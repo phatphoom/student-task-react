@@ -1,12 +1,13 @@
-"use client";
-import React from "react";
-import StudentTaskManager from "../Components/StudentTaskManager";
+import TaskForm from "@/Components/TaskForm";
+import TaskList from "@/Components/TaskList";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="min-h-screen p-8 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Student Task Manager</h1>
-      <StudentTaskManager />
-    </main>
+    <div>
+      <h1 className="text-xl font-bold p-4">Manage Student Task</h1>
+      <TaskForm />
+      <hr className="my-4" />
+      <TaskList />
+    </div>
   );
 }
