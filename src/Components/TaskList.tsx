@@ -87,136 +87,138 @@ export default function TaskList() {
   };
 
   return (
-    <div className="p-4">
-      <table className="border w-full">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2">Due Date</th>
-            <th className="border p-2">Subject</th>
-            <th className="border p-2">Teacher</th>
-            <th className="border p-2">What to Finish</th>
-            <th className="border p-2">Type</th>
-            <th className="border p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((t) => (
-            <tr key={t.sid}>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <input
-                    type="date"
-                    value={editData.due_date}
-                    onChange={(e) =>
-                      setEditData({ ...editData, due_date: e.target.value })
-                    }
-                    className="w-full p-1 border rounded"
-                  />
-                ) : (
-                  new Date(t.due_date).toLocaleDateString()
-                )}
-              </td>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <input
-                    type="text"
-                    value={editData.subject}
-                    onChange={(e) =>
-                      setEditData({ ...editData, subject: e.target.value })
-                    }
-                    className="w-full p-1 border rounded"
-                    placeholder="Subject"
-                  />
-                ) : (
-                  t.subject
-                )}
-              </td>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <input
-                    type="text"
-                    value={editData.teacher}
-                    onChange={(e) =>
-                      setEditData({ ...editData, teacher: e.target.value })
-                    }
-                    className="w-full p-1 border rounded"
-                    placeholder="Teacher"
-                  />
-                ) : (
-                  t.teacher
-                )}
-              </td>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <textarea
-                    value={editData.wtf}
-                    onChange={(e) =>
-                      setEditData({ ...editData, wtf: e.target.value })
-                    }
-                    className="w-full p-1 border rounded resize-none"
-                    rows="2"
-                    placeholder="What to Finish"
-                  />
-                ) : (
-                  t.wtf
-                )}
-              </td>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <select
-                    value={editData.work_type}
-                    onChange={(e) =>
-                      setEditData({ ...editData, work_type: e.target.value })
-                    }
-                    className="w-full p-1 border rounded"
+<div className="p-4">
+  <div className={"tableWrapperClass"}>
+    <table className={"tableClass"}>
+      <thead className={"theadClass"}>
+        <tr>
+          <th className={"thClass"}>Due Date</th>
+          <th className={"thClass"}>Subject</th>
+          <th className={"thClass"}>Teacher</th>
+          <th className={"thClass"}>What to Finish</th>
+          <th className={"thClass"}>Type</th>
+          <th className={"thClass"}>Actions</th>
+        </tr>
+      </thead>
+      <tbody className={'tbodyClass'}>
+        {tasks.map((t) => (
+          <tr key={t.sid} className={'rowHoverClass'}>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <input
+                  type="date"
+                  value={editData.due_date}
+                  onChange={(e) =>
+                    setEditData({ ...editData, due_date: e.target.value })
+                  }
+                  className={'inputClass'}
+                />
+              ) : (
+                new Date(t.due_date).toLocaleDateString()
+              )}
+            </td>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <input
+                  type="text"
+                  value={editData.subject}
+                  onChange={(e) =>
+                    setEditData({ ...editData, subject: e.target.value })
+                  }
+                  className={'inputClass'}
+                  placeholder="Subject"
+                />
+              ) : (
+                t.subject
+              )}
+            </td>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <input
+                  type="text"
+                  value={editData.teacher}
+                  onChange={(e) =>
+                    setEditData({ ...editData, teacher: e.target.value })
+                  }
+                  className={'inputClass'}
+                  placeholder="Teacher"
+                />
+              ) : (
+                t.teacher
+              )}
+            </td>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <textarea
+                  value={editData.wtf}
+                  onChange={(e) =>
+                    setEditData({ ...editData, wtf: e.target.value })
+                  }
+                  className={`${'inputClass'} resize-none`}
+                  rows={2}
+                  placeholder="What to Finish"
+                />
+              ) : (
+                t.wtf
+              )}
+            </td>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <select
+                  value={editData.work_type}
+                  onChange={(e) =>
+                    setEditData({ ...editData, work_type: e.target.value })
+                  }
+                  className={'inputClass'}
+                >
+                  <option value="">Select Type</option>
+                  <option value="Group">Group</option>
+                  <option value="Personal">Personal</option>
+                  <option value="School Event">School Event</option>
+                </select>
+              ) : (
+                t.work_type
+              )}
+            </td>
+            <td className={'tdClass'}>
+              {editingId === t.sid ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleSave(t.sid)}
+                    className={'buttonSaveClass'}
                   >
-                    <option value="">Select Type</option>
-                    <option value="Group">Group</option>
-                    <option value="Personal">Personal</option>
-                    <option value="School Event">School Event</option>
-                  </select>
-                ) : (
-                  t.work_type
-                )}
-              </td>
-              <td className="border p-2">
-                {editingId === t.sid ? (
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => handleSave(t.sid)}
-                      className="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleCancel}
-                      className="bg-gray-500 text-white px-2 py-1 rounded text-sm hover:bg-gray-600"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => handleEdit(t)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      Edit
-                    </button>
-                    {" | "}
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(t.sid)}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className={'buttonCancelClass'}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(t)}
+                    className={`${'editButtonClass'} ${'actionButtonClass'}`}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(t.sid)}
+                    className={`${'deleteButtonClass'} ${'actionButtonClass'}`}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
   );
 }

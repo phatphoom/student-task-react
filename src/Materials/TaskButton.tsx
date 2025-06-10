@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 type TaskButtonProps = {
   onClick: () => void;
@@ -6,9 +7,7 @@ type TaskButtonProps = {
 
 const TaskButton: React.FC<TaskButtonProps> = ({ onClick }) => {
   return (
-    <button onClick={onClick} className="task-button">
-      Add
-    </button>
+    <Link href="/" className="task-button">Add</Link>
   );
 };
 

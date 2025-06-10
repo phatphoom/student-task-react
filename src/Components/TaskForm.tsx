@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function TaskForm() {
   const [dueDate, setDueDate] = useState("");
@@ -62,62 +63,63 @@ export default function TaskForm() {
   };
 
   return (
+
     <div className="p-4">
+
+        <div className="home-btn">
+                <Link href="/Reports" className="nav-btn" >ไปหน้ารายการงาน (Task List)</Link>
+            </div>
+
+      <label className="form-label">Due Date *</label>
+      
       <input
         type="date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
-        className="border p-2 mb-2 w-full"
+        className="form-input"
       />
-
+      <label className="form-label">Teacher *</label>
       <select
         value={teacher}
         onChange={(e) => setTeacher(e.target.value)}
-        className="border p-2 mb-2 w-full"
+        className="form-select mb-2"
       >
         <option value="">Select Teacher</option>
         {[...new Set(subjects.map((s) => s.teacher))].map((t) => (
-          <option key={t} value={t}>
-            {t}
-          </option>
+          <option key={t} value={t}>{t}</option>
         ))}
       </select>
-
+      <label className="form-label">Subject *</label>
       <select
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
-        className="border p-2 mb-2 w-full"
+        className="form-select mb-2"
       >
         <option value="">Select Subject</option>
-        {subjects
-          .filter((s) => s.teacher === teacher)
-          .map((s, i) => (
-            <option key={i} value={s.subject}>
-              {s.subject}
-            </option>
-          ))}
+        {subjects.filter((s) => s.teacher === teacher).map((s, i) => (
+          <option key={i} value={s.subject}>{s.subject}</option>
+        ))}
       </select>
-
+      <label className="form-label">Work Type *</label>
       <select
         value={workType}
         onChange={(e) => setWorkType(e.target.value)}
-        className="border p-2 mb-2 w-full"
+        className="form-select mb-2"
       >
         <option>Group</option>
         <option>Personal</option>
         <option>School Event</option>
       </select>
-
+      <label className="form-label">What to finish *</label>
       <textarea
         value={wtf}
         onChange={(e) => setWtf(e.target.value)}
         placeholder="What to finish"
-        className="border p-2 mb-2 w-full"
+        className="form-textarea mb-2"
       />
-
       <button
         onClick={handleSubmit}
-        className="bg-blue-600 text-white px-4 py-2"
+        className="btn-primary"
       >
         Add Task
       </button>

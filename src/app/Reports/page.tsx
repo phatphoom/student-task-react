@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function TaskInformation() {
   const [tasks, setTasks] = useState([]);
@@ -62,36 +63,40 @@ export default function TaskInformation() {
   }, {});
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <h1 className="text-xl font-bold mb-6">105 For Task Information</h1>
+    <div className="p-4">
+      <h1 className="title"> Task Information</h1>
 
-        {/* Date Filter Section */}
+      <div className="tableClass">
+        <Link href="/" className="nav-btn">หน้าหลัก (Manage)</Link>
+      </div>
+
+      <div className="max-w-6xl mx-auto">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <label className="font-medium">Date From</label>
+              <label className="form-label">Date From</label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1"
+                className="form-input"
               />
-              <span className="text-sm text-gray-500">
+              <span className="form-label">
                 (Default Current Date)
               </span>
             </div>
 
+            <hr />
+
             <div className="flex items-center gap-2">
-              <label className="font-medium">Date From</label>
+              <label className="form-label">Date From</label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1"
+                className="form-input"
               />
-              <span className="text-sm text-gray-500">
+              <span className="form-label">
                 (Default Current Date +7)
               </span>
             </div>
@@ -99,30 +104,30 @@ export default function TaskInformation() {
 
           <button
             onClick={handleSearch}
-            className="mt-4 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded font-medium"
+            className="btn-primary"
           >
             Search
           </button>
         </div>
 
         {/* Tasks Table */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full border-collapse">
+        <div className="tableClass">
+          <table className="tableWrapperClass">
             <thead>
-              <tr className="bg-blue-100">
-                <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+              <tr className="theadClass">
+                <th className="theadClass">
                   Due Date
                 </th>
-                <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                <th className="theadClass">
                   Subject
                 </th>
-                <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                <th className="theadClass">
                   Teacher
                 </th>
-                <th className="border border-gray-300 px-4 py-3 text-left font-medium w-1/2">
+                <th className="theadClass">
                   What to Finish
                 </th>
-                <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                <th className="theadClass">
                   Type
                 </th>
               </tr>
@@ -132,31 +137,31 @@ export default function TaskInformation() {
                 dateTasks.map((task, index) => (
                   <tr
                     key={task.sid || `${date}-${index}`}
-                    className="hover:bg-gray-50"
+                    className="tdClass"
                   >
-                    <td className="border border-gray-300 px-4 py-3">
+                    <td className="tdClass">
                       {index === 0 ? date : ""}
                     </td>
-                    <td className="border border-gray-300 px-4 py-3">
+                    <td className="tdClass">
                       {task.subject}
                     </td>
-                    <td className="border border-gray-300 px-4 py-3">
+                    <td className="tdClass">
                       {task.teacher}
                     </td>
-                    <td className="border border-gray-300 px-4 py-3">
-                      <div className="flex items-start">
-                        <span className="mr-2 font-medium">
+                    <td className="tdClass">
+                      <div className="tdClass">
+                        <span className="tdClass">
                           {dateTasks.indexOf(task) + 1}.
                         </span>
                         <span>{task.wtf}</span>
                       </div>
                     </td>
-                    <td className="border border-gray-300 px-4 py-3">
+                    <td className="tdClass">
                       <span
-                        className={`px-2 py-1 rounded text-sm ${
+                        className={`tdClass ${
                           task.work_type === "Group"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800"
+                            ? "tdClass"
+                            : "tdClass"
                         }`}
                       >
                         {task.work_type}
@@ -183,11 +188,11 @@ export default function TaskInformation() {
                 length: Math.max(0, 8 - filteredTasks.length),
               }).map((_, i) => (
                 <tr key={`empty-${i}`}>
-                  <td className="border border-gray-300 px-4 py-3">&nbsp;</td>
-                  <td className="border border-gray-300 px-4 py-3">&nbsp;</td>
-                  <td className="border border-gray-300 px-4 py-3">&nbsp;</td>
-                  <td className="border border-gray-300 px-4 py-3">&nbsp;</td>
-                  <td className="border border-gray-300 px-4 py-3">&nbsp;</td>
+                  <td className="tbodyClass">&nbsp;</td>
+                  <td className="tbodyClass">&nbsp;</td>
+                  <td className="tbodyClass">&nbsp;</td>
+                  <td className="tbodyClass">&nbsp;</td>
+                  <td className="tbodyClass">&nbsp;</td>
                 </tr>
               ))}
             </tbody>

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 type Props = {
   onManageClick: () => void;
@@ -7,12 +8,8 @@ type Props = {
 
 const SidebarMenu: React.FC<Props> = ({ onManageClick, onReportClick }) => (
   <div className="sidebar-menu">
-    <button onClick={onManageClick} className="btn-manage">
-      Manage
-    </button>
-    <button onClick={onReportClick} className="btn-report">
-      Report
-    </button>
+    <Link href="/" className="btn-manage">Manage</Link>
+    <Link href="/Reports" className="btn-report">Report</Link>
   </div>
 );
 
