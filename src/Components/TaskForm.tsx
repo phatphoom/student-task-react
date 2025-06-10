@@ -2,18 +2,24 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+// เพิ่ม interface เพื่อกำหนด type
+interface Subject {
+  teacher: string;
+  subject: string;
+}
+
 export default function TaskForm() {
   const [dueDate, setDueDate] = useState("");
-  const [teacher, setTeacher] = useState("");
-  const [subject, setSubject] = useState("");
-  const [workType, setWorkType] = useState("Group");
-  const [wtf, setWtf] = useState("");
-  const [subjects, setSubjects] = useState([]);
+  const [teacher, setTeacher] = useState<string>("");
+  const [subject, setSubject] = useState<string>("");
+  const [workType, setWorkType] = useState<string>("Group");
+  const [wtf, setWtf] = useState<string>("");
+  const [subjects, setSubjects] = useState<Subject[]>([]); // ระบุ type ที่ชัดเจน
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/subjects`)
       .then((res) => res.json())
-      .then((data) => setSubjects(data))
+      .then((data: Subject[]) => setSubjects(data)) // ระบุ type ของ data
       .catch((err) => console.error("Error loading subjects:", err));
   }, []);
 

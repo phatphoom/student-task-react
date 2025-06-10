@@ -2,11 +2,25 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+// เพิ่ม interface เพื่อกำหนด types
+interface Task {
+  sid: number;
+  due_date: string;
+  subject: string;
+  teacher: string;
+  wtf: string;
+  work_type: string;
+}
+
+interface GroupedTasks {
+  [key: string]: Task[];
+}
+
 export default function TaskInformation() {
-  const [tasks, setTasks] = useState([]);
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
 
   // Set default dates on component mount
   useEffect(() => {
@@ -22,7 +36,7 @@ export default function TaskInformation() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: Task[]) => {
         setTasks(data);
         setFilteredTasks(data);
       })
@@ -47,20 +61,23 @@ export default function TaskInformation() {
   };
 
   // Format date to DD.MM.YYYY
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
   // Group tasks by date
-  const groupedTasks = filteredTasks.reduce((acc, task) => {
-    const dateKey = formatDate(task.due_date);
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    acc[dateKey].push(task);
-    return acc;
-  }, {});
+  const groupedTasks: GroupedTasks = filteredTasks.reduce(
+    (acc: GroupedTasks, task: Task) => {
+      const dateKey = formatDate(task.due_date);
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(task);
+      return acc;
+    },
+    {}
+  );
 
   return (
     <div className="p-4">
@@ -89,7 +106,7 @@ export default function TaskInformation() {
             <hr />
 
             <div className="flex items-center gap-2">
-              <label className="form-label">Date From</label>
+              <label className="form-label">Date To</label>
               <input
                 type="date"
                 value={dateTo}
@@ -149,7 +166,7 @@ export default function TaskInformation() {
               {filteredTasks.length === 0 && (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan={5}
                     className="border border-gray-300 px-4 py-8 text-center text-gray-500"
                   >
                     No tasks found for the selected date range

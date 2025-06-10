@@ -1,10 +1,34 @@
 "use client";
 import { useEffect, useState } from "react";
 
+// เพิ่ม interfaces เพื่อกำหนด types
+interface Task {
+  sid: number;
+  due_date: string;
+  subject: string;
+  teacher: string;
+  wtf: string;
+  work_type: string;
+}
+
+interface EditData {
+  due_date: string;
+  subject: string;
+  teacher: string;
+  wtf: string;
+  work_type: string;
+}
+
 export default function TaskList() {
-  const [tasks, setTasks] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({});
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editData, setEditData] = useState<EditData>({
+    due_date: "",
+    subject: "",
+    teacher: "",
+    wtf: "",
+    work_type: "",
+  });
 
   useEffect(() => {
     fetchTasks();
@@ -13,10 +37,10 @@ export default function TaskList() {
   const fetchTasks = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
-      .then((data) => setTasks(data));
+      .then((data: Task[]) => setTasks(data));
   };
 
-  const handleEdit = (task) => {
+  const handleEdit = (task: Task) => {
     setEditingId(task.sid);
     setEditData({
       due_date: task.due_date ? task.due_date.split("T")[0] : "", // Format date for input
@@ -27,7 +51,7 @@ export default function TaskList() {
     });
   };
 
-  const handleSave = async (id) => {
+  const handleSave = async (id: number) => {
     try {
       console.log("Saving task with ID:", id);
       console.log("Data being sent:", editData);
@@ -57,7 +81,13 @@ export default function TaskList() {
         const result = await response.json();
         console.log("Success:", result);
         setEditingId(null);
-        setEditData({});
+        setEditData({
+          due_date: "",
+          subject: "",
+          teacher: "",
+          wtf: "",
+          work_type: "",
+        });
         fetchTasks(); // รีเฟรชข้อมูล
       } else {
         const errorData = await response.json();
@@ -66,16 +96,22 @@ export default function TaskList() {
       }
     } catch (error) {
       console.error("Network error:", error);
-      alert(`Network error: ${error.message}`);
+      alert(`Network error: ${(error as Error).message}`);
     }
   };
 
   const handleCancel = () => {
     setEditingId(null);
-    setEditData({});
+    setEditData({
+      due_date: "",
+      subject: "",
+      teacher: "",
+      wtf: "",
+      work_type: "",
+    });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this task?")) {
       try {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
