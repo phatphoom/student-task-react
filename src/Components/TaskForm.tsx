@@ -11,7 +11,7 @@ export default function TaskForm() {
   const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/subjects")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/subjects`)
       .then((res) => res.json())
       .then((data) => setSubjects(data))
       .catch((err) => console.error("Error loading subjects:", err));
@@ -37,7 +37,7 @@ export default function TaskForm() {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/tasks", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -63,15 +63,15 @@ export default function TaskForm() {
   };
 
   return (
-
     <div className="p-4">
-
-        <div className="home-btn">
-                <Link href="/Reports" className="nav-btn" >ไปหน้ารายการงาน (Task List)</Link>
-            </div>
+      <div className="home-btn">
+        <Link href="/Reports" className="nav-btn">
+          ไปหน้ารายการงาน (Task List)
+        </Link>
+      </div>
 
       <label className="form-label">Due Date *</label>
-      
+
       <input
         type="date"
         value={dueDate}
@@ -86,7 +86,9 @@ export default function TaskForm() {
       >
         <option value="">Select Teacher</option>
         {[...new Set(subjects.map((s) => s.teacher))].map((t) => (
-          <option key={t} value={t}>{t}</option>
+          <option key={t} value={t}>
+            {t}
+          </option>
         ))}
       </select>
       <label className="form-label">Subject *</label>
@@ -96,9 +98,13 @@ export default function TaskForm() {
         className="form-select mb-2"
       >
         <option value="">Select Subject</option>
-        {subjects.filter((s) => s.teacher === teacher).map((s, i) => (
-          <option key={i} value={s.subject}>{s.subject}</option>
-        ))}
+        {subjects
+          .filter((s) => s.teacher === teacher)
+          .map((s, i) => (
+            <option key={i} value={s.subject}>
+              {s.subject}
+            </option>
+          ))}
       </select>
       <label className="form-label">Work Type *</label>
       <select
@@ -117,10 +123,7 @@ export default function TaskForm() {
         placeholder="What to finish"
         className="form-textarea mb-2"
       />
-      <button
-        onClick={handleSubmit}
-        className="btn-primary"
-      >
+      <button onClick={handleSubmit} className="btn-primary">
         Add Task
       </button>
     </div>

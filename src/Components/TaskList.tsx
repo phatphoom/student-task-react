@@ -11,7 +11,7 @@ export default function TaskList() {
   }, []);
 
   const fetchTasks = () => {
-    fetch("http://localhost:8080/api/tasks")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
       .then((data) => setTasks(data));
   };
@@ -40,13 +40,16 @@ export default function TaskList() {
 
       console.log("Formatted data:", dataToSend);
 
-      const response = await fetch(`http://localhost:8080/api/tasks/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       console.log("Response status:", response.status);
 
@@ -75,7 +78,7 @@ export default function TaskList() {
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this task?")) {
       try {
-        await fetch(`http://localhost:8080/api/tasks/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
           method: "DELETE",
         });
         fetchTasks(); // รีเฟรชข้อมูลแทน reload
@@ -87,138 +90,137 @@ export default function TaskList() {
   };
 
   return (
-<div className="p-4">
-  <div className={"tableWrapperClass"}>
-    <table className={"tableClass"}>
-      <thead className={"theadClass"}>
-        <tr>
-          <th className={"thClass"}>Due Date</th>
-          <th className={"thClass"}>Subject</th>
-          <th className={"thClass"}>Teacher</th>
-          <th className={"thClass"}>What to Finish</th>
-          <th className={"thClass"}>Type</th>
-          <th className={"thClass"}>Actions</th>
-        </tr>
-      </thead>
-      <tbody className={'tbodyClass'}>
-        {tasks.map((t) => (
-          <tr key={t.sid} className={'rowHoverClass'}>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <input
-                  type="date"
-                  value={editData.due_date}
-                  onChange={(e) =>
-                    setEditData({ ...editData, due_date: e.target.value })
-                  }
-                  className={'inputClass'}
-                />
-              ) : (
-                new Date(t.due_date).toLocaleDateString()
-              )}
-            </td>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <input
-                  type="text"
-                  value={editData.subject}
-                  onChange={(e) =>
-                    setEditData({ ...editData, subject: e.target.value })
-                  }
-                  className={'inputClass'}
-                  placeholder="Subject"
-                />
-              ) : (
-                t.subject
-              )}
-            </td>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <input
-                  type="text"
-                  value={editData.teacher}
-                  onChange={(e) =>
-                    setEditData({ ...editData, teacher: e.target.value })
-                  }
-                  className={'inputClass'}
-                  placeholder="Teacher"
-                />
-              ) : (
-                t.teacher
-              )}
-            </td>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <textarea
-                  value={editData.wtf}
-                  onChange={(e) =>
-                    setEditData({ ...editData, wtf: e.target.value })
-                  }
-                  className={`${'inputClass'} resize-none`}
-                  rows={2}
-                  placeholder="What to Finish"
-                />
-              ) : (
-                t.wtf
-              )}
-            </td>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <select
-                  value={editData.work_type}
-                  onChange={(e) =>
-                    setEditData({ ...editData, work_type: e.target.value })
-                  }
-                  className={'inputClass'}
-                >
-                  <option value="">Select Type</option>
-                  <option value="Group">Group</option>
-                  <option value="Personal">Personal</option>
-                  <option value="School Event">School Event</option>
-                </select>
-              ) : (
-                t.work_type
-              )}
-            </td>
-            <td className={'tdClass'}>
-              {editingId === t.sid ? (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleSave(t.sid)}
-                    className={'buttonSaveClass'}
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className={'buttonCancelClass'}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(t)}
-                    className={`${'editButtonClass'} ${'actionButtonClass'}`}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(t.sid)}
-                    className={`${'deleteButtonClass'} ${'actionButtonClass'}`}
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
+    <div className="p-4">
+      <div className={"tableWrapperClass"}>
+        <table className={"tableClass"}>
+          <thead className={"theadClass"}>
+            <tr>
+              <th className={"thClass"}>Due Date</th>
+              <th className={"thClass"}>Subject</th>
+              <th className={"thClass"}>Teacher</th>
+              <th className={"thClass"}>What to Finish</th>
+              <th className={"thClass"}>Type</th>
+              <th className={"thClass"}>Actions</th>
+            </tr>
+          </thead>
+          <tbody className={"tbodyClass"}>
+            {tasks.map((t) => (
+              <tr key={t.sid} className={"rowHoverClass"}>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <input
+                      type="date"
+                      value={editData.due_date}
+                      onChange={(e) =>
+                        setEditData({ ...editData, due_date: e.target.value })
+                      }
+                      className={"inputClass"}
+                    />
+                  ) : (
+                    new Date(t.due_date).toLocaleDateString()
+                  )}
+                </td>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <input
+                      type="text"
+                      value={editData.subject}
+                      onChange={(e) =>
+                        setEditData({ ...editData, subject: e.target.value })
+                      }
+                      className={"inputClass"}
+                      placeholder="Subject"
+                    />
+                  ) : (
+                    t.subject
+                  )}
+                </td>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <input
+                      type="text"
+                      value={editData.teacher}
+                      onChange={(e) =>
+                        setEditData({ ...editData, teacher: e.target.value })
+                      }
+                      className={"inputClass"}
+                      placeholder="Teacher"
+                    />
+                  ) : (
+                    t.teacher
+                  )}
+                </td>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <textarea
+                      value={editData.wtf}
+                      onChange={(e) =>
+                        setEditData({ ...editData, wtf: e.target.value })
+                      }
+                      className={`${"inputClass"} resize-none`}
+                      rows={2}
+                      placeholder="What to Finish"
+                    />
+                  ) : (
+                    t.wtf
+                  )}
+                </td>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <select
+                      value={editData.work_type}
+                      onChange={(e) =>
+                        setEditData({ ...editData, work_type: e.target.value })
+                      }
+                      className={"inputClass"}
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Group">Group</option>
+                      <option value="Personal">Personal</option>
+                      <option value="School Event">School Event</option>
+                    </select>
+                  ) : (
+                    t.work_type
+                  )}
+                </td>
+                <td className={"tdClass"}>
+                  {editingId === t.sid ? (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleSave(t.sid)}
+                        className={"buttonSaveClass"}
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        className={"buttonCancelClass"}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(t)}
+                        className={`${"editButtonClass"} ${"actionButtonClass"}`}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(t.sid)}
+                        className={`${"deleteButtonClass"} ${"actionButtonClass"}`}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

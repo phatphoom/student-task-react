@@ -20,7 +20,7 @@ export default function TaskInformation() {
 
   // Fetch tasks from API
   useEffect(() => {
-    fetch("http://localhost:8080/api/tasks")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
       .then((data) => {
         setTasks(data);
@@ -67,7 +67,9 @@ export default function TaskInformation() {
       <h1 className="title"> Task Information</h1>
 
       <div className="tableClass">
-        <Link href="/" className="nav-btn">หน้าหลัก (Manage)</Link>
+        <Link href="/" className="nav-btn">
+          หน้าหลัก (Manage)
+        </Link>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -81,9 +83,7 @@ export default function TaskInformation() {
                 onChange={(e) => setDateFrom(e.target.value)}
                 className="form-input"
               />
-              <span className="form-label">
-                (Default Current Date)
-              </span>
+              <span className="form-label">(Default Current Date)</span>
             </div>
 
             <hr />
@@ -96,16 +96,11 @@ export default function TaskInformation() {
                 onChange={(e) => setDateTo(e.target.value)}
                 className="form-input"
               />
-              <span className="form-label">
-                (Default Current Date +7)
-              </span>
+              <span className="form-label">(Default Current Date +7)</span>
             </div>
           </div>
 
-          <button
-            onClick={handleSearch}
-            className="btn-primary"
-          >
+          <button onClick={handleSearch} className="btn-primary">
             Search
           </button>
         </div>
@@ -115,39 +110,20 @@ export default function TaskInformation() {
           <table className="tableWrapperClass">
             <thead>
               <tr className="theadClass">
-                <th className="theadClass">
-                  Due Date
-                </th>
-                <th className="theadClass">
-                  Subject
-                </th>
-                <th className="theadClass">
-                  Teacher
-                </th>
-                <th className="theadClass">
-                  What to Finish
-                </th>
-                <th className="theadClass">
-                  Type
-                </th>
+                <th className="theadClass">Due Date</th>
+                <th className="theadClass">Subject</th>
+                <th className="theadClass">Teacher</th>
+                <th className="theadClass">What to Finish</th>
+                <th className="theadClass">Type</th>
               </tr>
             </thead>
             <tbody>
               {Object.entries(groupedTasks).map(([date, dateTasks]) =>
                 dateTasks.map((task, index) => (
-                  <tr
-                    key={task.sid || `${date}-${index}`}
-                    className="tdClass"
-                  >
-                    <td className="tdClass">
-                      {index === 0 ? date : ""}
-                    </td>
-                    <td className="tdClass">
-                      {task.subject}
-                    </td>
-                    <td className="tdClass">
-                      {task.teacher}
-                    </td>
+                  <tr key={task.sid || `${date}-${index}`} className="tdClass">
+                    <td className="tdClass">{index === 0 ? date : ""}</td>
+                    <td className="tdClass">{task.subject}</td>
+                    <td className="tdClass">{task.teacher}</td>
                     <td className="tdClass">
                       <div className="tdClass">
                         <span className="tdClass">
@@ -159,9 +135,7 @@ export default function TaskInformation() {
                     <td className="tdClass">
                       <span
                         className={`tdClass ${
-                          task.work_type === "Group"
-                            ? "tdClass"
-                            : "tdClass"
+                          task.work_type === "Group" ? "tdClass" : "tdClass"
                         }`}
                       >
                         {task.work_type}
