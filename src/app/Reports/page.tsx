@@ -78,7 +78,11 @@ export default function TaskInformation() {
     },
     {}
   );
-
+  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
+    const dateA = new Date(a.split(".").reverse().join("-"));
+    const dateB = new Date(b.split(".").reverse().join("-"));
+    return dateA - dateB;
+  });
   return (
     <div className="p-4">
       <h1 className="title"> Task Information</h1>
@@ -135,7 +139,7 @@ export default function TaskInformation() {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupedTasks).map(([date, dateTasks]) =>
+              {sortedEntries.map(([date, dateTasks]) =>
                 dateTasks.map((task, index) => (
                   <tr key={task.sid || `${date}-${index}`} className="tdClass">
                     <td className="tdClass">{index === 0 ? date : ""}</td>
