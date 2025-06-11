@@ -24,7 +24,7 @@ export default function Page() {
 
   return (
     <div className='p-4"'>
-      <h1 className="title">Program EP105 - ฉันรักการบ้านที่ซู้ด V1.0</h1>
+      <h1 className="title">Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611</h1>
       <h2 className="title">Class Room EP105</h2>      <TaskForm />
       <TaskList />
     </div>

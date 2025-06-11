@@ -56,15 +56,14 @@ body {
 }
 
 .top-right-button {
-  position: absolute;
-  top: 10px;       /* ปรับเป็นเลขที่เหมาะกับตำแหน่งที่ต้องการ */
-  right: 20px;
+  top: 10px;            /* เลื่อนลงจากบนหน้า 10px (แก้เป็นเลขที่ต้องการ) */
+  right: 20px;          /* ชิดขวา 20px */
   display: flex;
   justify-content: flex-end;
-  gap: 20px;
-  z-index: 4000;
+  position: absolute;
+  gap: 10px;            /* ช่องว่างระหว่างปุ่ม */
+  z-index: 4000;        /* ให้ลอยบน */
 }
-
 
 .nav-btn,
 .btn-primary {
