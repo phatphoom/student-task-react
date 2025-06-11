@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { Task, GroupedTasks } from "@/types";
 
@@ -9,7 +9,7 @@ export default function TaskInformation() {
   const [dateTo, setDateTo] = useState<string>("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
-
+  const [isSearch, setIsSearch] = useState(false);
   // Set default dates on component mount
   useEffect(() => {
     const today = new Date();
@@ -54,6 +54,7 @@ export default function TaskInformation() {
       setFilteredTasks(filtered);
       setIsFiltered(true);
     }
+    setIsSearch(!isSearch);
   };
 
   // Format date to DD.MM.YYYY
@@ -81,19 +82,24 @@ export default function TaskInformation() {
   });
   return (
     <div className="p-4">
-      <h1 className="title">
-        Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
-      </h1>
-      <h2 className="title">Class Room EP105</h2>
+      <div className="group-button-and-text">
+        <div>
+          {/* group only text*/}
+          <h1 className="title">
+            Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
+          </h1>
+          <h2 className="title">Class Room EP105</h2>
+        </div>
 
-      <div className="top-right-button">
-        <Link href="/" className="nav-btn">
-          หน้าหลัก (Manage)
-        </Link>
-
-        <Link href="/Reports" className="nav-btn2">
-          ไปหน้ารายการงาน (Task List)
-        </Link>
+        {/* group link*/}
+        <div className="top-right-button">
+          <Link href="/" className="nav-btn">
+            หน้าหลัก (Manage)
+          </Link>
+          <Link href="/Reports" className="nav-btn2">
+            ไปหน้ารายการงาน (Task List)
+          </Link>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -121,7 +127,7 @@ export default function TaskInformation() {
           </div>
 
           <button onClick={handleSearch} className="btn-primary">
-            Search
+            {!isSearch ? "Search by Date	" : "Show All"}
           </button>
         </div>
 

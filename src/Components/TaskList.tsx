@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Task, EditData } from "@/types";
-
+import "./tasklist.css";
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -122,129 +122,102 @@ export default function TaskList() {
   });
 
   return (
-    <div className="p-4">
-      <div className={"tableWrapperClass"}>
-        <table className={"tableClass"}>
-          <thead className={"theadClass"}>
-            <tr>
-              <th className={"thClass"}>Due Date</th>
-              <th className={"thClass"}>Subject</th>
-              <th className={"thClass"}>Teacher</th>
-              <th className={"thClass"}>What to Finish</th>
-              <th className={"thClass"}>Type</th>
-              <th className={"thClass"}>Actions</th>
-            </tr>
-          </thead>
-          <tbody className={"tbodyClass"}>
-            {sortedEntries.map(([date, dateTasks]) =>
-              dateTasks.map((t, index) => (
-                <tr key={t.sid} className={"rowHoverClass"}>
-                  <td className={"tdClass"}>{index === 0 ? date : ""}</td>
-                  <td className={"tdClass"}>
-                    {editingId === t.sid ? (
-                      <input
-                        type="text"
-                        value={editData.subject}
-                        onChange={(e) =>
-                          setEditData({ ...editData, subject: e.target.value })
-                        }
-                        className={"inputClass"}
-                        placeholder="Subject"
-                      />
-                    ) : (
-                      t.subject
-                    )}
-                  </td>
-                  <td className={"tdClass"}>
-                    {editingId === t.sid ? (
-                      <input
-                        type="text"
-                        value={editData.teacher}
-                        onChange={(e) =>
-                          setEditData({ ...editData, teacher: e.target.value })
-                        }
-                        className={"inputClass"}
-                        placeholder="Teacher"
-                      />
-                    ) : (
-                      t.teacher
-                    )}
-                  </td>
-                  <td className={"tdClass"}>
-                    {editingId === t.sid ? (
-                      <textarea
-                        value={editData.wtf}
-                        onChange={(e) =>
-                          setEditData({ ...editData, wtf: e.target.value })
-                        }
-                        className={`${"inputClass"}`}
-                        rows={2}
-                        placeholder="What to Finish"
-                      />
-                    ) : (
-                      t.wtf
-                    )}
-                  </td>
-                  <td className={"tdClass"}>
-                    {editingId === t.sid ? (
-                      <select
-                        value={editData.work_type}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            work_type: e.target.value,
-                          })
-                        }
-                        className={"inputClass"}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="Group">Group</option>
-                        <option value="Personal">Personal</option>
-                        <option value="School Event">School Event</option>
-                      </select>
-                    ) : (
-                      t.work_type
-                    )}
-                  </td>
-                  <td className={"tdClass"}>
-                    {editingId === t.sid ? (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleSave(t.sid)}
-                          className={"buttonSaveClass"}
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={handleCancel}
-                          className={"buttonCancelClass"}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(t)}
-                          className={`${"editButtonClass"} ${"actionButtonClass"}`}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(t.sid)}
-                          className={`${"deleteButtonClass"} ${"actionButtonClass"}`}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="cardContainer">
+      {sortedEntries.map(([date, tasks]) => (
+        <div key={date} className="dateCard">
+          <div className="dateHeader">{date}</div>
+          {tasks.map((t, index) => (
+            <div key={t.sid} className="taskCard">
+              <div className="taskHeader">
+                <span>{index + 1}. </span>
+                {editingId === t.sid ? (
+                  <>
+                    <input
+                      value={editData.teacher}
+                      onChange={(e) =>
+                        setEditData({ ...editData, teacher: e.target.value })
+                      }
+                      placeholder="Teacher"
+                      className="inputEdit"
+                    />
+                    :
+                    <input
+                      value={editData.subject}
+                      onChange={(e) =>
+                        setEditData({ ...editData, subject: e.target.value })
+                      }
+                      placeholder="Subject"
+                      className="inputEdit"
+                    />
+                    <select
+                      value={editData.work_type}
+                      onChange={(e) =>
+                        setEditData({ ...editData, work_type: e.target.value })
+                      }
+                      className="inputEdit"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Group">Group</option>
+                      <option value="Personal">Personal</option>
+                      <option value="School Event">School Event</option>
+                    </select>
+                  </>
+                ) : (
+                  <>
+                    <strong>
+                      T. {t.teacher} : {t.subject}
+                    </strong>
+                    <span className="typeTag">{t.work_type}</span>
+                  </>
+                )}
+              </div>
+
+              <div className="taskBody">
+                {editingId === t.sid ? (
+                  <textarea
+                    value={editData.wtf}
+                    onChange={(e) =>
+                      setEditData({ ...editData, wtf: e.target.value })
+                    }
+                    rows={2}
+                    className="inputEdit"
+                  />
+                ) : (
+                  t.wtf
+                )}
+              </div>
+
+              <div className="taskActions">
+                {editingId === t.sid ? (
+                  <>
+                    <button
+                      onClick={() => handleSave(t.sid)}
+                      className="editBtn"
+                    >
+                      Save
+                    </button>
+                    <button onClick={handleCancel} className="deleteBtn">
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => handleEdit(t)} className="editBtn">
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(t.sid)}
+                      className="deleteBtn"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import TaskForm from '@/Components/TaskForm';
-import TaskList from '@/Components/TaskList';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import TaskForm from "@/Components/TaskForm";
+import TaskList from "@/Components/TaskList";
 
 export default function Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem('loggedIn');
+    const loggedIn = localStorage.getItem("loggedIn");
     if (!loggedIn) {
-      router.push('/Logins');
+      router.push("/Logins");
     } else {
       setLoading(false);
     }
@@ -24,8 +24,7 @@ export default function Page() {
 
   return (
     <div className='p-4"'>
-      <h1 className="title">Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611</h1>
-      <h2 className="title">Class Room EP105</h2>      <TaskForm />
+      <TaskForm />
       <TaskList />
     </div>
   );
