@@ -65,21 +65,21 @@ export default function TaskForm() {
 
   return (
     <div className="p-4">
-    <div className="home-btn mb-4">
+    <div className="top-right-button">
         
-    <Link
-        href="/"
-        className="nav-btn"
-      >
-        หน้าหลัก (Manage)
-      </Link>
-
       <Link
-        href="/Reports"
-        className="nav-btn2"
-      >
-        ไปหน้ารายการงาน (Task List)
-      </Link>
+          href="/"
+          className="nav-btn"
+        >
+          หน้าหลัก (Manage)
+        </Link>
+
+        <Link
+          href="/Reports"
+          className="nav-btn2"
+        >
+          ไปหน้ารายการงาน (Task List)
+        </Link>
 
     </div>
 

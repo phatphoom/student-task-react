@@ -72,17 +72,18 @@ export default function TaskInformation() {
   });
   return (
     <div className="p-4">
-      <h1 className="title"> TASK INFOMATION</h1>
+      <h1 className="title">Program EP105 - ฉันรักการบ้านที่ซู้ด V1.0</h1>
+      <h2 className="title">Class Room EP105</h2>
 
-      <div className="home-btn mb-4">
-        <Link href="/" className="nav-btn">
-          หน้าหลัก (Manage)
-        </Link>
+        <div className="top-right-button">
+          <Link href="/" className="nav-btn">
+            หน้าหลัก (Manage)
+          </Link>
 
-        <Link href="/Reports" className="nav-btn2">
-          ไปหน้ารายการงาน (Task List)
-        </Link>
-      </div>
+          <Link href="/Reports" className="nav-btn2">
+            ไปหน้ารายการงาน (Task List)
+          </Link>
+        </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
