@@ -74,7 +74,7 @@ export default function TaskInformation() {
     <div className="p-4">
       <h1 className="title"> Task Information</h1>
 
-      <div className="tableClass">
+      <div className="home-btn mb-4">
         <Link href="/" className="nav-btn">
           หน้าหลัก (Manage)
         </Link>
