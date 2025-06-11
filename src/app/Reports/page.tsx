@@ -75,19 +75,13 @@ export default function TaskInformation() {
       <h1 className="title"> Task Information</h1>
 
       <div className="tableClass">
-      <Link
-        href="/"
-        className="nav-btn"
-      >
-        หน้าหลัก (Manage)
-      </Link>
+        <Link href="/" className="nav-btn">
+          หน้าหลัก (Manage)
+        </Link>
 
-      <Link
-        href="/Reports"
-        className="nav-btn2"
-      >
-        ไปหน้ารายการงาน (Task List)
-      </Link>
+        <Link href="/Reports" className="nav-btn2">
+          ไปหน้ารายการงาน (Task List)
+        </Link>
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -122,60 +116,41 @@ export default function TaskInformation() {
         </div>
 
         {/* Tasks Table */}
-        <div className="tableWrapperClass">
-          <table className="tableClass">
-            <thead>
-              <tr className="theadClass">
-                <th className="tdClass">Due Date</th>
-                <th className="tdClass">Subject</th>
-                <th className="tdClass">Teacher</th>
-                <th className="tdClass">What to Finish</th>
-                <th className="tdClass">Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedEntries.map(([date, dateTasks]) =>
+        <div className="card-container">
+          {sortedEntries.map(([date, dateTasks]) => (
+            <div key={date} className="card">
+              {/* วันที่ */}
+              <div className="card-header">{date}</div>
+
+              {/* ถ้าไม่มีงานในวันนั้น */}
+              {dateTasks.length === 0 ? (
+                <div className="card-empty">
+                  No Task Dued : Yeah!!! Very Happy.
+                </div>
+              ) : (
                 dateTasks.map((task, index) => (
-                  <tr key={task.sid || `${date}-${index}`} className="tdClass">
-                    <td className="tdClass">{index === 0 ? date : ""}</td>
-                    <td className="tdClass">{task.subject}</td>
-                    <td className="tdClass">{task.teacher}</td>
-                    <td className="tdClass">
-                      <div className="tdClass">
-                        <span className="tdClass">
-                          {dateTasks.indexOf(task) + 1}.
-                        </span>
-                        <span>{task.wtf}</span>
-                      </div>
-                    </td>
-                    <td className="tdClass">
-                      <span
-                        className={`tdClass ${
-                          task.work_type === "Group" ? "tdClass" : "tdClass"
-                        }`}
-                      >
-                        {task.work_type}
+                  <div
+                    key={task.sid || `${date}-${index}`}
+                    className="task-item"
+                  >
+                    {/* หัวเรื่อง */}
+                    <div className="task-header">
+                      <span className="teacher-subject">
+                        T. {task.teacher} : {task.subject}
                       </span>
-                    </td>
-                  </tr>
+                      <span className="task-type">{task.work_type}</span>
+                    </div>
+
+                    {/* รายละเอียด */}
+                    <div className="task-body">
+                      <strong>{index + 1}. </strong>
+                      {task.wtf}
+                    </div>
+                  </div>
                 ))
               )}
-
-              {/* Empty rows for styling */}
-              {filteredTasks.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="border border-gray-300 px-4 py-8 text-center text-gray-500"
-                  >
-                    No tasks found for the selected date range
-                  </td>
-                </tr>
-              )}
-
-
-            </tbody>
-          </table>
+            </div>
+          ))}
         </div>
       </div>
     </div>
