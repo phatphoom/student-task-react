@@ -634,3 +634,125 @@ body {
   color: #444;
   font-size: 14px;
 }
+
+/* app/globals.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.login-box {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #1e293b;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-label {
+  font-size: 0.95rem;
+  color: #334155;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.login-input {
+  width: 100%; /* ✅ กว้างเต็มพื้นที่ */
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #f9fafb;
+}
+
+.login-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background-color: #ffffff;
+  outline: none;
+}
+
+.login-button {
+  width: 100%; /* ✅ เพิ่มความกว้างให้เต็มเหมือน input */
+  padding: 0.75rem 1rem;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+
+.login-button:hover {
+  background-color: #2563eb;
+}
+
+.login-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+}
+
+.login-success {
+  color: #10b981;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+}
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.75rem 3rem 0.75rem 1rem; /* เพิ่ม padding ด้านขวาให้มีที่ว่างสำหรับปุ่มลูกตา */
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #f9fafb;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.toggle-password:hover {
+  color: #374151;
+}
