@@ -36,11 +36,11 @@ body {
 .title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--primary-color);
+  color: black;
   text-align: center;
-  margin-bottom: 32px;
-  background-color: #e6e6e6;
-  border-radius: 20px;
+  margin-bottom: 20px;
+  background-color: #BFECFF;
+  border-radius: 13px;
 }
 
 .nav-btn,
@@ -94,7 +94,7 @@ body {
 
 /* สำหรับ form row ที่ต้องการให้อยู่ในบรรทัดเดียวกัน */
 .form-row {
-  background: rgb(233, 233, 233);
+  background: #FFCCEA;
   padding: 20px;
   border-radius: 14px;
   display: flex;
@@ -106,7 +106,7 @@ body {
 
 /* ปรับ form-group ให้เป็น inline */
 .form-group {
-  background: rgb(233, 233, 233);
+  background: #FFCCEA;
   padding: 10px;
   border-radius: 14px;
   display: flex;
@@ -130,9 +130,7 @@ body {
 }
 
 .form-input,
-.form-select,
-.form-textarea {
-  width: auto;
+.form-select {
   font-family: "Kanit", sans-serif;
   padding: 12px 16px;
   border: 2px solid var(--border-color);
@@ -141,6 +139,19 @@ body {
   background: #ffffff;
   box-sizing: border-box;
   resize: none;
+}
+
+.form-textarea {
+  font-family: "Kanit", sans-serif;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+  background: #ffffff;
+  box-sizing: border-box;
+  resize: none;
+  /* เพิ่มความสูง */
+  min-height: 180px; /* เดิมอาจจะประมาณ 60px => x3 */
 }
 
 /* สำหรับ input ประเภทต่างๆ */
@@ -175,155 +186,157 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    body {
-      padding: 10px;
-      text-align: center; /* ทำให้เนื้อหาตรงกลางแนว text */
-    }
-  
-    .student-task-container {
-      padding: 24px 20px;
-      margin: 20px auto;
-      border-radius: var(--radius);
-      width: auto;
-      max-width: 100%;
-      
-    }
-  
-    .form-row {
-      flex-direction: column;
-      align-items: center; /* ช่วยให้อยู่ตรงกลางแนวตั้ง */
-      gap: 16px;
-    }
-  
-    .form-group {
-      width: 100%;
-      max-width: 100%;
-      align-items: stretch;
-    }
-  
-    .form-input,
-    .form-select,
-    .form-textarea {
-      width: 100%;
-      box-sizing: border-box;
-    }
-  
-    .nav-btn,
-    .btn-primary {
-      background: rgb(0, 197, 0);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      padding: 14px 32px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1.1rem;
-      font-family: "Kanit", sans-serif;
-      margin-top: 20px;
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      transition: background 0.3s;
-      text-decoration: none;
-    }
-    
-    .btn-primary:hover {
-      background: blue;
-    }
-    
-    .nav-btn:hover {
-      background: rgb(0, 73, 0);
-    }
-    
-    .nav-btn2 {
-      background: red;
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      padding: 14px 32px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1.1rem;
-      font-family: "Kanit", sans-serif;
-      margin-top: 20px;
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      transition: background 0.3s;
-      text-decoration: none;
-    }
-    
-    .nav-btn2:hover {
-      background: rgb(68, 0, 0);
-    }
-  
-    .title {
-      font-size: 2rem;
-      margin: 0 auto 32px auto;
-      width: 100%;
-    }
-  
-    .tableWrapperClass {
-      overflow-x: auto;
-      margin: 16px 0;
-      border-radius: var(--radius);
-    }
-  
-    .tableClass {
-      min-width: 600px; /* ให้ scroll ได้ถ้าจอกว้างน้อย */
-    }
-  
-    .success-message,
-    .error-message,
-    .info-card {
-      width: 100%;
-      box-sizing: border-box;
-    }
-  
-    .buttonSaveClass,
-    .buttonCancelClass,
-    .editButtonClass,
-    .deleteButtonClass {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .card-container {
-      display: flex;
-      justify-content: center;
-      align-items: center; /* <-- ตรงกลางแนวตั้งด้วย */
-      min-height: 100vh;   /* <-- ให้ container สูงเท่าหน้าจอ */
-      padding: 30px;       /* กันไม่ให้ติดขอบ */
-      box-sizing: border-box;
-    }
-    
-    .card {
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      background-color: white;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .card-header {
-      background-color: #cce6ff;
-      padding: 12px;
-      font-weight: bold;
-      text-align: center;
-      font-size: 16px;
-      color: #000;
-    }
-    
-    .card-empty {
-      padding: 20px;
-      text-align: center;
-      font-weight: bold;
-      color: #555;
-    }
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: "Kanit", sans-serif;
+    background-color: #f5f7fa;
   }
+
+  .card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f5f7fa; /* สีพื้นหลังให้อ่อนลง */
+  }
+
+  .card {
+    width: 100%;
+    max-width: 350px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .card-header {
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    padding: 16px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+  }
+
+  .card-empty {
+    padding: 24px;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .nav-btn,
+  .btn-primary,
+  .nav-btn2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    padding: 14px;
+    margin: 10px 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .btn-primary {
+    background: rgb(0, 197, 0);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background: blue;
+  }
+
+  .nav-btn {
+    background: green;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    background: rgb(0, 73, 0);
+  }
+
+  .nav-btn2 {
+    background: red;
+    color: white;
+  }
+
+  .nav-btn2:hover {
+    background: rgb(68, 0, 0);
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .form-group {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    color: #222;
+    text-align: center;
+  }
+
+  .tableWrapperClass {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: 12px;
+  }
+
+  .tableClass {
+    min-width: 600px;
+  }
+
+  .success-message,
+  .error-message,
+  .info-card {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .buttonSaveClass,
+  .buttonCancelClass,
+  .editButtonClass,
+  .deleteButtonClass {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+}
+
   
 .btn-primary {
   padding: 10px 20px;
@@ -583,8 +596,9 @@ body {
 
 .card {
   width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
+  height: auto;
+  /* border: 1px solid #ccc; */
+  border-radius: 2px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   background-color: white;
   overflow: hidden;
@@ -633,126 +647,4 @@ body {
   white-space: pre-wrap;
   color: #444;
   font-size: 14px;
-}
-
-/* app/globals.css */
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f6fa;
-}
-
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f5f6fa;
-}
-
-.login-box {
-  background-color: #ffffff;
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 400px;
-}
-
-.login-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: #1e293b;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.login-label {
-  font-size: 0.95rem;
-  color: #334155;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-.login-input {
-  width: 100%; /* ✅ กว้างเต็มพื้นที่ */
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #f9fafb;
-}
-
-.login-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-  background-color: #ffffff;
-  outline: none;
-}
-
-.login-button {
-  width: 100%; /* ✅ เพิ่มความกว้างให้เต็มเหมือน input */
-  padding: 0.75rem 1rem;
-  background-color: #3b82f6;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-
-.login-button:hover {
-  background-color: #2563eb;
-}
-
-.login-error {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: -0.5rem;
-}
-
-.login-success {
-  color: #10b981;
-  font-size: 0.875rem;
-  margin-top: -0.5rem;
-}
-.input-with-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.login-input {
-  width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem; /* เพิ่ม padding ด้านขวาให้มีที่ว่างสำหรับปุ่มลูกตา */
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #f9fafb;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #6b7280;
-}
-
-.toggle-password:hover {
-  color: #374151;
 }

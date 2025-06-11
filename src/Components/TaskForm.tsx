@@ -151,8 +151,8 @@ export default function TaskForm() {
       value={wtf}
       onChange={(e) => setWtf(e.target.value)}
       placeholder="What to finish"
-      className="form-textarea"
-      style={{width: '100%', minWidth: '300px'}}
+      className="form-textarea" 
+      rows={9}
     />
   </div>
 

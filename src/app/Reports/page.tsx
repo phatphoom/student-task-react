@@ -72,10 +72,10 @@ export default function TaskInformation() {
   });
   return (
     <div className="p-4">
-      <h1 className="title"> Task Information</h1>
+      <h1 className="title"> TASK INFOMATION</h1>
 
       <div className="home-btn mb-4">
-        <Link href="/Logins" className="nav-btn">
+        <Link href="/" className="nav-btn">
           หน้าหลัก (Manage)
         </Link>
 
@@ -88,25 +88,23 @@ export default function TaskInformation() {
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Date From</label>
+              <label className="form-label">Date From : </label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
                 className="form-input"
               />
-              <span className="form-label">(Default Current Date)</span>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Date To</label>
+              <label className="form-label">Date To : </label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
                 className="form-input"
               />
-              <span className="form-label">(Default Current Date +7)</span>
             </div>
           </div>
 
