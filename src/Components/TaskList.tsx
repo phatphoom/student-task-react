@@ -36,16 +36,10 @@ export default function TaskList() {
 
   const handleSave = async (id: number) => {
     try {
-      console.log("Saving task with ID:", id);
-      console.log("Data being sent:", editData);
-
-      // แปลง date format ให้เป็น datetime
       const dataToSend = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
       };
-
-      console.log("Formatted data:", dataToSend);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`,
@@ -58,11 +52,8 @@ export default function TaskList() {
         }
       );
 
-      console.log("Response status:", response.status);
-
       if (response.ok) {
         const result = await response.json();
-        console.log("Success:", result);
         setEditingId(null);
         setEditData({
           due_date: "",
@@ -71,14 +62,12 @@ export default function TaskList() {
           wtf: "",
           work_type: "",
         });
-        fetchTasks(); // รีเฟรชข้อมูล
+        fetchTasks();
       } else {
         const errorData = await response.json();
-        console.error("Server error:", errorData);
         alert(`Failed to update task: ${errorData.error || "Unknown error"}`);
       }
     } catch (error) {
-      console.error("Network error:", error);
       alert(`Network error: ${(error as Error).message}`);
     }
   };
@@ -100,7 +89,7 @@ export default function TaskList() {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
           method: "DELETE",
         });
-        fetchTasks(); // รีเฟรชข้อมูลแทน reload
+        fetchTasks();
       } catch (error) {
         console.error("Error deleting task:", error);
         alert("Error deleting task");
@@ -128,10 +117,10 @@ export default function TaskList() {
           <div className="dateHeader">{date}</div>
           {tasks.map((t, index) => (
             <div key={t.sid} className="taskCard">
-              <div className="taskHeader">
-                <span>{index + 1}. </span>
-                {editingId === t.sid ? (
-                  <>
+              {editingId === t.sid ? (
+                <div className="editForm">
+                  <div className="editFormField">
+                    <label>Teacher:</label>
                     <input
                       value={editData.teacher}
                       onChange={(e) =>
@@ -140,7 +129,9 @@ export default function TaskList() {
                       placeholder="Teacher"
                       className="inputEdit"
                     />
-                    :
+                  </div>
+                  <div className="editFormField">
+                    <label>Subject:</label>
                     <input
                       value={editData.subject}
                       onChange={(e) =>
@@ -149,6 +140,9 @@ export default function TaskList() {
                       placeholder="Subject"
                       className="inputEdit"
                     />
+                  </div>
+                  <div className="editFormField">
+                    <label>Type:</label>
                     <select
                       value={editData.work_type}
                       onChange={(e) =>
@@ -161,47 +155,39 @@ export default function TaskList() {
                       <option value="Personal">Personal</option>
                       <option value="School Event">School Event</option>
                     </select>
-                  </>
-                ) : (
-                  <>
-                    <strong>
-                      T. {t.teacher} : {t.subject}
-                    </strong>
-                    <span className="typeTag">{t.work_type}</span>
-                  </>
-                )}
-              </div>
-
-              <div className="taskBody">
-                {editingId === t.sid ? (
-                  <textarea
-                    value={editData.wtf}
-                    onChange={(e) =>
-                      setEditData({ ...editData, wtf: e.target.value })
-                    }
-                    rows={2}
-                    className="inputEdit"
-                  />
-                ) : (
-                  t.wtf
-                )}
-              </div>
-
-              <div className="taskActions">
-                {editingId === t.sid ? (
-                  <>
-                    <button
-                      onClick={() => handleSave(t.sid)}
-                      className="editBtn"
-                    >
+                  </div>
+                  <div className="editFormField">
+                    <label>Description:</label>
+                    <textarea
+                      value={editData.wtf}
+                      onChange={(e) =>
+                        setEditData({ ...editData, wtf: e.target.value })
+                      }
+                      rows={3}
+                      className="inputEdit"
+                      placeholder="Description"
+                    />
+                  </div>
+                  <div className="taskActions">
+                    <button onClick={() => handleSave(t.sid)} className="editBtn">
                       Save
                     </button>
                     <button onClick={handleCancel} className="deleteBtn">
                       Cancel
                     </button>
-                  </>
-                ) : (
-                  <>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="taskHeader">
+                    <span>{index + 1}. </span>
+                    <strong>
+                      T. {t.teacher} : {t.subject}
+                    </strong>
+                    <span className="typeTag">{t.work_type}</span>
+                  </div>
+                  <div className="taskBody">{t.wtf}</div>
+                  <div className="taskActions">
                     <button onClick={() => handleEdit(t)} className="editBtn">
                       Edit
                     </button>
@@ -211,9 +197,9 @@ export default function TaskList() {
                     >
                       Delete
                     </button>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
