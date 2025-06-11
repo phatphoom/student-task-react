@@ -1,12 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-// เพิ่ม interface เพื่อกำหนด type
-interface Subject {
-  teacher: string;
-  subject: string;
-}
+import { Subject } from "@/types";
 
 export default function TaskForm() {
   const [dueDate, setDueDate] = useState("");

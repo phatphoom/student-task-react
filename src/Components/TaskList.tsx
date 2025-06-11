@@ -1,23 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
-// เพิ่ม interfaces เพื่อกำหนด types
-interface Task {
-  sid: number;
-  due_date: string;
-  subject: string;
-  teacher: string;
-  wtf: string;
-  work_type: string;
-}
-
-interface EditData {
-  due_date: string;
-  subject: string;
-  teacher: string;
-  wtf: string;
-  work_type: string;
-}
+import { Task, EditData } from "@/types";
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -125,6 +108,19 @@ export default function TaskList() {
     }
   };
 
+  const groupedTasks = tasks.reduce<Record<string, Task[]>>((acc, task) => {
+    const dateStr = new Date(task.due_date).toLocaleDateString("en-GB");
+    if (!acc[dateStr]) acc[dateStr] = [];
+    acc[dateStr].push(task);
+    return acc;
+  }, {});
+
+  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
+    const dateA = new Date(a.split("/").reverse().join("-"));
+    const dateB = new Date(b.split("/").reverse().join("-"));
+    return dateA.getTime() - dateB.getTime();
+  });
+
   return (
     <div className="p-4">
       <div className={"tableWrapperClass"}>
@@ -140,120 +136,112 @@ export default function TaskList() {
             </tr>
           </thead>
           <tbody className={"tbodyClass"}>
-            {tasks.map((t) => (
-              <tr key={t.sid} className={"rowHoverClass"}>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <input
-                      type="date"
-                      value={editData.due_date}
-                      onChange={(e) =>
-                        setEditData({ ...editData, due_date: e.target.value })
-                      }
-                      className={"inputClass"}
-                    />
-                  ) : (
-                    new Date(t.due_date).toLocaleDateString()
-                  )}
-                </td>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <input
-                      type="text"
-                      value={editData.subject}
-                      onChange={(e) =>
-                        setEditData({ ...editData, subject: e.target.value })
-                      }
-                      className={"inputClass"}
-                      placeholder="Subject"
-                    />
-                  ) : (
-                    t.subject
-                  )}
-                </td>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <input
-                      type="text"
-                      value={editData.teacher}
-                      onChange={(e) =>
-                        setEditData({ ...editData, teacher: e.target.value })
-                      }
-                      className={"inputClass"}
-                      placeholder="Teacher"
-                    />
-                  ) : (
-                    t.teacher
-                  )}
-                </td>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <textarea
-                      value={editData.wtf}
-                      onChange={(e) =>
-                        setEditData({ ...editData, wtf: e.target.value })
-                      }
-                      className={`${"inputClass"} resize-none`}
-                      rows={2}
-                      placeholder="What to Finish"
-                    />
-                  ) : (
-                    t.wtf
-                  )}
-                </td>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <select
-                      value={editData.work_type}
-                      onChange={(e) =>
-                        setEditData({ ...editData, work_type: e.target.value })
-                      }
-                      className={"inputClass"}
-                    >
-                      <option value="">Select Type</option>
-                      <option value="Group">Group</option>
-                      <option value="Personal">Personal</option>
-                      <option value="School Event">School Event</option>
-                    </select>
-                  ) : (
-                    t.work_type
-                  )}
-                </td>
-                <td className={"tdClass"}>
-                  {editingId === t.sid ? (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleSave(t.sid)}
-                        className={"buttonSaveClass"}
+            {sortedEntries.map(([date, dateTasks]) =>
+              dateTasks.map((t, index) => (
+                <tr key={t.sid} className={"rowHoverClass"}>
+                  <td className={"tdClass"}>{index === 0 ? date : ""}</td>
+                  <td className={"tdClass"}>
+                    {editingId === t.sid ? (
+                      <input
+                        type="text"
+                        value={editData.subject}
+                        onChange={(e) =>
+                          setEditData({ ...editData, subject: e.target.value })
+                        }
+                        className={"inputClass"}
+                        placeholder="Subject"
+                      />
+                    ) : (
+                      t.subject
+                    )}
+                  </td>
+                  <td className={"tdClass"}>
+                    {editingId === t.sid ? (
+                      <input
+                        type="text"
+                        value={editData.teacher}
+                        onChange={(e) =>
+                          setEditData({ ...editData, teacher: e.target.value })
+                        }
+                        className={"inputClass"}
+                        placeholder="Teacher"
+                      />
+                    ) : (
+                      t.teacher
+                    )}
+                  </td>
+                  <td className={"tdClass"}>
+                    {editingId === t.sid ? (
+                      <textarea
+                        value={editData.wtf}
+                        onChange={(e) =>
+                          setEditData({ ...editData, wtf: e.target.value })
+                        }
+                        className={`${"inputClass"} resize-none`}
+                        rows={2}
+                        placeholder="What to Finish"
+                      />
+                    ) : (
+                      t.wtf
+                    )}
+                  </td>
+                  <td className={"tdClass"}>
+                    {editingId === t.sid ? (
+                      <select
+                        value={editData.work_type}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            work_type: e.target.value,
+                          })
+                        }
+                        className={"inputClass"}
                       >
-                        Save
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className={"buttonCancelClass"}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(t)}
-                        className={`${"editButtonClass"} ${"actionButtonClass"}`}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(t.sid)}
-                        className={`${"deleteButtonClass"} ${"actionButtonClass"}`}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+                        <option value="">Select Type</option>
+                        <option value="Group">Group</option>
+                        <option value="Personal">Personal</option>
+                        <option value="School Event">School Event</option>
+                      </select>
+                    ) : (
+                      t.work_type
+                    )}
+                  </td>
+                  <td className={"tdClass"}>
+                    {editingId === t.sid ? (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSave(t.sid)}
+                          className={"buttonSaveClass"}
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className={"buttonCancelClass"}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(t)}
+                          className={`${"editButtonClass"} ${"actionButtonClass"}`}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t.sid)}
+                          className={`${"deleteButtonClass"} ${"actionButtonClass"}`}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

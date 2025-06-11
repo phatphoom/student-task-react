@@ -1,20 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-// เพิ่ม interface เพื่อกำหนด types
-interface Task {
-  sid: number;
-  due_date: string;
-  subject: string;
-  teacher: string;
-  wtf: string;
-  work_type: string;
-}
-
-interface GroupedTasks {
-  [key: string]: Task[];
-}
+import { Task, GroupedTasks } from "@/types";
 
 export default function TaskInformation() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -81,7 +68,7 @@ export default function TaskInformation() {
   const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
-    return dateA - dateB;
+    return dateA.getTime() - dateB.getTime(); // Use getTime() for accurate comparison
   });
   return (
     <div className="p-4">
