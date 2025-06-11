@@ -44,7 +44,6 @@ body {
   font-size: 2.5rem;
   font-weight: 800;
   color: black;
-
 }
 
 .title h5 {
@@ -56,13 +55,13 @@ body {
 }
 
 .top-right-button {
-  top: 10px;            /* เลื่อนลงจากบนหน้า 10px (แก้เป็นเลขที่ต้องการ) */
-  right: 20px;          /* ชิดขวา 20px */
+  top: 10px; /* เลื่อนลงจากบนหน้า 10px (แก้เป็นเลขที่ต้องการ) */
+  right: 20px; /* ชิดขวา 20px */
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  gap: 10px;            /* ช่องว่างระหว่างปุ่ม */
-  z-index: 4000;        /* ให้ลอยบน */
+  gap: 10px; /* ช่องว่างระหว่างปุ่ม */
+  z-index: 4000; /* ให้ลอยบน */
 }
 
 .nav-btn,
@@ -116,7 +115,7 @@ body {
 
 /* สำหรับ form row ที่ต้องการให้อยู่ในบรรทัดเดียวกัน */
 .form-row {
-  background: #FFCCEA;
+  background: #ffccea;
   padding: 20px;
   border-radius: 14px;
   display: flex;
@@ -128,7 +127,7 @@ body {
 
 /* ปรับ form-group ให้เป็น inline */
 .form-group {
-  background: #FFCCEA;
+  background: #ffccea;
   padding: 10px;
   border-radius: 14px;
   display: flex;
@@ -359,7 +358,6 @@ body {
   }
 }
 
-  
 .btn-primary {
   padding: 10px 20px;
   background: var(--primary-color);
@@ -508,7 +506,6 @@ body {
   background: #e53e3e;
 }
 
-
 .info-card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -618,7 +615,7 @@ body {
 
 .card {
   width: 300px;
-  height: auto;
+  height: fit-content;
   /* border: 1px solid #ccc; */
   border-radius: 2px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -675,7 +672,7 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f6fa;
 }
 
@@ -746,7 +743,6 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 
 .login-button:hover {
   background-color: #2563eb;

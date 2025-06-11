@@ -6,7 +6,7 @@ const kanit = Kanit({
   weight: ["400"],
   variable: "--font-kanit",
   subsets: ["latin"],
-})
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${kanit.variable} ${kanit.variable} antialiased`}
-      >
+      <body className={`${kanit.variable} ${kanit.variable} antialiased`}>
         {children}
       </body>
     </html>

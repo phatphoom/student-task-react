@@ -8,6 +8,7 @@ export default function TaskInformation() {
   const [dateFrom, setDateFrom] = useState<string>("");
   const [dateTo, setDateTo] = useState<string>("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [isFiltered, setIsFiltered] = useState(false);
 
   // Set default dates on component mount
   useEffect(() => {
@@ -29,22 +30,30 @@ export default function TaskInformation() {
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
-
   // Handle search/filter
   const handleSearch = () => {
-    if (!dateFrom || !dateTo) {
+    if (isFiltered) {
+      // ถ้าตอนนี้ filter อยู่ → กดอีกที กลับไปแสดงทั้งหมด
       setFilteredTasks(tasks);
-      return;
+      setIsFiltered(false);
+    } else {
+      // ถ้ายังไม่ได้ filter → ทำการ filter
+      if (!dateFrom || !dateTo) {
+        setFilteredTasks(tasks);
+        setIsFiltered(false);
+        return;
+      }
+
+      const filtered = tasks.filter((task) => {
+        const taskDate = new Date(task.due_date);
+        const fromDate = new Date(dateFrom);
+        const toDate = new Date(dateTo);
+        return taskDate >= fromDate && taskDate <= toDate;
+      });
+
+      setFilteredTasks(filtered);
+      setIsFiltered(true);
     }
-
-    const filtered = tasks.filter((task) => {
-      const taskDate = new Date(task.due_date);
-      const fromDate = new Date(dateFrom);
-      const toDate = new Date(dateTo);
-      return taskDate >= fromDate && taskDate <= toDate;
-    });
-
-    setFilteredTasks(filtered);
   };
 
   // Format date to DD.MM.YYYY
