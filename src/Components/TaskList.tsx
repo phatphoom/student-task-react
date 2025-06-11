@@ -177,7 +177,7 @@ export default function TaskList() {
                         onChange={(e) =>
                           setEditData({ ...editData, wtf: e.target.value })
                         }
-                        className={`${"inputClass"} resize-none`}
+                        className={`${"inputClass"}`}
                         rows={2}
                         placeholder="What to Finish"
                       />

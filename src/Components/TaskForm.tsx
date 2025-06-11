@@ -65,25 +65,42 @@ export default function TaskForm() {
 
   return (
     <div className="p-4">
-      <div className="home-btn">
-        <Link href="/Reports" className="nav-btn">
-          ไปหน้ารายการงาน (Task List)
-        </Link>
-      </div>
+    <div className="home-btn mb-4">
+        
+    <Link
+        href="/"
+        className="nav-btn"
+      >
+        หน้าหลัก (Manage)
+      </Link>
 
+      <Link
+        href="/Reports"
+        className="nav-btn2"
+      >
+        ไปหน้ารายการงาน (Task List)
+      </Link>
+
+    </div>
+
+  {/* ทุกอย่างในบรรทัดเดียว */}
+  <div className="form-row">
+    <div className="form-group">
       <label className="form-label">Due Date *</label>
-
       <input
         type="date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
-        className="form-input"
+        className="form-input date-input"
       />
+    </div>
+
+    <div className="form-group">
       <label className="form-label">Teacher *</label>
       <select
         value={teacher}
         onChange={(e) => setTeacher(e.target.value)}
-        className="form-select mb-2"
+        className="form-select items-select"
       >
         <option value="">Select Teacher</option>
         {[...new Set(subjects.map((s) => s.teacher))].map((t) => (
@@ -92,41 +109,56 @@ export default function TaskForm() {
           </option>
         ))}
       </select>
+    </div>
+
+    <div className="form-group">
       <label className="form-label">Subject *</label>
       <select
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
-        className="form-select mb-2"
+        className="form-select items-select"
       >
         <option value="">Select Subject</option>
         {subjects
-          .filter((s) => s.teacher === teacher)
-          .map((s, i) => (
+          .filter((s: any) => s.teacher === teacher)
+          .map((s: any, i: number) => (
             <option key={i} value={s.subject}>
               {s.subject}
             </option>
           ))}
       </select>
+    </div>
+
+    <div className="form-group">
       <label className="form-label">Work Type *</label>
       <select
         value={workType}
         onChange={(e) => setWorkType(e.target.value)}
-        className="form-select mb-2"
+        className="form-select status-select"
       >
+        <option value="">เลือกประเภทงาน</option>
         <option>Group</option>
         <option>Personal</option>
         <option>School Event</option>
       </select>
-      <label className="form-label">What to finish *</label>
-      <textarea
-        value={wtf}
-        onChange={(e) => setWtf(e.target.value)}
-        placeholder="What to finish"
-        className="form-textarea mb-2"
-      />
-      <button onClick={handleSubmit} className="btn-primary">
-        Add Task
-      </button>
     </div>
+  </div>
+
+  {/* What to finish แยกบรรทัด */}
+  <div className="form-group" style={{marginTop: '20px', marginBottom: '20px'}}>
+    <label className="form-label">What to finish *</label>
+    <textarea
+      value={wtf}
+      onChange={(e) => setWtf(e.target.value)}
+      placeholder="What to finish"
+      className="form-textarea"
+      style={{width: '100%', minWidth: '300px'}}
+    />
+  </div>
+
+  <button onClick={handleSubmit} className="btn-primary mt-4">
+    Add Task
+  </button>
+</div>
   );
-}
+};

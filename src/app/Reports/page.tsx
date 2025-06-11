@@ -75,15 +75,25 @@ export default function TaskInformation() {
       <h1 className="title"> Task Information</h1>
 
       <div className="tableClass">
-        <Link href="/" className="nav-btn">
-          หน้าหลัก (Manage)
-        </Link>
+      <Link
+        href="/"
+        className="nav-btn"
+      >
+        หน้าหลัก (Manage)
+      </Link>
+
+      <Link
+        href="/Reports"
+        className="nav-btn2"
+      >
+        ไปหน้ารายการงาน (Task List)
+      </Link>
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
+          <div className="form-row">
+            <div className="form-group">
               <label className="form-label">Date From</label>
               <input
                 type="date"
@@ -94,9 +104,7 @@ export default function TaskInformation() {
               <span className="form-label">(Default Current Date)</span>
             </div>
 
-            <hr />
-
-            <div className="flex items-center gap-2">
+            <div className="form-group">
               <label className="form-label">Date To</label>
               <input
                 type="date"
@@ -114,15 +122,15 @@ export default function TaskInformation() {
         </div>
 
         {/* Tasks Table */}
-        <div className="tableClass">
-          <table className="tableWrapperClass">
+        <div className="tableWrapperClass">
+          <table className="tableClass">
             <thead>
               <tr className="theadClass">
-                <th className="theadClass">Due Date</th>
-                <th className="theadClass">Subject</th>
-                <th className="theadClass">Teacher</th>
-                <th className="theadClass">What to Finish</th>
-                <th className="theadClass">Type</th>
+                <th className="tdClass">Due Date</th>
+                <th className="tdClass">Subject</th>
+                <th className="tdClass">Teacher</th>
+                <th className="tdClass">What to Finish</th>
+                <th className="tdClass">Type</th>
               </tr>
             </thead>
             <tbody>
@@ -165,18 +173,7 @@ export default function TaskInformation() {
                 </tr>
               )}
 
-              {/* Add some empty rows to match the original design */}
-              {Array.from({
-                length: Math.max(0, 8 - filteredTasks.length),
-              }).map((_, i) => (
-                <tr key={`empty-${i}`}>
-                  <td className="tbodyClass">&nbsp;</td>
-                  <td className="tbodyClass">&nbsp;</td>
-                  <td className="tbodyClass">&nbsp;</td>
-                  <td className="tbodyClass">&nbsp;</td>
-                  <td className="tbodyClass">&nbsp;</td>
-                </tr>
-              ))}
+
             </tbody>
           </table>
         </div>
