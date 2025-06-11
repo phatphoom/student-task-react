@@ -59,7 +59,7 @@ body {
   right: 20px; /* ชิดขวา 20px */
   display: flex;
   justify-content: flex-end;
-  position: absolute;
+  /* position: absolute; */
   gap: 10px; /* ช่องว่างระหว่างปุ่ม */
   z-index: 4000; /* ให้ลอยบน */
 }
