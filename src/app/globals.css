@@ -55,7 +55,7 @@ body {
 }
 
 .top-right-button {
-  top: 10px; /* เลื่อนลงจากบนหน้า 10px (แก้เป็นเลขที่ต้องการ) */
+  top: 80px; /* เลื่อนลงจากบนหน้า 10px (แก้เป็นเลขที่ต้องการ) */
   right: 20px; /* ชิดขวา 20px */
   display: flex;
   justify-content: flex-end;
@@ -291,21 +291,21 @@ body {
   }
 
   .nav-btn {
-    background: green;
+    background: rgb(255 205 235);
     color: white;
   }
 
   .nav-btn:hover {
-    background: rgb(0, 73, 0);
+    background: rgb(181, 86, 143);
   }
 
   .nav-btn2 {
-    background: red;
+    background: #b3d4fd;
     color: white;
   }
 
   .nav-btn2:hover {
-    background: rgb(68, 0, 0);
+    background: #5482bc;
   }
 
   .form-row {
