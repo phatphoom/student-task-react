@@ -248,7 +248,6 @@ body {
   .card {
     width: 100%;
     max-width: 350px;
-    border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     overflow: hidden;
@@ -262,7 +261,6 @@ body {
     padding: 16px;
     font-weight: bold;
     font-size: 18px;
-    color: #fff;
     text-align: center;
   }
 
@@ -628,22 +626,21 @@ body {
 }
 
 .card-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
-  justify-content: flex-start;
+  width: 100%;
 }
 
 .card {
-  width: 300px;
+  width: 100%;
   height: fit-content;
-  /* border: 1px solid #ccc; */
-  border-radius: 2px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   background-color: white;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform 0.2 ease, box-shadow 0.2s ease;
 }
 
 .card-header {
@@ -652,18 +649,24 @@ body {
   font-weight: bold;
   text-align: center;
   font-size: 16px;
-  color: #000;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-empty {
   padding: 20px;
   text-align: center;
-  font-weight: bold;
-  color: #000000;
+  font-weight: 500;
+  color: var(--text-light);
+  font-style: italic;
 }
 
 .task-item {
   border-top: 1px solid #ddd;
+  padding: 12px;
+
 }
 
 .task-header {
@@ -687,6 +690,7 @@ body {
   white-space: pre-wrap;
   color: #444;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 /* app/globals.css */
