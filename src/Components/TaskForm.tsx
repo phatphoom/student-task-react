@@ -140,7 +140,17 @@ export default function TaskForm() {
               <label className="form-label">Teacher *</label>
               <select
                 value={teacher}
-                onChange={(e) => setTeacher(e.target.value)}
+                onChange={(e) => {
+                  setTeacher(e.target.value);
+                  const teacherSubjects = subjects.filter(
+                    (s) => s.teacher === e.target.value
+                  );
+                  if (teacherSubjects.length === 1) {
+                    setSubject(teacherSubjects[0].subject);
+                  } else if (teacherSubjects.length === 0) {
+                    setSubject("");
+                  }
+                }}
                 className="form-select items-select"
               >
                 <option value="">Select Teacher</option>
@@ -151,22 +161,29 @@ export default function TaskForm() {
                 ))}
               </select>
             </div>
-
             <div className="form-group">
               <label className="form-label">Subject *</label>
               <select
                 value={subject}
-                onChange={(e) => setSubject(e.target.value)}
+                onChange={(e) => {
+                  setSubject(e.target.value);
+                  const selectedSubject = subjects.find(
+                    (s) => s.subject === e.target.value
+                  );
+                  if (selectedSubject) {
+                    setTeacher(selectedSubject.teacher);
+                  } else {
+                    setTeacher("");
+                  }
+                }}
                 className="form-select items-select"
               >
                 <option value="">Select Subject</option>
-                {subjects
-                  .filter((s) => s.teacher === teacher)
-                  .map((s, i) => (
-                    <option key={i} value={s.subject}>
-                      {s.subject}
-                    </option>
-                  ))}
+                {[...new Set(subjects.map((s) => s.subject))].map((subj) => (
+                  <option key={subj} value={subj}>
+                    {subj}
+                  </option>
+                ))}
               </select>
             </div>
           </>

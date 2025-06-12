@@ -134,9 +134,11 @@ export default function TaskList() {
             </div>
 
             {tasks.map((t, index) => (
-              <div 
-                key={t.sid} 
-                className={`taskCard ${t.work_type === 'School Event' ? 'school-event-task' : ''}`}
+              <div
+                key={t.sid}
+                className={`taskCard ${
+                  t.work_type === "School Event" ? "school-event-task" : ""
+                }`}
                 data-work-type={t.work_type}
               >
                 {editingId === t.sid ? (
@@ -152,9 +154,13 @@ export default function TaskList() {
                   <>
                     <div className="taskHeader">
                       <span>{index + 1}. </span>
-                      <strong>
-                        T. {t.teacher} : {t.subject}
-                      </strong>
+                      {t.work_type !== "school event" &&
+                        t.teacher &&
+                        t.subject && (
+                          <strong>
+                            T. {t.teacher} : {t.subject}
+                          </strong>
+                        )}
                       <span className="typeTag">{t.work_type}</span>
                     </div>
                     <div className="taskBody">{t.wtf}</div>

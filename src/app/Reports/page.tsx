@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Task, GroupedTasks } from "@/types";
+import "./reports.css";
 
 export default function TaskInformation() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -96,8 +97,34 @@ export default function TaskInformation() {
     },
     {}
   );
+  const generateDateRange = (start: Date, days: number): string[] => {
+    const dates: string[] = [];
+    const current = new Date(start);
+    current.setHours(0, 0, 0, 0);
 
-  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
+    for (let i = 0; i <= days; i++) {
+      const dateStr = current.toLocaleDateString("en-GB").replace(/\//g, ".");
+      dates.push(dateStr);
+      current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const sevenDaysLater = new Date(today);
+  sevenDaysLater.setDate(today.getDate() + 7);
+
+  const fullDates = generateDateRange(today, 7);
+
+  const filledGroupedTasks: GroupedTasks = {};
+  fullDates.forEach((dateKey) => {
+    filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
+  });
+
+  // เรียงวันให้ถูก
+  const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
     return dateA.getTime() - dateB.getTime();
@@ -153,32 +180,41 @@ export default function TaskInformation() {
         </div>
 
         <div className="card-container">
-          {sortedEntries.map(([date, dateTasks]) => (
-            <div key={date} className="card">
-              <div className="card-header">{date}</div>
-              {dateTasks.length === 0 ? (
-                <div className="card-empty">
-                  No Task Dued : Yeah!!! Very Happy.
+          {sortedEntries.map(([date, dateTasks]) => {
+            const [day, month, year] = date.split(".").map(Number);
+            const dateObj = new Date(year, month - 1, day);
+            const weekday = new Intl.DateTimeFormat("en-US", {
+              weekday: "short",
+            }).format(dateObj);
+
+            return (
+              <div key={date} className="card">
+                <div className="card-header">
+                  {date} <span className="weekday">{weekday}</span>
                 </div>
-              ) : (
-                dateTasks.map((task, index) => (
-                  <div
-                  key={task.sid || `${date}-${index}`}
-                  className={`task-item ${task.work_type === "School Event" ? "school-event-task" : ""}`}
-                  >
-                  <div className="task-header">
-                      <strong>{index + 1}. </strong>
-                      <span className="teacher-subject">
-                        T. {task.teacher} : {task.subject}
-                      </span>
-                      <span className="task-type">{task.work_type}</span>
+
+                {dateTasks.length === 0 ? (
+                  <div className="card-empty">No Task Yet</div>
+                ) : (
+                  dateTasks.map((task, index) => (
+                    <div
+                      key={task.sid || `${date}-${index}`}
+                      className="task-item"
+                    >
+                      <div className="task-header">
+                        <strong>{index + 1}. </strong>
+                        <span className="teacher-subject">
+                          T. {task.teacher} : {task.subject}
+                        </span>
+                        <span className="task-type">{task.work_type}</span>
+                      </div>
+                      <div className="task-body">{task.wtf}</div>
                     </div>
-                    <div className="task-body">{task.wtf}</div>
-                  </div>
-                ))
-              )}
-            </div>
-          ))}
+                  ))
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

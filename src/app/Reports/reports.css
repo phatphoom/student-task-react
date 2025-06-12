@@ -1,0 +1,15 @@
+.card-header {
+  background-color: #b3d4fc;
+  padding: 0.5rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between; /* กระจายด้านซ้าย-ขวา */
+  align-items: center;
+}
+
+.weekday {
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin-left: auto;
+}
