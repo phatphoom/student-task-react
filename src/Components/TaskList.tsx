@@ -112,98 +112,116 @@ export default function TaskList() {
 
   return (
     <div className="cardContainer">
-      {sortedEntries.map(([date, tasks]) => (
-        <div key={date} className="dateCard">
-          <div className="dateHeader">{date}</div>
-          {tasks.map((t, index) => (
-            <div key={t.sid} className="taskCard">
-              {editingId === t.sid ? (
-                <div className="editForm">
-                  <div className="editFormField">
-                    <label>Teacher:</label>
-                    <input
-                      value={editData.teacher}
-                      onChange={(e) =>
-                        setEditData({ ...editData, teacher: e.target.value })
-                      }
-                      placeholder="Teacher"
-                      className="inputEdit"
-                    />
-                  </div>
-                  <div className="editFormField">
-                    <label>Subject:</label>
-                    <input
-                      value={editData.subject}
-                      onChange={(e) =>
-                        setEditData({ ...editData, subject: e.target.value })
-                      }
-                      placeholder="Subject"
-                      className="inputEdit"
-                    />
-                  </div>
-                  <div className="editFormField">
-                    <label>Type:</label>
-                    <select
-                      value={editData.work_type}
-                      onChange={(e) =>
-                        setEditData({ ...editData, work_type: e.target.value })
-                      }
-                      className="inputEdit"
-                    >
-                      <option value="">Select Type</option>
-                      <option value="Group">Group</option>
-                      <option value="Personal">Personal</option>
-                      <option value="School Event">School Event</option>
-                    </select>
-                  </div>
-                  <div className="editFormField">
-                    <label>Description:</label>
-                    <textarea
-                      value={editData.wtf}
-                      onChange={(e) =>
-                        setEditData({ ...editData, wtf: e.target.value })
-                      }
-                      rows={3}
-                      className="inputEdit"
-                      placeholder="Description"
-                    />
-                  </div>
-                  <div className="taskActions">
-                    <button onClick={() => handleSave(t.sid)} className="editBtn">
-                      Save
-                    </button>
-                    <button onClick={handleCancel} className="deleteBtn">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="taskHeader">
-                    <span>{index + 1}. </span>
-                    <strong>
-                      T. {t.teacher} : {t.subject}
-                    </strong>
-                    <span className="typeTag">{t.work_type}</span>
-                  </div>
-                  <div className="taskBody">{t.wtf}</div>
-                  <div className="taskActions">
-                    <button onClick={() => handleEdit(t)} className="editBtn">
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(t.sid)}
-                      className="deleteBtn"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </>
-              )}
+      {sortedEntries.map(([date, tasks]) => {
+        // แปลง date string dd/mm/yyyy เป็น Date object
+        const [day, month, year] = date.split("/").map(Number);
+        const dateObj = new Date(year, month - 1, day);
+        const weekday = new Intl.DateTimeFormat("en-US", {
+          weekday: "short",
+        }).format(dateObj);
+
+        return (
+          <div key={date} className="dateCard">
+            <div className="dateHeader">
+              {date} <span>{weekday}</span>
             </div>
-          ))}
-        </div>
-      ))}
+
+            {tasks.map((t, index) => (
+              <div key={t.sid} className="taskCard">
+                {editingId === t.sid ? (
+                  <div className="editForm">
+                    <div className="editFormField">
+                      <label>Teacher:</label>
+                      <input
+                        value={editData.teacher}
+                        onChange={(e) =>
+                          setEditData({ ...editData, teacher: e.target.value })
+                        }
+                        placeholder="Teacher"
+                        className="inputEdit"
+                      />
+                    </div>
+                    <div className="editFormField">
+                      <label>Subject:</label>
+                      <input
+                        value={editData.subject}
+                        onChange={(e) =>
+                          setEditData({ ...editData, subject: e.target.value })
+                        }
+                        placeholder="Subject"
+                        className="inputEdit"
+                      />
+                    </div>
+                    <div className="editFormField">
+                      <label>Type:</label>
+                      <select
+                        value={editData.work_type}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            work_type: e.target.value,
+                          })
+                        }
+                        className="inputEdit"
+                      >
+                        <option value="">Select Type</option>
+                        <option value="Group">Group</option>
+                        <option value="Personal">Personal</option>
+                        <option value="School Event">School Event</option>
+                      </select>
+                    </div>
+                    <div className="editFormField">
+                      <label>Description:</label>
+                      <textarea
+                        value={editData.wtf}
+                        onChange={(e) =>
+                          setEditData({ ...editData, wtf: e.target.value })
+                        }
+                        rows={3}
+                        className="inputEdit"
+                        placeholder="Description"
+                      />
+                    </div>
+                    <div className="taskActions">
+                      <button
+                        onClick={() => handleSave(t.sid)}
+                        className="editBtn"
+                      >
+                        Save
+                      </button>
+                      <button onClick={handleCancel} className="deleteBtn">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="taskHeader">
+                      <span>{index + 1}. </span>
+                      <strong>
+                        T. {t.teacher} : {t.subject}
+                      </strong>
+                      <span className="typeTag">{t.work_type}</span>
+                    </div>
+                    <div className="taskBody">{t.wtf}</div>
+                    <div className="taskActions">
+                      <button onClick={() => handleEdit(t)} className="editBtn">
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(t.sid)}
+                        className="deleteBtn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
