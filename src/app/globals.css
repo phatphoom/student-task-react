@@ -26,7 +26,7 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   box-sizing: border-box;
   background-color: var(--background-color);
 }
@@ -235,42 +235,6 @@ body {
     gap: 1rem;              /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
   }
 
-  .card-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #f5f7fa; /* สีพื้นหลังให้อ่อนลง */
-  }
-
-  .card {
-    width: 100%;
-    max-width: 350px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s ease;
-  }
-
-  .card-header {
-    background: #cce6ff;
-    padding: 16px;
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .card-empty {
-    padding: 24px;
-    text-align: center;
-    font-size: 16px;
-    color: #000000;
-    font-weight: 500;
-  }
 
   .nav-btn,
   .btn-primary,
@@ -615,6 +579,7 @@ body {
   .title {
     font-size: 1.75rem;
   }
+
 }
 
 .card-container {

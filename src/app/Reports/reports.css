@@ -1,8 +1,10 @@
 .card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
   width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box; /* เพิ่มบรรทัดนี้ */
 }
 
 .card {
@@ -14,11 +16,7 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 0; /* เพิ่มบรรทัดนี้ */
 }
 
 .card-header {
@@ -31,6 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0; /* เพิ่มบรรทัดนี้ */
 }
 
 .card-empty {
@@ -44,62 +43,68 @@
 .task-item {
   border-top: 1px solid #ddd;
   padding: 12px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .task-header {
-  background-color: #fafafa;
-  padding: 8px 12px;
   display: flex;
-  justify-content: space-between;
-  font-weight: bold;
+  align-items: center;
+  gap: 8px;
+  /* ลบ flex-wrap: nowrap; */
+  /* ลบ white-space: nowrap; */
+  /* ลบ overflow: hidden; */
+  /* ลบ text-overflow: ellipsis; */
+  justify-content: space-between; /* เพิ่มบรรทัดนี้ */
+  width: 100%; /* เพิ่มบรรทัดนี้ */
 }
 
 .teacher-subject {
-  color: #333;
-  flex-grow: 1;
-  margin: 0 8px;
-  text-align: left;
+  flex: 1; /* ยังคงไว้ */
+  min-width: 0; /* ยังคงไว้ */
+  /* ลบ white-space: nowrap; */
+  /* ลบ overflow: hidden; */
+  /* ลบ text-overflow: ellipsis; */
 }
 
 .task-type {
   color: #333;
-  white-space: nowrap;
+  /* ลบ white-space: nowrap; */
+  margin-left: auto; /* เพิ่มบรรทัดนี้ */
 }
 
 .task-body {
-  padding: 8px 12px;
+  padding: 8px 0;
   white-space: pre-wrap;
-  color: #444;
-  font-size: 16px;
-  line-height: 1.5;
+  word-break: break-word; /* ตัดคำเมื่อจำเป็น */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .card-container {
     grid-template-columns: 1fr;
+    padding: 0;
+    margin: 0px; 
+    gap: 0;
+  }
+
+  .card {
     width: 100%;
-    padding: 1; /* เพิ่ม padding ด้านข้างเล็กน้อยเพื่อความสวยงาม */
-    box-sizing: border-box;
+    border-radius: 0;
+    margin: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #ddd;
   }
 
   .card-header {
+    padding: 12px;
     font-size: 14px;
-    padding: 10px;
   }
 
-  .task-header {
-    flex-direction: column;
-    gap: px;
-  }
-
-  .teacher-subject {
-    margin: 0;
-    text-align: center;
-  }
 }
 
-/* School Event styles */
+
 .task-item.school-event {
   background-color: #f4dbf2 !important;
   border-left: 4px solid #d68fcf;
@@ -108,4 +113,4 @@
 
 .task-item.school-event .task-header {
   background-color: #f0c5ed !important;
-}
+} 
