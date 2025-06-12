@@ -611,17 +611,9 @@ body {
 }
 
 @media (max-width: 480px) {
-  .student-task-container {
-    padding: 20px 16px;
-    margin: 10px auto;
-  }
 
   .title {
     font-size: 1.75rem;
-  }
-
-  .tableClass {
-    font-size: 0.9rem;
   }
 }
 
