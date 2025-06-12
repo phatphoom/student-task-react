@@ -120,12 +120,18 @@ export default function TaskList() {
 
   return (
     <div className="cardContainer">
-      {groupAndSortTasks().map(([date, tasks]) => {
-        const [day, month, year] = date.split("/").map(Number);
-        const dateObj = new Date(year, month - 1, day);
-        const weekday = new Intl.DateTimeFormat("en-US", {
-          weekday: "short",
-        }).format(dateObj);
+        {groupAndSortTasks().map(([date, tasks]) => {
+          let [day, month, year] = date.split("/").map(Number);
+
+          // ถ้าเจอปีเกิน 2500 (น่าจะเป็น พ.ศ.) ให้แปลงเป็น ค.ศ.
+          if (year > 2500) {
+            year -= 543;
+          }
+
+          const dateObj = new Date(year, month - 1, day);
+          const weekday = new Intl.DateTimeFormat("en-US", {
+            weekday: "short",
+          }).format(dateObj);
 
         return (
           <div key={date} className="dateCard">
