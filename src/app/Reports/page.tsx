@@ -46,12 +46,20 @@ export default function TaskInformation() {
 
   const handleSearch = () => {
     if (isFiltered) {
-      setFilteredTasks(tasks);
+      // กลับไปแสดงแค่ task ตั้งแต่วันนี้เป็นต้นไป (default behavior)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const futureTasks = tasks.filter((task) => {
+        const taskDate = new Date(task.due_date);
+        taskDate.setHours(0, 0, 0, 0);
+        return taskDate >= today;
+      });
+      setFilteredTasks(futureTasks);
       setIsFiltered(false);
     } else {
+      // ทำการ filter ตาม date range ที่เลือก
       if (!dateFrom || !dateTo) {
-        setFilteredTasks(tasks);
-        setIsFiltered(false);
+        alert("Please select both From and To dates");
         return;
       }
 
@@ -62,7 +70,6 @@ export default function TaskInformation() {
 
       const filtered = tasks.filter((task) => {
         const taskDate = new Date(task.due_date);
-        taskDate.setHours(0, 0, 0, 0);
         return taskDate >= fromDate && taskDate <= toDate;
       });
 
@@ -97,6 +104,7 @@ export default function TaskInformation() {
     },
     {}
   );
+
   const generateDateRange = (start: Date, days: number): string[] => {
     const dates: string[] = [];
     const current = new Date(start);
@@ -111,17 +119,31 @@ export default function TaskInformation() {
     return dates;
   };
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const sevenDaysLater = new Date(today);
-  sevenDaysLater.setDate(today.getDate() + 7);
+  // สร้าง date range ตามสถานะ
+  let filledGroupedTasks: GroupedTasks = {};
 
-  const fullDates = generateDateRange(today, 7);
+  if (isFiltered && dateFrom && dateTo) {
+    // ถ้าเป็นโหมด search by date ให้แสดงเฉพาะวันที่ในช่วงที่เลือก
+    const fromDate = new Date(dateFrom);
+    const toDate = new Date(dateTo);
+    const daysDiff = Math.ceil(
+      (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24)
+    );
+    const selectedDates = generateDateRange(fromDate, daysDiff);
 
-  const filledGroupedTasks: GroupedTasks = {};
-  fullDates.forEach((dateKey) => {
-    filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
-  });
+    selectedDates.forEach((dateKey) => {
+      filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
+    });
+  } else {
+    // โหมดปกติ แสดง 7 วันข้างหน้า
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const fullDates = generateDateRange(today, 7);
+
+    fullDates.forEach((dateKey) => {
+      filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
+    });
+  }
 
   // เรียงวันให้ถูก
   const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
@@ -145,7 +167,7 @@ export default function TaskInformation() {
             Manage Due
           </Link>
           <Link href="/Reports" className="nav-btn2">
-            Work on Due Report 
+            Work on Due Report
           </Link>
         </div>
       </div>
@@ -194,22 +216,26 @@ export default function TaskInformation() {
                 </div>
 
                 {dateTasks.length === 0 ? (
-                  <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
+                  <div className="card-empty">
+                    No Task Dued: Yeah!!! Very Happy
+                  </div>
                 ) : (
                   dateTasks.map((task, index) => (
                     <div
-                    key={task.sid || `${date}-${index}`}
-                    className={`task-item ${task.work_type === "School Event" ? "school-event" : ""}`}
+                      key={task.sid || `${date}-${index}`}
+                      className={`task-item ${
+                        task.work_type === "School Event" ? "school-event" : ""
+                      }`}
                     >
-                        <div className="task-header">
-                          <strong>{index + 1}. </strong>
-                          <span className="teacher-subject">
-                            {task.teacher} : {task.subject}
-                          </span>
-                          <span className="task-type">{task.work_type}</span>
-                        </div>
-                        <div className="task-body">{task.wtf}</div>
+                      <div className="task-header">
+                        <strong>{index + 1}. </strong>
+                        <span className="teacher-subject">
+                          {task.teacher} : {task.subject}
+                        </span>
+                        <span className="task-type">{task.work_type}</span>
                       </div>
+                      <div className="task-body">{task.wtf}</div>
+                    </div>
                   ))
                 )}
               </div>
