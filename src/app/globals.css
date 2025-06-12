@@ -165,6 +165,15 @@ body {
   margin-bottom: 5px;
 }
 
+.form-label {
+  min-width: auto;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  margin-bottom: 5px;
+}
+
 .form-input,
 .form-select {
   font-family: "Kanit", sans-serif;
