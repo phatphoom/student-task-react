@@ -228,6 +228,13 @@ body {
     background-color: #f5f7fa;
   }
 
+  .group-button-and-text {
+    justify-content: center;
+    flex-direction: column; /* ถ้าอยากให้เรียงแนวตั้งเมื่อหน้าจอแคบ */
+    align-items: center;    /* ให้อยู่กึ่งกลางแนวขวางด้วย */
+    gap: 1rem;              /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
+  }
+
   .card-container {
     display: flex;
     justify-content: center;
