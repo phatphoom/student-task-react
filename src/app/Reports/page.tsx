@@ -125,9 +125,9 @@ export default function TaskInformation() {
 
       <div className="max-w-6xl mx-auto">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Date From : </label>
+          <div className="form-row2">
+            <div className="form-group2">
+              <label className="form-label2">Date From : </label>
               <input
                 type="date"
                 value={dateFrom}
@@ -136,8 +136,8 @@ export default function TaskInformation() {
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Date To : </label>
+            <div className="form-group2">
+              <label className="form-label2">Date To : </label>
               <input
                 type="date"
                 value={dateTo}
