@@ -204,7 +204,7 @@ export default function TaskInformation() {
                       <div className="task-header">
                         <strong>{index + 1}. </strong>
                         <span className="teacher-subject">
-                          T. {task.teacher} : {task.subject}
+                          {task.teacher} : {task.subject}
                         </span>
                         <span className="task-type">{task.work_type}</span>
                       </div>

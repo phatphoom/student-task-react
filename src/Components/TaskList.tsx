@@ -158,7 +158,7 @@ export default function TaskList() {
                         t.teacher &&
                         t.subject && (
                           <strong>
-                            T. {t.teacher} : {t.subject}
+                            {t.teacher} : {t.subject}
                           </strong>
                         )}
                       <span className="typeTag">{t.work_type}</span>
