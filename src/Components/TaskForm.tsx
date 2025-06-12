@@ -19,10 +19,18 @@ export default function TaskForm() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!dueDate || !teacher || !subject || !wtf) {
-      alert("Please fill in all required fields.");
-      return;
+    if (workType === "School Event") {
+      if (!dueDate || !wtf) {
+        alert("Please fill in Due Date and What to Finish.");
+        return;
+      }
+    } else {
+      if (!dueDate || !teacher || !subject || !wtf) {
+        alert("Please fill in all required fields.");
+        return;
+      }
     }
+
     const dueDateISOString = new Date(dueDate).toISOString();
 
     const body = {
@@ -108,40 +116,43 @@ export default function TaskForm() {
             className="form-input date-input"
           />
         </div>
+        {workType !== "School Event" && (
+          <>
+            <div className="form-group">
+              <label className="form-label">Teacher *</label>
+              <select
+                value={teacher}
+                onChange={(e) => setTeacher(e.target.value)}
+                className="form-select items-select"
+              >
+                <option value="">Select Teacher</option>
+                {[...new Set(subjects.map((s) => s.teacher))].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div className="form-group">
-          <label className="form-label">Teacher *</label>
-          <select
-            value={teacher}
-            onChange={(e) => setTeacher(e.target.value)}
-            className="form-select items-select"
-          >
-            <option value="">Select Teacher</option>
-            {[...new Set(subjects.map((s) => s.teacher))].map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Subject *</label>
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="form-select items-select"
-          >
-            <option value="">Select Subject</option>
-            {subjects
-              .filter((s) => s.teacher === teacher)
-              .map((s, i) => (
-                <option key={i} value={s.subject}>
-                  {s.subject}
-                </option>
-              ))}
-          </select>
-        </div>
+            <div className="form-group">
+              <label className="form-label">Subject *</label>
+              <select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="form-select items-select"
+              >
+                <option value="">Select Subject</option>
+                {subjects
+                  .filter((s) => s.teacher === teacher)
+                  .map((s, i) => (
+                    <option key={i} value={s.subject}>
+                      {s.subject}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </>
+        )}
 
         <div className="form-group">
           <label className="form-label">Work Type *</label>
