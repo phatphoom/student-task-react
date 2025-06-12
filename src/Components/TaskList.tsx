@@ -103,13 +103,38 @@ export default function TaskList() {
     resetEditData();
   };
 
+  const generateDateRange = (start: Date, days: number): string[] => {
+    const dates: string[] = [];
+    const current = new Date(start);
+    current.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i <= days; i++) {
+      const dateStr = current.toLocaleDateString("en-GB");
+      dates.push(dateStr);
+      current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+  };
+
   const groupAndSortTasks = () => {
-    const grouped = tasks.reduce<Record<string, Task[]>>((acc, task) => {
-      const dateStr = new Date(task.due_date).toLocaleDateString("en-GB");
-      if (!acc[dateStr]) acc[dateStr] = [];
-      acc[dateStr].push(task);
-      return acc;
-    }, {});
+    const grouped: Record<string, Task[]> = {};
+
+    // กำหนดช่วง 7 วันข้างหน้า
+    const today = new Date();
+    const dates = generateDateRange(today, 7);
+
+    dates.forEach((dateStr) => {
+      grouped[dateStr] = [];
+    });
+
+    tasks.forEach((task) => {
+      const taskDate = new Date(task.due_date);
+      const taskDateStr = taskDate.toLocaleDateString("en-GB");
+      if (grouped[taskDateStr]) {
+        grouped[taskDateStr].push(task);
+      }
+    });
 
     return Object.entries(grouped).sort(([a], [b]) => {
       const dateA = new Date(a.split("/").reverse().join("-"));
@@ -120,18 +145,13 @@ export default function TaskList() {
 
   return (
     <div className="cardContainer">
-        {groupAndSortTasks().map(([date, tasks]) => {
-          let [day, month, year] = date.split("/").map(Number);
-
-          // ถ้าเจอปีเกิน 2500 (น่าจะเป็น พ.ศ.) ให้แปลงเป็น ค.ศ.
-          if (year > 2500) {
-            year -= 543;
-          }
-
-          const dateObj = new Date(year, month - 1, day);
-          const weekday = new Intl.DateTimeFormat("en-US", {
-            weekday: "short",
-          }).format(dateObj);
+      {groupAndSortTasks().map(([date, tasks]) => {
+        let [day, month, year] = date.split("/").map(Number);
+        if (year > 2500) year -= 543;
+        const dateObj = new Date(year, month - 1, day);
+        const weekday = new Intl.DateTimeFormat("en-US", {
+          weekday: "short",
+        }).format(dateObj);
 
         return (
           <div key={date} className="dateCard">
@@ -139,52 +159,59 @@ export default function TaskList() {
               {date} <span className="weekday">{weekday}</span>
             </div>
 
-            {tasks.map((t, index) => (
-              <div
-                key={t.sid}
-                className={`taskCard ${
-                  t.work_type === "School Event" ? "school-event-task" : ""
-                }`}
-                data-work-type={t.work_type}
-              >
-                {editingId === t.sid ? (
-                  <div className="editForm">
-                    <EditForm
-                      editData={editData}
-                      setEditData={setEditData}
-                      handleSave={() => handleSave(t.sid)}
-                      handleCancel={handleCancel}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <div className="taskHeader">
-                      <span>{index + 1}. </span>
-                      {t.work_type !== "school event" &&
-                        t.teacher &&
-                        t.subject && (
-                          <strong>
-                            {t.teacher} : {t.subject}
-                          </strong>
-                        )}
-                      <span className="typeTag">{t.work_type}</span>
+            {tasks.length === 0 ? (
+              <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
+            ) : (
+              tasks.map((t, index) => (
+                <div
+                  key={t.sid}
+                  className={`taskCard ${
+                    t.work_type === "School Event" ? "school-event-task" : ""
+                  }`}
+                  data-work-type={t.work_type}
+                >
+                  {editingId === t.sid ? (
+                    <div className="editForm">
+                      <EditForm
+                        editData={editData}
+                        setEditData={setEditData}
+                        handleSave={() => handleSave(t.sid)}
+                        handleCancel={handleCancel}
+                      />
                     </div>
-                    <div className="taskBody">{t.wtf}</div>
-                    <div className="taskActions">
-                      <button onClick={() => handleEdit(t)} className="editBtn">
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(t.sid)}
-                        className="deleteBtn"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+                  ) : (
+                    <>
+                      <div className="taskHeader">
+                        <span>{index + 1}. </span>
+                        {t.work_type !== "school event" &&
+                          t.teacher &&
+                          t.subject && (
+                            <strong>
+                              {t.teacher} : {t.subject}
+                            </strong>
+                          )}
+                        <span className="typeTag">{t.work_type}</span>
+                      </div>
+                      <div className="taskBody">{t.wtf}</div>
+                      <div className="taskActions">
+                        <button
+                          onClick={() => handleEdit(t)}
+                          className="editBtn"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t.sid)}
+                          className="deleteBtn"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         );
       })}
@@ -192,6 +219,7 @@ export default function TaskList() {
   );
 }
 
+// EditForm (เหมือนเดิม)
 function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
   return (
     <>
