@@ -72,9 +72,9 @@ export default function TaskForm() {
       // รีเซ็ตฟอร์ม
       const todayStr = new Date().toISOString().split("T")[0];
       setDueDate(todayStr);
-      setTeacher("");
-      setSubject("");
-      setWorkType("Group");
+      // setTeacher("");
+      // setSubject("");
+      // setWorkType("Group");
       setWtf("");
       // window.location.reload();
     } catch (error) {
