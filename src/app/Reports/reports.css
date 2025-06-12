@@ -13,3 +13,13 @@
   text-transform: uppercase;
   margin-left: auto;
 }
+
+/* reports.css */
+.task-item.school-event {
+  background-color: #f4dbf2 !important;
+  border-left: 4px solid #d68fcf;
+}
+
+.task-item.school-event .task-header {
+  background-color: #f0c5ed !important;
+}
