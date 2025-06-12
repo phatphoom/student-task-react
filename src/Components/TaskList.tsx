@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Task, EditData } from "@/types";
 import "./tasklist.css";
+
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -20,13 +21,24 @@ export default function TaskList() {
   const fetchTasks = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
-      .then((data: Task[]) => setTasks(data));
+      .then((data: Task[]) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // เคลียร์เวลาทำให้เปรียบเทียบแค่วัน
+
+        const upcomingTasks = data.filter((task) => {
+          const taskDate = new Date(task.due_date);
+          return taskDate >= today;
+        });
+
+        setTasks(upcomingTasks);
+      })
+      .catch((err) => console.error("Error fetching tasks:", err));
   };
 
   const handleEdit = (task: Task) => {
     setEditingId(task.sid);
     setEditData({
-      due_date: task.due_date ? task.due_date.split("T")[0] : "", // Format date for input
+      due_date: task.due_date ? task.due_date.split("T")[0] : "",
       subject: task.subject || "",
       teacher: task.teacher || "",
       wtf: task.wtf || "",
@@ -36,44 +48,47 @@ export default function TaskList() {
 
   const handleSave = async (id: number) => {
     try {
-      const dataToSend = {
+      const updatedTask = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
       };
 
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToSend),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedTask),
         }
       );
 
-      if (response.ok) {
-        const result = await response.json();
+      if (res.ok) {
         setEditingId(null);
-        setEditData({
-          due_date: "",
-          subject: "",
-          teacher: "",
-          wtf: "",
-          work_type: "",
-        });
+        resetEditData();
         fetchTasks();
       } else {
-        const errorData = await response.json();
-        alert(`Failed to update task: ${errorData.error || "Unknown error"}`);
+        const err = await res.json();
+        console.error("Failed to update:", err);
       }
-    } catch (error) {
-      alert(`Network error: ${(error as Error).message}`);
+    } catch (err) {
+      console.error("Network error:", err);
     }
   };
 
-  const handleCancel = () => {
-    setEditingId(null);
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this task?")) return;
+
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
+        method: "DELETE",
+      });
+      fetchTasks();
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
+
+  const resetEditData = () => {
     setEditData({
       due_date: "",
       subject: "",
@@ -83,46 +98,35 @@ export default function TaskList() {
     });
   };
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this task?")) {
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
-          method: "DELETE",
-        });
-        fetchTasks();
-      } catch (error) {
-        console.error("Error deleting task:", error);
-        alert("Error deleting task");
-      }
-    }
+  const handleCancel = () => {
+    setEditingId(null);
+    resetEditData();
   };
 
-  const groupedTasks = tasks.reduce<Record<string, Task[]>>((acc, task) => {
-    const dateStr = new Date(task.due_date).toLocaleDateString("en-GB");
-    if (!acc[dateStr]) acc[dateStr] = [];
-    acc[dateStr].push(task);
-    return acc;
-  }, {});
+  const groupAndSortTasks = () => {
+    const grouped = tasks.reduce<Record<string, Task[]>>((acc, task) => {
+      const dateStr = new Date(task.due_date).toLocaleDateString("en-GB");
+      if (!acc[dateStr]) acc[dateStr] = [];
+      acc[dateStr].push(task);
+      return acc;
+    }, {});
 
-  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
-    const dateA = new Date(a.split("/").reverse().join("-"));
-    const dateB = new Date(b.split("/").reverse().join("-"));
-    return dateA.getTime() - dateB.getTime();
-  });
+    return Object.entries(grouped).sort(([a], [b]) => {
+      const dateA = new Date(a.split("/").reverse().join("-"));
+      const dateB = new Date(b.split("/").reverse().join("-"));
+      return dateA.getTime() - dateB.getTime();
+    });
+  };
 
   return (
     <div className="cardContainer">
-      {sortedEntries.map(([date, tasks]) => {
-        // แปลง date string dd/mm/yyyy เป็น Date object
+      {groupAndSortTasks().map(([date, tasks]) => {
         const [day, month, year] = date.split("/").map(Number);
         const dateObj = new Date(year, month - 1, day);
-
-
         const weekday = new Intl.DateTimeFormat("en-US", {
           weekday: "short",
         }).format(dateObj);
-        
-        
+
         return (
           <div key={date} className="dateCard">
             <div className="dateHeader">
@@ -133,69 +137,12 @@ export default function TaskList() {
               <div key={t.sid} className="taskCard">
                 {editingId === t.sid ? (
                   <div className="editForm">
-                    <div className="editFormField">
-                      <label>Teacher:</label>
-                      <input
-                        value={editData.teacher}
-                        onChange={(e) =>
-                          setEditData({ ...editData, teacher: e.target.value })
-                        }
-                        placeholder="Teacher"
-                        className="inputEdit"
-                      />
-                    </div>
-                    <div className="editFormField">
-                      <label>Subject:</label>
-                      <input
-                        value={editData.subject}
-                        onChange={(e) =>
-                          setEditData({ ...editData, subject: e.target.value })
-                        }
-                        placeholder="Subject"
-                        className="inputEdit"
-                      />
-                    </div>
-                    <div className="editFormField">
-                      <label>Type:</label>
-                      <select
-                        value={editData.work_type}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            work_type: e.target.value,
-                          })
-                        }
-                        className="inputEdit"
-                      >
-                        <option value="">Select Type</option>
-                        <option value="Group">Group</option>
-                        <option value="Personal">Personal</option>
-                        <option value="School Event">School Event</option>
-                      </select>
-                    </div>
-                    <div className="editFormField">
-                      <label>Description:</label>
-                      <textarea
-                        value={editData.wtf}
-                        onChange={(e) =>
-                          setEditData({ ...editData, wtf: e.target.value })
-                        }
-                        rows={3}
-                        className="inputEdit"
-                        placeholder="Description"
-                      />
-                    </div>
-                    <div className="taskActions">
-                      <button
-                        onClick={() => handleSave(t.sid)}
-                        className="editBtn"
-                      >
-                        Save
-                      </button>
-                      <button onClick={handleCancel} className="deleteBtn">
-                        Cancel
-                      </button>
-                    </div>
+                    <EditForm
+                      editData={editData}
+                      setEditData={setEditData}
+                      handleSave={() => handleSave(t.sid)}
+                      handleCancel={handleCancel}
+                    />
                   </div>
                 ) : (
                   <>
@@ -223,9 +170,70 @@ export default function TaskList() {
               </div>
             ))}
           </div>
-          
         );
       })}
     </div>
+  );
+}
+
+// แยกฟอร์มออกมาให้ clean กว่าเดิม
+function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
+  return (
+    <>
+      <div className="editFormField">
+        <label>Teacher:</label>
+        <input
+          value={editData.teacher}
+          onChange={(e) =>
+            setEditData((prev: any) => ({ ...prev, teacher: e.target.value }))
+          }
+          className="inputEdit"
+        />
+      </div>
+      <div className="editFormField">
+        <label>Subject:</label>
+        <input
+          value={editData.subject}
+          onChange={(e) =>
+            setEditData((prev: any) => ({ ...prev, subject: e.target.value }))
+          }
+          className="inputEdit"
+        />
+      </div>
+      <div className="editFormField">
+        <label>Type:</label>
+        <select
+          value={editData.work_type}
+          onChange={(e) =>
+            setEditData((prev: any) => ({ ...prev, work_type: e.target.value }))
+          }
+          className="inputEdit"
+        >
+          <option value="">Select Type</option>
+          <option value="Group">Group</option>
+          <option value="Personal">Personal</option>
+          <option value="School Event">School Event</option>
+        </select>
+      </div>
+      <div className="editFormField">
+        <label>Description:</label>
+        <textarea
+          value={editData.wtf}
+          onChange={(e) =>
+            setEditData((prev: any) => ({ ...prev, wtf: e.target.value }))
+          }
+          rows={3}
+          className="inputEdit"
+        />
+      </div>
+      <div className="taskActions">
+        <button onClick={handleSave} className="editBtn">
+          Save
+        </button>
+        <button onClick={handleCancel} className="deleteBtn">
+          Cancel
+        </button>
+      </div>
+    </>
   );
 }
