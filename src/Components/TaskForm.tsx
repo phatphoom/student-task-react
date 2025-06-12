@@ -62,7 +62,20 @@ export default function TaskForm() {
       alert("Network error");
     }
   };
+  useEffect(() => {
+    if (!teacher) {
+      setSubject("");
+      return;
+    }
 
+    const filteredSubjects = subjects.filter((s) => s.teacher === teacher);
+
+    if (filteredSubjects.length === 1) {
+      setSubject(filteredSubjects[0].subject);
+    } else {
+      setSubject(""); // ให้ user เลือกเองถ้ามีหลายวิชา
+    }
+  }, [teacher, subjects]);
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -121,8 +134,8 @@ export default function TaskForm() {
           >
             <option value="">Select Subject</option>
             {subjects
-              .filter((s: any) => s.teacher === teacher)
-              .map((s: any, i: number) => (
+              .filter((s) => s.teacher === teacher)
+              .map((s, i) => (
                 <option key={i} value={s.subject}>
                   {s.subject}
                 </option>
