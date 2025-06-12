@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Task, GroupedTasks } from "@/types";
 
@@ -10,44 +10,58 @@ export default function TaskInformation() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-  // Set default dates on component mount
+
   useEffect(() => {
     const today = new Date();
     const nextWeek = new Date();
     nextWeek.setDate(today.getDate() + 7);
 
-    setDateFrom(today.toISOString().split("T")[0]);
-    setDateTo(nextWeek.toISOString().split("T")[0]);
+    const todayStr = today.toISOString().split("T")[0];
+    const nextWeekStr = nextWeek.toISOString().split("T")[0];
+
+    setDateFrom(todayStr);
+    setDateTo(nextWeekStr);
   }, []);
 
-  // Fetch tasks from API
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
       .then((data: Task[]) => {
         setTasks(data);
-        setFilteredTasks(data);
+
+        // filter เฉพาะตั้งแต่วันนี้ไว้เป็น default
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const futureTasks = data.filter((task) => {
+          const taskDate = new Date(task.due_date);
+          taskDate.setHours(0, 0, 0, 0);
+          return taskDate >= today;
+        });
+
+        setFilteredTasks(futureTasks);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
-  // Handle search/filter
+
   const handleSearch = () => {
     if (isFiltered) {
-      // ถ้าตอนนี้ filter อยู่ → กดอีกที กลับไปแสดงทั้งหมด
       setFilteredTasks(tasks);
       setIsFiltered(false);
     } else {
-      // ถ้ายังไม่ได้ filter → ทำการ filter
       if (!dateFrom || !dateTo) {
         setFilteredTasks(tasks);
         setIsFiltered(false);
         return;
       }
 
+      const fromDate = new Date(dateFrom);
+      const toDate = new Date(dateTo);
+      fromDate.setHours(0, 0, 0, 0);
+      toDate.setHours(23, 59, 59, 999);
+
       const filtered = tasks.filter((task) => {
         const taskDate = new Date(task.due_date);
-        const fromDate = new Date(dateFrom);
-        const toDate = new Date(dateTo);
+        taskDate.setHours(0, 0, 0, 0);
         return taskDate >= fromDate && taskDate <= toDate;
       });
 
@@ -57,14 +71,21 @@ export default function TaskInformation() {
     setIsSearch(!isSearch);
   };
 
-  // Format date to DD.MM.YYYY
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
-  // Group tasks by date
-  const groupedTasks: GroupedTasks = filteredTasks.reduce(
+  const todayDate = new Date();
+  todayDate.setHours(0, 0, 0, 0);
+
+  const filteredTodayOrFuture = filteredTasks.filter((task) => {
+    const taskDate = new Date(task.due_date);
+    taskDate.setHours(0, 0, 0, 0);
+    return taskDate >= todayDate;
+  });
+
+  const groupedTasks: GroupedTasks = filteredTodayOrFuture.reduce(
     (acc: GroupedTasks, task: Task) => {
       const dateKey = formatDate(task.due_date);
       if (!acc[dateKey]) {
@@ -75,23 +96,23 @@ export default function TaskInformation() {
     },
     {}
   );
+
   const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
-    return dateA.getTime() - dateB.getTime(); // Use getTime() for accurate comparison
+    return dateA.getTime() - dateB.getTime();
   });
+
   return (
     <div className="p-4">
       <div className="group-button-and-text">
         <div>
-          {/* group only text*/}
           <h1 className="title">
             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
           </h1>
           <h2 className="title">Class Room EP105</h2>
         </div>
 
-        {/* group link*/}
         <div className="top-right-button">
           <Link href="/" className="nav-btn">
             หน้าหลัก (Manage)
@@ -127,18 +148,14 @@ export default function TaskInformation() {
           </div>
 
           <button onClick={handleSearch} className="btn-primary">
-            {!isSearch ? "Search by Date	" : "Show All"}
+            {!isSearch ? "Search by Date" : "Show All"}
           </button>
         </div>
 
-        {/* Tasks Table */}
         <div className="card-container">
           {sortedEntries.map(([date, dateTasks]) => (
             <div key={date} className="card">
-              {/* วันที่ */}
               <div className="card-header">{date}</div>
-
-              {/* ถ้าไม่มีงานในวันนั้น */}
               {dateTasks.length === 0 ? (
                 <div className="card-empty">
                   No Task Dued : Yeah!!! Very Happy.
@@ -149,7 +166,6 @@ export default function TaskInformation() {
                     key={task.sid || `${date}-${index}`}
                     className="task-item"
                   >
-                    {/* หัวเรื่อง */}
                     <div className="task-header">
                       <strong>{index + 1}. </strong>
                       <span className="teacher-subject">
@@ -157,8 +173,6 @@ export default function TaskInformation() {
                       </span>
                       <span className="task-type">{task.work_type}</span>
                     </div>
-
-                    {/* รายละเอียด */}
                     <div className="task-body">{task.wtf}</div>
                   </div>
                 ))
