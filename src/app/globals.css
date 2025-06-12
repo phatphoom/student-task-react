@@ -799,3 +799,13 @@ body {
 .toggle-password:hover {
   color: #374151;
 }
+
+/* 为School Event类型的任务添加特殊背景色 */
+.school-event-task {
+  background-color: #f4dbf2 !important;
+  border-left: 4px solid #d68fcf;
+}
+
+.school-event-task .task-header {
+  background-color: #f0c5ed !important;
+}

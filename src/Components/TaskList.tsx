@@ -23,7 +23,7 @@ export default function TaskList() {
       .then((res) => res.json())
       .then((data: Task[]) => {
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // เคลียร์เวลาทำให้เปรียบเทียบแค่วัน
+        today.setHours(0, 0, 0, 0);
 
         const upcomingTasks = data.filter((task) => {
           const taskDate = new Date(task.due_date);
@@ -134,7 +134,11 @@ export default function TaskList() {
             </div>
 
             {tasks.map((t, index) => (
-              <div key={t.sid} className="taskCard">
+              <div 
+                key={t.sid} 
+                className={`taskCard ${t.work_type === 'School Event' ? 'school-event-task' : ''}`}
+                data-work-type={t.work_type}
+              >
                 {editingId === t.sid ? (
                   <div className="editForm">
                     <EditForm
@@ -176,7 +180,6 @@ export default function TaskList() {
   );
 }
 
-// แยกฟอร์มออกมาให้ clean กว่าเดิม
 function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
   return (
     <>

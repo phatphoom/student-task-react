@@ -130,3 +130,18 @@ textarea.inputEdit {
   background-color: #f37e75;
   color: white;
 }
+
+/* เพิ่มส่วนนี้ลงใน tasklist.css */
+.taskCard[data-work-type="School Event"],
+.taskCard[data-work-type="School Event"] .taskBody {
+  background-color: #f4dbf2;
+}
+
+/* หรือใช้คลาสแบบนี้ */
+.school-event-task {
+  background-color: #f4dbf2;
+}
+
+.school-event-task .taskBody {
+  background-color: #f4dbf2;
+}
