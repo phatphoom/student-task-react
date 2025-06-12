@@ -4,26 +4,35 @@ import Link from "next/link";
 import { Subject } from "@/types";
 
 export default function TaskForm() {
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState<string>("");
   const [teacher, setTeacher] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
   const [workType, setWorkType] = useState<string>("Group");
   const [wtf, setWtf] = useState<string>("");
-  const [subjects, setSubjects] = useState<Subject[]>([]); // ระบุ type ที่ชัดเจน
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/subjects`)
       .then((res) => res.json())
-      .then((data: Subject[]) => setSubjects(data)) // ระบุ type ของ data
+      .then((data: Subject[]) => setSubjects(data))
       .catch((err) => console.error("Error loading subjects:", err));
   }, []);
 
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setDueDate(today);
+  }, []);
+
   const handleSubmit = async () => {
+    let finalDueDate = dueDate;
+
     if (workType === "School Event") {
-      if (!dueDate || !wtf) {
-        alert("Please fill in Due Date and What to Finish.");
+      if (!wtf) {
+        alert("Please fill in What to Finish.");
         return;
       }
+      // ตั้ง dueDate เป็นวันนี้เลย
+      finalDueDate = new Date().toISOString().split("T")[0];
     } else {
       if (!dueDate || !teacher || !subject || !wtf) {
         alert("Please fill in all required fields.");
@@ -31,13 +40,13 @@ export default function TaskForm() {
       }
     }
 
-    const dueDateISOString = new Date(dueDate).toISOString();
+    const dueDateISOString = new Date(finalDueDate).toISOString();
 
     const body = {
       task_id: "TASK_" + Date.now(),
       due_date: dueDateISOString,
-      teacher,
-      subject,
+      teacher: workType === "School Event" ? "" : teacher,
+      subject: workType === "School Event" ? "" : subject,
       wtf,
       work_type: workType,
       created_by: null,
@@ -59,17 +68,20 @@ export default function TaskForm() {
       }
 
       alert("Task Added!");
-      // เคลียร์ฟอร์ม
-      setDueDate("");
+      await fetchTasks();
+      // รีเซ็ตฟอร์ม
+      const todayStr = new Date().toISOString().split("T")[0];
+      setDueDate(todayStr);
       setTeacher("");
       setSubject("");
       setWorkType("Group");
       setWtf("");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       alert("Network error");
     }
   };
+
   useEffect(() => {
     if (!teacher) {
       setSubject("");
@@ -81,14 +93,22 @@ export default function TaskForm() {
     if (filteredSubjects.length === 1) {
       setSubject(filteredSubjects[0].subject);
     } else {
-      setSubject(""); // ให้ user เลือกเองถ้ามีหลายวิชา
+      setSubject("");
     }
   }, [teacher, subjects]);
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`);
+      // const data = await res.json();
+      // console.log("Fetched tasks:", data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
   return (
     <div className="p-4">
       <div className="group-button-and-text">
         <div>
-          {/* group only text*/}
           <h1 className="title">
             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
           </h1>
@@ -98,14 +118,12 @@ export default function TaskForm() {
           <Link href="/" className="nav-btn">
             หน้าหลัก (Manage)
           </Link>
-
           <Link href="/Reports" className="nav-btn2">
             ไปหน้ารายการงาน (Task List)
           </Link>
         </div>
       </div>
 
-      {/* ทุกอย่างในบรรทัดเดียว */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label">Due Date *</label>
@@ -169,7 +187,6 @@ export default function TaskForm() {
         </div>
       </div>
 
-      {/* What to finish แยกบรรทัด */}
       <div
         className="form-group"
         style={{ marginTop: "20px", marginBottom: "20px" }}
