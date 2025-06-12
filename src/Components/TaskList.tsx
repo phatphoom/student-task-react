@@ -116,14 +116,17 @@ export default function TaskList() {
         // แปลง date string dd/mm/yyyy เป็น Date object
         const [day, month, year] = date.split("/").map(Number);
         const dateObj = new Date(year, month - 1, day);
+
+
         const weekday = new Intl.DateTimeFormat("en-US", {
           weekday: "short",
         }).format(dateObj);
-
+        
+        
         return (
           <div key={date} className="dateCard">
             <div className="dateHeader">
-              {date} <span>{weekday}</span>
+              {date} <span className="weekday">{weekday}</span>
             </div>
 
             {tasks.map((t, index) => (
@@ -220,6 +223,7 @@ export default function TaskList() {
               </div>
             ))}
           </div>
+          
         );
       })}
     </div>
