@@ -19,7 +19,7 @@
 }
 
 .taskCard {
-  background-color: #ffe1ec;
+  background-color: #fafafa;
   padding: 0.5rem;
   border-radius: 6px;
   margin-bottom: 0.5rem;
@@ -111,11 +111,11 @@ textarea.inputEdit {
 }
 
 .editBtn {
-  background-color: #4caf50;
+  background-color: #87d18a;
   color: white;
 }
 
 .deleteBtn {
-  background-color: #f44336;
+  background-color: #f37e75;
   color: white;
 }

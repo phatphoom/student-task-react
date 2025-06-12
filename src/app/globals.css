@@ -237,7 +237,7 @@ body {
   }
 
   .card-header {
-    background: linear-gradient(to right, #4facfe, #00f2fe);
+    background: #cce6ff;
     padding: 16px;
     font-weight: bold;
     font-size: 18px;
@@ -646,7 +646,7 @@ body {
 }
 
 .task-header {
-  background-color: #f5d6ea;
+  background-color: #fafafa;
   padding: 8px 12px;
   display: flex;
   justify-content: space-between;
