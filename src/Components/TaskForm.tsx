@@ -115,11 +115,11 @@ export default function TaskForm() {
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
-          <Link href="/" className="nav-btn">
-            หน้าหลัก (Manage)
+        <Link href="/" className="nav-btn">
+            Manage Due
           </Link>
           <Link href="/Reports" className="nav-btn2">
-            ไปหน้ารายการงาน (Task List)
+            Work on Due Report 
           </Link>
         </div>
       </div>

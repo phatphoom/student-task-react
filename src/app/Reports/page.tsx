@@ -142,10 +142,10 @@ export default function TaskInformation() {
 
         <div className="top-right-button">
           <Link href="/" className="nav-btn">
-            หน้าหลัก (Manage)
+            Manage Due
           </Link>
           <Link href="/Reports" className="nav-btn2">
-            ไปหน้ารายการงาน (Task List)
+            Work on Due Report 
           </Link>
         </div>
       </div>
@@ -194,7 +194,7 @@ export default function TaskInformation() {
                 </div>
 
                 {dateTasks.length === 0 ? (
-                  <div className="card-empty">No Task Yet</div>
+                  <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
                 ) : (
                   dateTasks.map((task, index) => (
                     <div

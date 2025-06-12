@@ -71,7 +71,7 @@ body {
 .nav-btn,
 .btn-primary {
   background: rgb(255 205 235);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: var(--radius);
   padding: 14px 32px;
@@ -97,7 +97,7 @@ body {
 
 .nav-btn2 {
   background: #b3d4fd;
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: var(--radius);
   padding: 14px 32px;
@@ -270,7 +270,7 @@ body {
     padding: 24px;
     text-align: center;
     font-size: 16px;
-    color: #666;
+    color: #000000;
     font-weight: 500;
   }
 
@@ -303,7 +303,7 @@ body {
 
   .nav-btn {
     background: rgb(255 205 235);
-    color: white;
+    color: rgb(0, 0, 0);
   }
 
   .nav-btn:hover {
@@ -312,7 +312,7 @@ body {
 
   .nav-btn2 {
     background: #b3d4fd;
-    color: white;
+    color: rgb(0, 0, 0);
   }
 
   .nav-btn2:hover {
@@ -659,7 +659,7 @@ body {
   padding: 20px;
   text-align: center;
   font-weight: bold;
-  color: #555;
+  color: #000000;
 }
 
 .task-item {
