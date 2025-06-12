@@ -1,4 +1,4 @@
-/* .cardContainer {
+.cardContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
@@ -10,7 +10,7 @@
   height: fit-content;
   width: 300px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-} */
+}
 
 .dateHeader {
   background-color: #b3d4fc;
