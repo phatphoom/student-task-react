@@ -120,8 +120,7 @@ export default function TaskInformation() {
       filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
     });
   }
-
-  const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
+  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
     return dateA.getTime() - dateB.getTime();
