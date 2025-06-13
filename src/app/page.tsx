@@ -10,7 +10,6 @@ export default function TaskInformation() {
   const [dateTo, setDateTo] = useState<string>("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
 
   useEffect(() => {
     const today = new Date();
@@ -29,54 +28,28 @@ export default function TaskInformation() {
       .then((res) => res.json())
       .then((data: Task[]) => {
         setTasks(data);
-
-        // filter เฉพาะตั้งแต่วันนี้ไว้เป็น default
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const futureTasks = data.filter((task) => {
-          const taskDate = new Date(task.due_date);
-          taskDate.setHours(0, 0, 0, 0);
-          return taskDate >= today;
-        });
-
-        setFilteredTasks(futureTasks);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
 
   const handleSearch = () => {
-    if (isFiltered) {
-      // กลับไปแสดงแค่ task ตั้งแต่วันนี้เป็นต้นไป (default behavior)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const futureTasks = tasks.filter((task) => {
-        const taskDate = new Date(task.due_date);
-        taskDate.setHours(0, 0, 0, 0);
-        return taskDate >= today;
-      });
-      setFilteredTasks(futureTasks);
-      setIsFiltered(false);
-    } else {
-      // ทำการ filter ตาม date range ที่เลือก
-      if (!dateFrom || !dateTo) {
-        alert("Please select both From and To dates");
-        return;
-      }
-
-      const fromDate = new Date(dateFrom);
-      const toDate = new Date(dateTo);
-      fromDate.setHours(0, 0, 0, 0);
-      toDate.setHours(23, 59, 59, 999);
-
-      const filtered = tasks.filter((task) => {
-        const taskDate = new Date(task.due_date);
-        return taskDate >= fromDate && taskDate <= toDate;
-      });
-
-      setFilteredTasks(filtered);
-      setIsFiltered(true);
+    if (!dateFrom || !dateTo) {
+      alert("Please select both From and To dates");
+      return;
     }
-    setIsSearch(!isSearch);
+
+    const fromDate = new Date(dateFrom);
+    const toDate = new Date(dateTo);
+    fromDate.setHours(0, 0, 0, 0);
+    toDate.setHours(23, 59, 59, 999);
+
+    const filtered = tasks.filter((task) => {
+      const taskDate = new Date(task.due_date);
+      return taskDate >= fromDate && taskDate <= toDate;
+    });
+
+    setFilteredTasks(filtered);
+    setIsFiltered(true);
   };
 
   const formatDate = (dateString: string): string => {
@@ -84,16 +57,22 @@ export default function TaskInformation() {
     return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
-  const todayDate = new Date();
-  todayDate.setHours(0, 0, 0, 0);
+  // ใช้ tasks ตาม default หรือ filtered
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const filteredTodayOrFuture = filteredTasks.filter((task) => {
+  const defaultEnd = new Date();
+  defaultEnd.setDate(today.getDate() + 7);
+  defaultEnd.setHours(23, 59, 59, 999);
+
+  const defaultFiltered = tasks.filter((task) => {
     const taskDate = new Date(task.due_date);
-    taskDate.setHours(0, 0, 0, 0);
-    return taskDate >= todayDate;
+    return taskDate >= today && taskDate <= defaultEnd;
   });
 
-  const groupedTasks: GroupedTasks = filteredTodayOrFuture.reduce(
+  const targetTasks = isFiltered ? filteredTasks : defaultFiltered;
+
+  const groupedTasks: GroupedTasks = targetTasks.reduce(
     (acc: GroupedTasks, task: Task) => {
       const dateKey = formatDate(task.due_date);
       if (!acc[dateKey]) {
@@ -119,11 +98,9 @@ export default function TaskInformation() {
     return dates;
   };
 
-  // สร้าง date range ตามสถานะ
   let filledGroupedTasks: GroupedTasks = {};
 
   if (isFiltered && dateFrom && dateTo) {
-    // ถ้าเป็นโหมด search by date ให้แสดงเฉพาะวันที่ในช่วงที่เลือก
     const fromDate = new Date(dateFrom);
     const toDate = new Date(dateTo);
     const daysDiff = Math.ceil(
@@ -135,7 +112,6 @@ export default function TaskInformation() {
       filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
     });
   } else {
-    // โหมดปกติ แสดง 7 วันข้างหน้า
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const fullDates = generateDateRange(today, 7);
@@ -145,7 +121,6 @@ export default function TaskInformation() {
     });
   }
 
-  // เรียงวันให้ถูก
   const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
@@ -197,7 +172,7 @@ export default function TaskInformation() {
           </div>
 
           <button onClick={handleSearch} className="btn-primary">
-            {!isSearch ? "Search by Date" : "Show All"}
+            Search by Date
           </button>
         </div>
 
