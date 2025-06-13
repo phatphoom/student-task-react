@@ -22,7 +22,6 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
     const today = new Date().toISOString().split("T")[0];
     setDueDate(today);
   }, []);
-
   const handleSubmit = async () => {
     let finalDueDate = dueDate;
 
@@ -40,6 +39,8 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
       }
     }
 
+    const adminId = localStorage.getItem("adminId");
+
     const body = {
       task_id: "TASK_" + Date.now(),
       due_date: new Date(finalDueDate).toISOString(),
@@ -47,7 +48,7 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
       subject: workType === "School Event" ? "" : subject,
       wtf,
       work_type: workType,
-      created_by: null,
+      created_by: adminId ? parseInt(adminId) : null,
       created_on: new Date().toISOString(),
       delindicator: false,
     };

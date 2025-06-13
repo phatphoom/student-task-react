@@ -20,7 +20,7 @@ export default function TaskList({
 
   useEffect(() => {
     fetchTasks();
-  });
+  }, []);
 
   const fetchTasks = async () => {
     try {
@@ -196,6 +196,15 @@ export default function TaskList({
                         <span className="typeTag">{t.work_type}</span>
                       </div>
                       <div className="taskBody">{t.wtf}</div>
+
+                      {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
+                      <div className="taskCreator">
+                        <span className="creatorLabel">by:</span>
+                        <span className="creatorName">
+                          {t.created_by_name || "Unknown"}
+                        </span>
+                      </div>
+
                       <div className="taskActions">
                         <button
                           onClick={() => handleEdit(t)}
