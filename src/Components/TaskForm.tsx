@@ -110,10 +110,10 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
-          <Link href="/" className="nav-btn">
+          <Link href="/Manages" className="nav-btn">
             Manage Due
           </Link>
-          <Link href="/Reports" className="nav-btn2">
+          <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
         </div>

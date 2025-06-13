@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
         localStorage.setItem('loggedIn', 'true');  // <-- เพิ่มตรงนี้
         setSuccess(true);
         setError('');
-        router.push('/');
+        router.push('/Manages');
         } else {
         setError('รหัสผ่านไม่ถูกต้อง');
         setSuccess(false);
