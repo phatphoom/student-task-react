@@ -162,9 +162,9 @@ textarea.inputEdit {
 }
 
 .creatorName {
-  font-weight: bolder;
   font-style: italic;
-  font-size: 1.1rem;
+  /* font-weight: bolder; */
+  /* font-size: 1.1rem; */
 }
 
 .taskCard {
