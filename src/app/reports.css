@@ -112,3 +112,18 @@
 .task-item.school-event .task-header {
   background-color: #f0c5ed !important;
 } 
+
+.task-creator {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.creator-label {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.creator-name {
+  font-style: italic;
+}

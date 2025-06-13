@@ -200,6 +200,7 @@ export default function TaskInformation() {
             {!isSearch ? "Search by Date" : "Show All"}
           </button>
         </div>
+      
 
         <div className="card-container">
           {sortedEntries.map(([date, dateTasks]) => {
@@ -235,6 +236,13 @@ export default function TaskInformation() {
                         <span className="task-type">{task.work_type}</span>
                       </div>
                       <div className="task-body">{task.wtf}</div>
+
+                      <div className="task-creator">
+                      <span className="creator-label">by:</span>
+                      <span className="creator-name">
+                        {task.created_by_name || "Unknown"}
+                      </span>
+                    </div>
                     </div>
                   ))
                 )}

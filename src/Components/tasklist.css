@@ -147,3 +147,25 @@ textarea.inputEdit {
 .school-event-task .taskBody {
   background-color: #f4dbf2;
 }
+/* Add these styles to your tasklist.css file */
+.taskCreator {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.creatorLabel {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.creatorName {
+  font-style: italic;
+}
+
+/* Optional: Adjust spacing if needed */
+.taskCard {
+  padding-bottom: 12px; /* Add more space at bottom for creator info */
+}
