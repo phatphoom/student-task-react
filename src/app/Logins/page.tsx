@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (password === 'ep105admin') {
+        if (password === 'TN') {
         localStorage.setItem('loggedIn', 'true');  // <-- เพิ่มตรงนี้
         setSuccess(true);
         setError('');
