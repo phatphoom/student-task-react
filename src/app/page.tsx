@@ -235,6 +235,16 @@ export default function TaskInformation() {
                         <span className="task-type">{task.work_type}</span>
                       </div>
                       <div className="task-body">{task.wtf}</div>
+
+                      {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
+                      <div className="task-creator-report">
+                        <span className="creator-label-report">
+                          Created by:
+                        </span>
+                        <span className="creator-name-report">
+                          {task.created_by_name || "Unknown"}
+                        </span>
+                      </div>
                     </div>
                   ))
                 )}
