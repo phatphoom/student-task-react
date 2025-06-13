@@ -7,7 +7,7 @@ export default function TaskForm() {
   const [dueDate, setDueDate] = useState<string>("");
   const [teacher, setTeacher] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
-  const [workType, setWorkType] = useState<string>("Group");
+  const [workType, setWorkType] = useState<string>("Personal");
   const [wtf, setWtf] = useState<string>("");
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
@@ -115,11 +115,11 @@ export default function TaskForm() {
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
-        <Link href="/" className="nav-btn">
+          <Link href="/" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/Reports" className="nav-btn2">
-            Work on Due Report 
+            Work on Due Report
           </Link>
         </div>
       </div>
@@ -196,7 +196,7 @@ export default function TaskForm() {
             onChange={(e) => setWorkType(e.target.value)}
             className="form-select status-select"
           >
-            <option value="">เลือกประเภทงาน</option>
+            {/* <option value="">เลือกประเภทงาน</option> */}
             <option>Group</option>
             <option>Personal</option>
             <option>School Event</option>
