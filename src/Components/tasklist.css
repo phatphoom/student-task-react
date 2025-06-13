@@ -150,22 +150,23 @@ textarea.inputEdit {
 /* Add these styles to your tasklist.css file */
 .taskCreator {
   margin-top: 8px;
-  font-size: 0.8rem;
-  color: #666;
+  color: #4e4e4e;
   display: flex;
-  align-items: center;
+  align-items: end;
+  justify-content: flex-end; /* เพิ่มบรรทัดนี้เพื่อจัดเนื้อหาไปทางขวา */
+  /* หรือใช้ margin-left: auto; แทนก็ได้ */
 }
 
 .creatorLabel {
-  font-weight: bold;
   margin-right: 4px;
 }
 
 .creatorName {
+  font-weight: bolder;
   font-style: italic;
+  font-size: 1.1rem;
 }
 
-/* Optional: Adjust spacing if needed */
 .taskCard {
-  padding-bottom: 12px; /* Add more space at bottom for creator info */
+  padding-bottom: 10px;
 }

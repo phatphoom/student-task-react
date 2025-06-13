@@ -199,12 +199,12 @@ export default function TaskList({
 
                       {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
                       <div className="taskCreator">
-                        <span className="creatorLabel">by:</span>
+                        <span className="creatorLabel">by :</span>
                         <span className="creatorName">
                           {t.created_by_name || "Unknown"}
                         </span>
                       </div>
-                      
+
                       <div className="taskActions">
                         <button
                           onClick={() => handleEdit(t)}
