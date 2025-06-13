@@ -7,7 +7,7 @@ import TaskList from "@/Components/TaskList";
 
 export default function Page() {
   const [refresh, setRefresh] = useState(false);
-
+  const [startDate, setStartDate] = useState<string>("");
   const triggerRefresh = () => setRefresh((prev) => !prev);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -27,8 +27,8 @@ export default function Page() {
 
   return (
     <div className='p-4"'>
-      <TaskForm onTaskAdded={triggerRefresh} />
-      <TaskList refreshTrigger={refresh} />
+      <TaskForm onTaskAdded={triggerRefresh} onDateChange={setStartDate} />
+      <TaskList refreshTrigger={refresh} startDate={startDate} />
     </div>
   );
 }

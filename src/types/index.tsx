@@ -5,6 +5,7 @@ export interface Task {
   teacher: string;
   wtf: string;
   work_type: string;
+  created_by: string;
   created_by_name?: string; // เพิ่ม field นี้
 }
 
@@ -23,6 +24,7 @@ export interface EditData {
   teacher: string;
   wtf: string;
   work_type: string;
+  created_by?: string; // 👈 เพิ่มตรงนี้
 }
 
 export interface UserAdmin {

@@ -5,8 +5,10 @@ import "./tasklist.css";
 
 export default function TaskList({
   refreshTrigger,
+  startDate,
 }: {
   refreshTrigger: boolean;
+  startDate: string; // YYYY‑MM‑DD
 }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -16,23 +18,26 @@ export default function TaskList({
     teacher: "",
     wtf: "",
     work_type: "",
+    created_by: "",
   });
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [refreshTrigger, startDate]);
 
   const fetchTasks = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`);
       const data: Task[] = await res.json();
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const upcomingTasks = data.filter((task) => {
-        const taskDate = new Date(task.due_date);
-        return taskDate >= today;
+      const start = startDate ? new Date(startDate) : new Date();
+      start.setHours(0, 0, 0, 0);
+
+      const filtered = data.filter((t) => {
+        const td = new Date(t.due_date);
+        td.setHours(0, 0, 0, 0);
+        return td >= start;
       });
-      setTasks(upcomingTasks);
+      setTasks(filtered);
     } catch (err) {
       console.error("Error fetching tasks:", err);
     }
@@ -46,6 +51,7 @@ export default function TaskList({
       teacher: task.teacher || "",
       wtf: task.wtf || "",
       work_type: task.work_type || "",
+      created_by: task.created_by || "",
     });
   };
 
@@ -54,8 +60,9 @@ export default function TaskList({
       const updatedTask = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
+        created_by: editData.created_by, // 👈 เพิ่มเพื่อความชัดเจน (จริงๆ ...editData ก็รวมอยู่แล้ว)
       };
-
+      console.log(updatedTask);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`,
         {
@@ -110,48 +117,38 @@ export default function TaskList({
     const dates: string[] = [];
     const current = new Date(start);
     current.setHours(0, 0, 0, 0);
-
     for (let i = 0; i <= days; i++) {
-      const dateStr = current.toLocaleDateString("en-GB");
-      dates.push(dateStr);
+      dates.push(current.toLocaleDateString("en-GB"));
       current.setDate(current.getDate() + 1);
     }
-
     return dates;
   };
 
   const groupAndSortTasks = () => {
     const grouped: Record<string, Task[]> = {};
-
-    // กำหนดช่วง 7 วันข้างหน้า
-    const today = new Date();
-    const dates = generateDateRange(today, 7);
-
-    dates.forEach((dateStr) => {
-      grouped[dateStr] = [];
+    const start = startDate ? new Date(startDate) : new Date();
+    const dates = generateDateRange(start, 7);
+    dates.forEach((d) => (grouped[d] = []));
+    tasks.forEach((t) => {
+      const td = new Date(t.due_date);
+      const key = td.toLocaleDateString("en-GB");
+      if (grouped[key]) grouped[key].push(t);
     });
 
-    tasks.forEach((task) => {
-      const taskDate = new Date(task.due_date);
-      const taskDateStr = taskDate.toLocaleDateString("en-GB");
-      if (grouped[taskDateStr]) {
-        grouped[taskDateStr].push(task);
-      }
-    });
-
-    return Object.entries(grouped).sort(([a], [b]) => {
-      const dateA = new Date(a.split("/").reverse().join("-"));
-      const dateB = new Date(b.split("/").reverse().join("-"));
-      return dateA.getTime() - dateB.getTime();
-    });
+    return Object.entries(grouped)
+      .filter(([, arr]) => arr.length > 0)
+      .sort(([a], [b]) => {
+        const da = new Date(a.split("/").reverse().join("-"));
+        const db = new Date(b.split("/").reverse().join("-"));
+        return da.getTime() - db.getTime();
+      });
   };
-
   return (
     <div className="cardContainer">
-      {groupAndSortTasks().map(([date, tasks]) => {
-        let [day, month, year] = date.split("/").map(Number);
-        if (year > 2500) year -= 543;
-        const dateObj = new Date(year, month - 1, day);
+      {groupAndSortTasks().map(([date, tasksOnDate]) => {
+        let [d, m, y] = date.split("/").map(Number);
+        if (y > 2500) y -= 543;
+        const dateObj = new Date(y, m - 1, d);
         const weekday = new Intl.DateTimeFormat("en-US", {
           weekday: "short",
         }).format(dateObj);
@@ -165,7 +162,7 @@ export default function TaskList({
             {tasks.length === 0 ? (
               <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
             ) : (
-              tasks.map((t, index) => (
+              tasksOnDate.map((t, index) => (
                 <div
                   key={t.sid}
                   className={`taskCard ${

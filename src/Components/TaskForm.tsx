@@ -3,14 +3,19 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Subject } from "@/types";
 
-export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
+export default function TaskForm({
+  onTaskAdded,
+  onDateChange,
+}: {
+  onTaskAdded: () => void;
+  onDateChange: (date: string) => void;
+}) {
   const [dueDate, setDueDate] = useState<string>("");
   const [teacher, setTeacher] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
   const [workType, setWorkType] = useState<string>("Personal");
   const [wtf, setWtf] = useState<string>("");
   const [subjects, setSubjects] = useState<Subject[]>([]);
-
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/subjects`)
       .then((res) => res.json())
@@ -21,7 +26,13 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setDueDate(today);
-  }, []);
+    onDateChange(today);
+  }, [onDateChange]);
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    setDueDate(date);
+    onDateChange(date);
+  };
   const handleSubmit = async () => {
     let finalDueDate = dueDate;
 
@@ -30,7 +41,6 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
         alert("Please fill in What to Finish.");
         return;
       }
-      // ตั้ง dueDate เป็นวันนี้เลย
       // finalDueDate = new Date().toISOString().split("T")[0];
     } else {
       if (!dueDate || !teacher || !subject || !wtf) {
@@ -126,7 +136,7 @@ export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
           <input
             type="date"
             value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+            onChange={handleDateChange}
             className="form-input date-input"
           />
         </div>
