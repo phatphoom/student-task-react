@@ -20,15 +20,14 @@
 
 .card-header {
   background-color: #b3d4fc;
-  padding: 12px;
+  padding: .5rem;
   font-weight: bold;
   text-align: center;
-  font-size: 16px;
+  font-size: 1rem;
   color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0; /* เพิ่มบรรทัดนี้ */
 }
 
 .card-empty {
@@ -98,7 +97,7 @@
 
   .card-header {
     padding: 12px;
-    font-size: 14px;
+    font-size: 1rem;
   }
 
 }
