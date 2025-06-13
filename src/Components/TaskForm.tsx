@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Subject } from "@/types";
 
-export default function TaskForm() {
+export default function TaskForm({ onTaskAdded }: { onTaskAdded: () => void }) {
   const [dueDate, setDueDate] = useState<string>("");
   const [teacher, setTeacher] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
@@ -32,7 +32,7 @@ export default function TaskForm() {
         return;
       }
       // ตั้ง dueDate เป็นวันนี้เลย
-      finalDueDate = new Date().toISOString().split("T")[0];
+      // finalDueDate = new Date().toISOString().split("T")[0];
     } else {
       if (!dueDate || !teacher || !subject || !wtf) {
         alert("Please fill in all required fields.");
@@ -40,11 +40,9 @@ export default function TaskForm() {
       }
     }
 
-    const dueDateISOString = new Date(finalDueDate).toISOString();
-
     const body = {
       task_id: "TASK_" + Date.now(),
-      due_date: dueDateISOString,
+      due_date: new Date(finalDueDate).toISOString(),
       teacher: workType === "School Event" ? "" : teacher,
       subject: workType === "School Event" ? "" : subject,
       wtf,
@@ -69,14 +67,11 @@ export default function TaskForm() {
 
       alert("Task Added!");
       await fetchTasks();
+      onTaskAdded();
       // รีเซ็ตฟอร์ม
       const todayStr = new Date().toISOString().split("T")[0];
       setDueDate(todayStr);
-      // setTeacher("");
-      // setSubject("");
-      // setWorkType("Group");
       setWtf("");
-      // window.location.reload();
     } catch (error) {
       alert("Network error");
     }

@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { Task, EditData } from "@/types";
 import "./tasklist.css";
 
-export default function TaskList() {
+export default function TaskList({
+  refreshTrigger,
+}: {
+  refreshTrigger: boolean;
+}) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<EditData>({
@@ -16,23 +20,22 @@ export default function TaskList() {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  });
 
-  const fetchTasks = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
-      .then((res) => res.json())
-      .then((data: Task[]) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const upcomingTasks = data.filter((task) => {
-          const taskDate = new Date(task.due_date);
-          return taskDate >= today;
-        });
-
-        setTasks(upcomingTasks);
-      })
-      .catch((err) => console.error("Error fetching tasks:", err));
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`);
+      const data: Task[] = await res.json();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const upcomingTasks = data.filter((task) => {
+        const taskDate = new Date(task.due_date);
+        return taskDate >= today;
+      });
+      setTasks(upcomingTasks);
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+    }
   };
 
   const handleEdit = (task: Task) => {
