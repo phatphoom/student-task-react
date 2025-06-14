@@ -11,116 +11,92 @@ export default function TaskInformation() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
 
+  // Set default dateFrom to today on first load
   useEffect(() => {
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-
     const todayStr = today.toISOString().split("T")[0];
-    const nextWeekStr = nextWeek.toISOString().split("T")[0];
-
     setDateFrom(todayStr);
-    setDateTo(nextWeekStr);
   }, []);
 
+  // Load all tasks from API
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
-      .then((data: Task[]) => {
-        setTasks(data);
-      })
+      .then((data: Task[]) => setTasks(data))
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
 
+  // Search button handler
   const handleSearch = () => {
-    if (!dateFrom || !dateTo) {
-      alert("Please select both From and To dates");
+    if (!dateFrom) {
+      alert("Please select From date");
       return;
     }
 
     const fromDate = new Date(dateFrom);
-    const toDate = new Date(dateTo);
     fromDate.setHours(0, 0, 0, 0);
-    toDate.setHours(23, 59, 59, 999);
+
+    // หา maxDate จากข้อมูลทั้งหมดใน tasks
+    const maxTaskDate = tasks.reduce((max, task) => {
+      const taskDate = new Date(task.due_date);
+      return taskDate > max ? taskDate : max;
+    }, fromDate);
+
+    maxTaskDate.setHours(23, 59, 59, 999);
 
     const filtered = tasks.filter((task) => {
       const taskDate = new Date(task.due_date);
-      return taskDate >= fromDate && taskDate <= toDate;
+      return taskDate >= fromDate && taskDate <= maxTaskDate;
     });
 
     setFilteredTasks(filtered);
     setIsFiltered(true);
-  };
 
+    // update dateTo (optional)
+    setDateTo(maxTaskDate.toISOString().split("T")[0]);
+  };
+  // Utility: convert date string to display format
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
-  // ใช้ tasks ตาม default หรือ filtered
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Pick which tasks to show
+  const targetTasks = isFiltered ? filteredTasks : tasks;
 
-  const defaultEnd = new Date();
-  defaultEnd.setDate(today.getDate() + 7);
-  defaultEnd.setHours(23, 59, 59, 999);
-
-  const defaultFiltered = tasks.filter((task) => {
-    const taskDate = new Date(task.due_date);
-    return taskDate >= today && taskDate <= defaultEnd;
-  });
-
-  const targetTasks = isFiltered ? filteredTasks : defaultFiltered;
-
+  // Group tasks by date string
   const groupedTasks: GroupedTasks = targetTasks.reduce(
     (acc: GroupedTasks, task: Task) => {
       const dateKey = formatDate(task.due_date);
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
+      if (!acc[dateKey]) acc[dateKey] = [];
       acc[dateKey].push(task);
       return acc;
     },
     {}
   );
 
-  const generateDateRange = (start: Date, days: number): string[] => {
+  // Generate date range (always 7 days after dateFrom)
+  const generateDateRange = (startStr: string): string[] => {
     const dates: string[] = [];
-    const current = new Date(start);
-    current.setHours(0, 0, 0, 0);
+    const startDate = new Date(startStr);
+    if (isNaN(startDate.getTime())) return dates;
 
-    for (let i = 0; i <= days; i++) {
-      const dateStr = current.toLocaleDateString("en-GB").replace(/\//g, ".");
-      dates.push(dateStr);
-      current.setDate(current.getDate() + 1);
+    startDate.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 7; i++) {
+      dates.push(startDate.toLocaleDateString("en-GB").replace(/\//g, "."));
+      startDate.setDate(startDate.getDate() + 1);
     }
-
     return dates;
   };
 
-  let filledGroupedTasks: GroupedTasks = {};
+  const fullDates = generateDateRange(dateFrom);
+  const filledGroupedTasks: GroupedTasks = {};
+  fullDates.forEach((dateKey) => {
+    filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
+  });
 
-  if (isFiltered && dateFrom && dateTo) {
-    const fromDate = new Date(dateFrom);
-    const toDate = new Date(dateTo);
-    const daysDiff = Math.ceil(
-      (toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24)
-    );
-    const selectedDates = generateDateRange(fromDate, daysDiff);
-
-    selectedDates.forEach((dateKey) => {
-      filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
-    });
-  } else {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const fullDates = generateDateRange(today, 7);
-
-    fullDates.forEach((dateKey) => {
-      filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
-    });
-  }
-  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
+  // Sort entries ascending
+  const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
     return dateA.getTime() - dateB.getTime();
@@ -158,69 +134,68 @@ export default function TaskInformation() {
                 className="form-input"
               />
             </div>
-
-            <div className="form-group2">
-              <label className="form-label2">Date To : </label>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="form-input"
-              />
-            </div>
           </div>
 
           <button onClick={handleSearch} className="btn-primary">
-            Search by Date
+            Search
           </button>
         </div>
 
         <div className="card-container">
           {sortedEntries.map(([date, dateTasks]) => {
-            const [day, month, year] = date.split(".").map(Number);
-            const dateObj = new Date(year, month - 1, day);
-            const weekday = new Intl.DateTimeFormat("en-US", {
-              weekday: "short",
-            }).format(dateObj);
+            try {
+              const [day, month, year] = date.split(".").map(Number);
+              const dateObj = new Date(year, month - 1, day);
+              if (isNaN(dateObj.getTime())) throw new Error("Invalid Date");
 
-            return (
-              <div key={date} className="card">
-                <div className="card-header">
-                  {date} <span className="weekday">{weekday}</span>
-                </div>
+              const weekday = new Intl.DateTimeFormat("en-US", {
+                weekday: "short",
+              }).format(dateObj);
 
-                {dateTasks.length === 0 ? (
-                  <div className="card-empty">
-                    No Task Dued: Yeah!!! Very Happy
+              return (
+                <div key={date} className="card">
+                  <div className="card-header">
+                    {date} <span className="weekday">{weekday}</span>
                   </div>
-                ) : (
-                  dateTasks.map((task, index) => (
-                    <div
-                      key={task.sid || `${date}-${index}`}
-                      className={`task-item ${
-                        task.work_type === "School Event" ? "school-event" : ""
-                      }`}
-                    >
-                      <div className="task-header">
-                        <strong>{index + 1}. </strong>
-                        <span className="teacher-subject">
-                          {task.teacher} : {task.subject}
-                        </span>
-                        <span className="task-type">{task.work_type}</span>
-                      </div>
-                      <div className="task-body">{task.wtf}</div>
 
-                      <div className="task-creator">
-                        <span className="creator-label">by :</span>
-                        <span className="creator-name">
-                          {task.created_by_name || "Unknown"}
-                        </span>
-                      </div>
+                  {dateTasks.length === 0 ? (
+                    <div className="card-empty">
+                      No Task Dued: Yeah!!! Very Happy
                     </div>
-                  ))
-                )}
-              </div>
-            );
+                  ) : (
+                    dateTasks.map((task, index) => (
+                      <div
+                        key={task.sid || `${date}-${index}`}
+                        className={`task-item ${
+                          task.work_type === "School Event"
+                            ? "school-event"
+                            : ""
+                        }`}
+                      >
+                        <div className="task-header">
+                          <strong>{index + 1}. </strong>
+                          <span className="teacher-subject">
+                            {task.teacher} : {task.subject}
+                          </span>
+                          <span className="task-type">{task.work_type}</span>
+                        </div>
+                        <div className="task-body">{task.wtf}</div>
+
+                        <div className="task-creator">
+                          <span className="creator-label">by :</span>
+                          <span className="creator-name">
+                            {task.created_by_name || "Unknown"}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              );
+            } catch (err) {
+              console.error("Skipping invalid date:", date);
+              return null; // skip render
+            }
           })}
         </div>
       </div>
