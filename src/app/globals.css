@@ -582,7 +582,7 @@ body {
 
 }
 
-.card-container {
+/* .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
@@ -632,6 +632,7 @@ body {
   display: flex;
   justify-content: space-between;
   font-weight: bold;
+  color: #2c9ff2;
 }
 
 .teacher-subject {
@@ -648,7 +649,7 @@ body {
   color: #0005ff;
   font-size: 1rem;
   line-height: 1.5;
-}
+} */
 
 /* app/globals.css */
 

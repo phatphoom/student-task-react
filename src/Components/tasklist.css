@@ -10,6 +10,7 @@
   height: fit-content;
   width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
 } 
 
 .dateHeader {
@@ -32,6 +33,7 @@
 
 
 .taskCard {
+  color: #2c9ff2;
   background-color: #fafafa;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
@@ -43,6 +45,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  
 }
 
 .editForm {
@@ -139,14 +142,7 @@ textarea.inputEdit {
   background-color: #f4dbf2;
 }
 
-/* หรือใช้คลาสแบบนี้ */
-.school-event-task {
-  background-color: #f4dbf2;
-}
 
-.school-event-task .taskBody {
-  background-color: #f4dbf2;
-}
 /* Add these styles to your tasklist.css file */
 .taskCreator {
   margin-top: 8px;
