@@ -47,6 +47,7 @@
 }
 
 .task-header {
+  color: #2c9ff2;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -59,6 +60,7 @@
 }
 
 .teacher-subject {
+  color: #2c9ff2;
   flex: 1; /* ยังคงไว้ */
   min-width: 0; /* ยังคงไว้ */
   /* ลบ white-space: nowrap; */
@@ -67,7 +69,7 @@
 }
 
 .task-type {
-  color: #333;
+  color: #2c9ff2;
   /* ลบ white-space: nowrap; */
   margin-left: auto; /* เพิ่มบรรทัดนี้ */
 }
