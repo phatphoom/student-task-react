@@ -7,9 +7,7 @@ import "./reports.css";
 export default function TaskInformation() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
-  const [isFiltered, setIsFiltered] = useState(false);
+  const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
 
   // Set default dateFrom to today on first load
   useEffect(() => {
@@ -23,33 +21,27 @@ export default function TaskInformation() {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
       .then((data: Task[]) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const futureTasks = data.filter((task) => {
-          const taskDate = new Date(task.due_date);
-          taskDate.setHours(0, 0, 0, 0);
-          return taskDate >= today;
-        });
-        setTasks(futureTasks);
+        setTasks(data);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
 
-  // Search button handler
-  const handleSearch = () => {
-    if (!dateFrom) {
-      alert("Please select From date");
-      return;
+  // Update grouped tasks when dateFrom or tasks change
+  useEffect(() => {
+    if (dateFrom && tasks.length > 0) {
+      updateGroupedTasks();
     }
+  }, [dateFrom, tasks]);
 
+  const updateGroupedTasks = () => {
     const fromDate = new Date(dateFrom);
     fromDate.setHours(0, 0, 0, 0);
 
-    // หา maxDate จากข้อมูลทั้งหมดใน tasks
+    // Find max date from all tasks
     const maxTaskDate = tasks.reduce((max, task) => {
       const taskDate = new Date(task.due_date);
       return taskDate > max ? taskDate : max;
-    }, fromDate);
+    }, new Date(fromDate));
 
     maxTaskDate.setHours(23, 59, 59, 999);
 
@@ -58,31 +50,25 @@ export default function TaskInformation() {
       return taskDate >= fromDate && taskDate <= maxTaskDate;
     });
 
-    setFilteredTasks(filtered);
-    setIsFiltered(true);
-
-    // update dateTo (optional)
-    setDateTo(maxTaskDate.toISOString().split("T")[0]);
+    const grouped = groupTasksByDate(filtered);
+    setGroupedTasks(grouped);
   };
+
   // Utility: convert date string to display format
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
-  // Pick which tasks to show
-  const targetTasks = isFiltered ? filteredTasks : tasks;
-
   // Group tasks by date string
-  const groupedTasks: GroupedTasks = targetTasks.reduce(
-    (acc: GroupedTasks, task: Task) => {
+  const groupTasksByDate = (tasksToGroup: Task[]): GroupedTasks => {
+    return tasksToGroup.reduce((acc: GroupedTasks, task: Task) => {
       const dateKey = formatDate(task.due_date);
       if (!acc[dateKey]) acc[dateKey] = [];
       acc[dateKey].push(task);
       return acc;
-    },
-    {}
-  );
+    }, {});
+  };
 
   // Sort entries ascending
   const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
@@ -124,10 +110,6 @@ export default function TaskInformation() {
               />
             </div>
           </div>
-
-          <button onClick={handleSearch} className="btn-primary">
-            Search
-          </button>
         </div>
 
         <div className="card-container">
