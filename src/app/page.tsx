@@ -22,7 +22,16 @@ export default function TaskInformation() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`)
       .then((res) => res.json())
-      .then((data: Task[]) => setTasks(data))
+      .then((data: Task[]) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const futureTasks = data.filter((task) => {
+          const taskDate = new Date(task.due_date);
+          taskDate.setHours(0, 0, 0, 0);
+          return taskDate >= today;
+        });
+        setTasks(futureTasks);
+      })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
 
@@ -75,28 +84,8 @@ export default function TaskInformation() {
     {}
   );
 
-  // Generate date range (always 7 days after dateFrom)
-  const generateDateRange = (startStr: string): string[] => {
-    const dates: string[] = [];
-    const startDate = new Date(startStr);
-    if (isNaN(startDate.getTime())) return dates;
-
-    startDate.setHours(0, 0, 0, 0);
-    for (let i = 0; i < 7; i++) {
-      dates.push(startDate.toLocaleDateString("en-GB").replace(/\//g, "."));
-      startDate.setDate(startDate.getDate() + 1);
-    }
-    return dates;
-  };
-
-  const fullDates = generateDateRange(dateFrom);
-  const filledGroupedTasks: GroupedTasks = {};
-  fullDates.forEach((dateKey) => {
-    filledGroupedTasks[dateKey] = groupedTasks[dateKey] || [];
-  });
-
   // Sort entries ascending
-  const sortedEntries = Object.entries(filledGroupedTasks).sort(([a], [b]) => {
+  const sortedEntries = Object.entries(groupedTasks).sort(([a], [b]) => {
     const dateA = new Date(a.split(".").reverse().join("-"));
     const dateB = new Date(b.split(".").reverse().join("-"));
     return dateA.getTime() - dateB.getTime();

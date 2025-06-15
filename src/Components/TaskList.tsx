@@ -123,12 +123,33 @@ export default function TaskList({
     }
     return dates;
   };
+  const generateDateRangeFromTo = (start: Date, end: Date): string[] => {
+    const dates: string[] = [];
+    const current = new Date(start);
+    current.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
 
+    while (current <= end) {
+      dates.push(current.toLocaleDateString("en-GB"));
+      current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+  };
   const groupAndSortTasks = () => {
     const grouped: Record<string, Task[]> = {};
     const start = startDate ? new Date(startDate) : new Date();
-    const dates = generateDateRange(start, 7);
+
+    // 🔍 หาวันสุดท้าย
+    const maxDate = tasks.reduce((max, task) => {
+      const taskDate = new Date(task.due_date);
+      return taskDate > max ? taskDate : max;
+    }, new Date(start));
+
+    // 🔄 generate ทุกวันตั้งแต่ start ถึง maxDate
+    const dates = generateDateRangeFromTo(start, maxDate);
     dates.forEach((d) => (grouped[d] = []));
+
     tasks.forEach((t) => {
       const td = new Date(t.due_date);
       const key = td.toLocaleDateString("en-GB");
