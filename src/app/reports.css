@@ -131,3 +131,28 @@
 .creator-name {
   font-style: italic;
 }
+
+/* จัดตำแหน่งปุ่มให้อยู่ตรงกลาง */
+.form-group2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ตรงกลางแนวแกน X */
+  gap: 10px;
+}
+
+/* ปรับสีปุ่มให้ดูน่ารักขึ้น */
+.full-calendar-btn {
+  background-color: #ff6b81; /* สีชมพูอมแดงพาสเทล */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.full-calendar-btn:hover {
+  background-color: #ff4f6f; /* สีเข้มขึ้นเวลาชี้ */
+}
