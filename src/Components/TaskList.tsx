@@ -60,7 +60,7 @@ export default function TaskList({
       const updatedTask = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
-        created_by: editData.created_by, // 👈 เพิ่มเพื่อความชัดเจน (จริงๆ ...editData ก็รวมอยู่แล้ว)
+        created_by: editData.created_by,
       };
       console.log(updatedTask);
       const res = await fetch(
@@ -123,6 +123,7 @@ export default function TaskList({
     }
     return dates;
   };
+
   const generateDateRangeFromTo = (start: Date, end: Date): string[] => {
     const dates: string[] = [];
     const current = new Date(start);
@@ -136,6 +137,30 @@ export default function TaskList({
 
     return dates;
   };
+
+  // ฟังก์ชันสำหรับเรียงลำดับ task ตามประเภท
+  const sortTasksInDate = (tasksOnDate: Task[]) => {
+    return tasksOnDate.sort((a, b) => {
+      // กำหนดลำดับความสำคัญ
+      const getPriority = (workType: string) => {
+        switch (workType) {
+          case "School Event":
+            return 1;
+          case "School Exam":
+            return 2;
+          case "Group":
+            return 3;
+          case "Personal":
+            return 4;
+          default:
+            return 5;
+        }
+      };
+
+      return getPriority(a.work_type) - getPriority(b.work_type);
+    });
+  };
+
   const groupAndSortTasks = () => {
     const grouped: Record<string, Task[]> = {};
     const start = startDate ? new Date(startDate) : new Date();
@@ -164,6 +189,7 @@ export default function TaskList({
         return da.getTime() - db.getTime();
       });
   };
+
   return (
     <div className="cardContainer">
       {groupAndSortTasks().map(([date, tasksOnDate]) => {
@@ -174,6 +200,12 @@ export default function TaskList({
           weekday: "short",
         }).format(dateObj);
 
+        // เรียงลำดับ tasks ในวันนั้น
+        const sortedTasks = sortTasksInDate(tasksOnDate);
+
+        // แยก task ที่เป็นการบ้าน (Group, Personal) สำหรับนับหมายเลข
+        let homeworkCounter = 0;
+
         return (
           <div key={date} className="dateCard">
             <div className="dateHeader">
@@ -183,64 +215,73 @@ export default function TaskList({
             {tasks.length === 0 ? (
               <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
             ) : (
-              tasksOnDate.map((t, index) => (
-                <div
-                  key={t.sid}
-                  className={`taskCard ${
-                    t.work_type === "School Event" ? "school-event-task" : ""
-                  }`}
-                  data-work-type={t.work_type}
-                >
-                  {editingId === t.sid ? (
-                    <div className="editForm">
-                      <EditForm
-                        editData={editData}
-                        setEditData={setEditData}
-                        handleSave={() => handleSave(t.sid)}
-                        handleCancel={handleCancel}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="taskHeader">
-                        <span>{index + 1}. </span>
-                        {t.work_type !== "school event" &&
-                          t.teacher &&
-                          t.subject && (
-                            <strong>
-                              {t.teacher} : {t.subject}
-                            </strong>
-                          )}
-                        <span className="typeTag">{t.work_type}</span>
-                      </div>
-                      <div className="taskBody">{t.wtf}</div>
+              sortedTasks.map((t) => {
+                // เพิ่มตัวนับสำหรับการบ้านเท่านั้น
+                const isHomework =
+                  t.work_type === "Group" || t.work_type === "Personal";
+                if (isHomework) homeworkCounter++;
 
-                      {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
-                      <div className="taskCreator">
-                        <span className="creatorLabel">by :</span>
-                        <span className="creatorName">
-                          {t.created_by_name || "Unknown"}
-                        </span>
+                return (
+                  <div
+                    key={t.sid}
+                    className={`taskCard ${
+                      t.work_type === "School Event" ? "school-event-task" : ""
+                    }`}
+                    data-work-type={t.work_type}
+                  >
+                    {editingId === t.sid ? (
+                      <div className="editForm">
+                        <EditForm
+                          editData={editData}
+                          setEditData={setEditData}
+                          handleSave={() => handleSave(t.sid)}
+                          handleCancel={handleCancel}
+                        />
                       </div>
+                    ) : (
+                      <>
+                        <div className="taskHeader">
+                          {/* แสดงหมายเลขเฉพาะการบ้าน (Group, Personal) */}
+                          {isHomework && <span>{homeworkCounter}. </span>}
 
-                      <div className="taskActions">
-                        <button
-                          onClick={() => handleEdit(t)}
-                          className="editBtn"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(t.sid)}
-                          className="deleteBtn"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
+                          {t.work_type !== "school event" &&
+                            t.teacher &&
+                            t.subject && (
+                              <strong>
+                                {t.teacher} : {t.subject}
+                              </strong>
+                            )}
+                          <span className="typeTag">{t.work_type}</span>
+                        </div>
+                        <div className="taskBody">{t.wtf}</div>
+
+                        {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
+                        <div className="taskCreator">
+                          <span className="creatorLabel">by :</span>
+                          <span className="creatorName">
+                            {t.created_by_name || "Unknown"}
+                          </span>
+                        </div>
+
+                        <div className="taskActions">
+                          <button
+                            onClick={() => handleEdit(t)}
+                            className="editBtn"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(t.sid)}
+                            className="deleteBtn"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
         );
@@ -286,6 +327,7 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
           <option value="Group">Group</option>
           <option value="Personal">Personal</option>
           <option value="School Event">School Event</option>
+          <option value="School Exam">School Exam</option>
         </select>
       </div>
       <div className="editFormField">

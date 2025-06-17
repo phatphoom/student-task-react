@@ -36,7 +36,7 @@ export default function TaskForm({
   const handleSubmit = async () => {
     let finalDueDate = dueDate;
 
-    if (workType === "School Event") {
+    if (workType === "School Event" || workType === "School Exam") {
       if (!wtf) {
         alert("Please fill in What to Finish.");
         return;
@@ -140,7 +140,7 @@ export default function TaskForm({
             className="form-input date-input"
           />
         </div>
-        {workType !== "School Event" && (
+        {workType !== "School Event" && workType !== "School Exam" && (
           <>
             <div className="form-group">
               <label className="form-label">Teacher *</label>
@@ -206,6 +206,7 @@ export default function TaskForm({
             <option>Group</option>
             <option>Personal</option>
             <option>School Event</option>
+            <option>School Exam</option>
           </select>
         </div>
       </div>
