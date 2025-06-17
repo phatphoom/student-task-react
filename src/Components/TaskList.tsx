@@ -225,7 +225,11 @@ export default function TaskList({
                   <div
                     key={t.sid}
                     className={`taskCard ${
-                      t.work_type === "School Event" ? "school-event-task" : ""
+                      t.work_type === "School Event"
+                        ? "school-event-task"
+                        : t.work_type === "School Exam"
+                        ? "school-exam-task"
+                        : ""
                     }`}
                     data-work-type={t.work_type}
                   >

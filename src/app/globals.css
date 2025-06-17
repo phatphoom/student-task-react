@@ -231,10 +231,9 @@ body {
   .group-button-and-text {
     justify-content: center;
     flex-direction: column; /* ถ้าอยากให้เรียงแนวตั้งเมื่อหน้าจอแคบ */
-    align-items: center;    /* ให้อยู่กึ่งกลางแนวขวางด้วย */
-    gap: 1rem;              /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
+    align-items: center; /* ให้อยู่กึ่งกลางแนวขวางด้วย */
+    gap: 1rem; /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
   }
-
 
   .nav-btn,
   .btn-primary,
@@ -575,11 +574,9 @@ body {
 }
 
 @media (max-width: 480px) {
-
   .title {
     font-size: 1.75rem;
   }
-
 }
 
 .card-container {
@@ -623,7 +620,6 @@ body {
 .task-item {
   border-top: 1px solid #ddd;
   padding: 12px;
-
 }
 
 .task-header {
@@ -781,4 +777,15 @@ body {
 
 .school-event-task .task-header {
   background-color: #f0c5ed !important;
+}
+
+.school-exam-task {
+  /* background-color: #f4dbf2 !important; */
+  border-left: 4px solid #d68fcf;
+}
+.school-exam-task .typeTag {
+  color: #ff5151;
+}
+.school-exam-task .taskBody {
+  color: #ff5151;
 }
