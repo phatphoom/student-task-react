@@ -164,10 +164,14 @@ export default function TaskInformation() {
                     <div className="task-day">
                       {dateTasks.map((task, index) => (
                         <div
-                          key={task.sid || `${date}-${index}`}
-                          className={`task-item ${
-                            task.work_type === "School Event" ? "school-event" : ""
-                          }`}
+                        key={task.sid || `${date}-${index}`}
+                        className={`task-item ${
+                          task.work_type === "School Event" 
+                            ? "school-event" 
+                            : task.work_type === "School Exam" 
+                              ? "school-exam" 
+                              : ""
+                        }`}
                         >
                           <div className="task-header">
                             <strong>{index + 1}. </strong>

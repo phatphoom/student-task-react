@@ -7,6 +7,7 @@
 }
 
 .card {
+  
   width: 100%;
   height: fit-content;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -155,4 +156,16 @@
 
 .full-calendar-btn:hover {
   background-color: #ff4f6f; /* สีเข้มขึ้นเวลาชี้ */
+}
+
+.task-item.school-exam .task-type {
+  color: #ff5151; /* สีข้อความแดง */
+  font-weight: bold;
+}
+
+.task-item.school-exam .task-body {
+  color: white !important; /* ข้อความสีขาว */
+  background-color: #ff5151 !important; /* พื้นหลังสีแดง */
+  padding: 8px 12px;
+  border-radius: 4px;
 }
