@@ -150,6 +150,8 @@ export default function TaskInformation() {
                 weekday: "short",
               }).format(dateObj);
 
+              let homeworkCounter = 0;
+
               return (
                 <div key={date} className="card">
                   <div className="card-header">
@@ -162,34 +164,48 @@ export default function TaskInformation() {
                     </div>
                   ) : (
                     <div className="task-day">
-                      {dateTasks.map((task, index) => (
-                        <div
-                        key={task.sid || `${date}-${index}`}
-                        className={`task-item ${
-                          task.work_type === "School Event" 
-                            ? "school-event" 
-                            : task.work_type === "School Exam" 
-                              ? "school-exam" 
-                              : ""
-                        }`}
-                        >
-                          <div className="task-header">
-                            <strong>{index + 1}. </strong>
-                            <span className="teacher-subject">
-                              {task.teacher} : {task.subject}
-                            </span>
-                            <span className="task-type">{task.work_type}</span>
-                          </div>
-                          <div className="task-body">{task.wtf}</div>
+                      {dateTasks.map((task, index) => {
+                        const isHomework = task.work_type === "Group" || task.work_type === "Personal";
+                        if (isHomework) homeworkCounter++;
 
-                          <div className="task-creator">
-                            <span className="creator-label">by :</span>
-                            <span className="creator-name">
-                              {task.created_by_name || "Unknown"}
-                            </span>
+                        return (
+                          <div
+                            key={task.sid || `${date}-${index}`}
+                            className={`task-item ${
+                              task.work_type === "School Event" 
+                                ? "school-event" 
+                                : task.work_type === "School Exam" 
+                                  ? "school-exam" 
+                                  : ""
+                            }`}
+                          >
+                            <div className="task-header">
+                              {/* แสดงตัวเลขเฉพาะ Group และ Personal */}
+                              {(task.work_type === "Group" || task.work_type === "Personal") && (
+                                <strong>{homeworkCounter}. </strong>
+                              )}
+                              
+                              {/* แสดงครูและวิชา ยกเว้น School Event/Exam */}
+                              {task.work_type !== "School Event" && task.work_type !== "School Exam" && (
+                                <span className="teacher-subject">
+                                  {task.teacher} : {task.subject}
+                                </span>
+                              )}
+                              
+                              {/* แสดงประเภทงานทั้งหมด */}
+                              <span className="task-type">{task.work_type}</span>
+                            </div>
+                            <div className="task-body">{task.wtf}</div>
+
+                            <div className="task-creator">
+                              <span className="creator-label">by :</span>
+                              <span className="creator-name">
+                                {task.created_by_name || "Unknown"}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

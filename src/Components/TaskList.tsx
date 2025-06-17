@@ -138,10 +138,8 @@ export default function TaskList({
     return dates;
   };
 
-  // ฟังก์ชันสำหรับเรียงลำดับ task ตามประเภท
   const sortTasksInDate = (tasksOnDate: Task[]) => {
     return tasksOnDate.sort((a, b) => {
-      // กำหนดลำดับความสำคัญ
       const getPriority = (workType: string) => {
         switch (workType) {
           case "School Event":
@@ -165,13 +163,11 @@ export default function TaskList({
     const grouped: Record<string, Task[]> = {};
     const start = startDate ? new Date(startDate) : new Date();
 
-    // 🔍 หาวันสุดท้าย
     const maxDate = tasks.reduce((max, task) => {
       const taskDate = new Date(task.due_date);
       return taskDate > max ? taskDate : max;
     }, new Date(start));
 
-    // 🔄 generate ทุกวันตั้งแต่ start ถึง maxDate
     const dates = generateDateRangeFromTo(start, maxDate);
     dates.forEach((d) => (grouped[d] = []));
 
@@ -200,10 +196,7 @@ export default function TaskList({
           weekday: "short",
         }).format(dateObj);
 
-        // เรียงลำดับ tasks ในวันนั้น
         const sortedTasks = sortTasksInDate(tasksOnDate);
-
-        // แยก task ที่เป็นการบ้าน (Group, Personal) สำหรับนับหมายเลข
         let homeworkCounter = 0;
 
         return (
@@ -216,9 +209,7 @@ export default function TaskList({
               <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
             ) : (
               sortedTasks.map((t) => {
-                // เพิ่มตัวนับสำหรับการบ้านเท่านั้น
-                const isHomework =
-                  t.work_type === "Group" || t.work_type === "Personal";
+                const isHomework = t.work_type === "Group" || t.work_type === "Personal";
                 if (isHomework) homeworkCounter++;
 
                 return (
@@ -245,21 +236,16 @@ export default function TaskList({
                     ) : (
                       <>
                         <div className="taskHeader">
-                          {/* แสดงหมายเลขเฉพาะการบ้าน (Group, Personal) */}
                           {isHomework && <span>{homeworkCounter}. </span>}
-
-                          {t.work_type !== "school event" &&
-                            t.teacher &&
-                            t.subject && (
-                              <strong>
-                                {t.teacher} : {t.subject}
-                              </strong>
-                            )}
+                          {(t.work_type !== "School Event" && t.work_type !== "School Exam") && (
+                            <strong>
+                              {t.teacher} : {t.subject}
+                            </strong>
+                          )}
                           <span className="typeTag">{t.work_type}</span>
                         </div>
                         <div className="taskBody">{t.wtf}</div>
 
-                        {/* เพิ่มส่วนแสดงชื่อผู้สร้าง */}
                         <div className="taskCreator">
                           <span className="creatorLabel">by :</span>
                           <span className="creatorName">
@@ -294,7 +280,6 @@ export default function TaskList({
   );
 }
 
-// EditForm (เหมือนเดิม)
 function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
   return (
     <>
