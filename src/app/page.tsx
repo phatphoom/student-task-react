@@ -30,7 +30,26 @@ export default function TaskInformation() {
       updateGroupedTasks();
     }
   }, [dateFrom, tasks]);
+  useEffect(() => {
+    const user = localStorage.getItem("adminName");
+    const logAccess = async () => {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/log-access`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            menu: "Work on Due Report", // แก้ชื่อเมนูให้ตรงแต่ละหน้า
+            user: user ?? "", // ส่งค่าว่าง ถ้าไม่มีชื่อ
+            date_time: new Date().toISOString(),
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to log access:", err);
+      }
+    };
 
+    logAccess();
+  }, []);
   const updateGroupedTasks = () => {
     const fromDate = new Date(dateFrom);
     fromDate.setHours(0, 0, 0, 0);
@@ -165,35 +184,41 @@ export default function TaskInformation() {
                   ) : (
                     <div className="task-day">
                       {dateTasks.map((task, index) => {
-                        const isHomework = task.work_type === "Group" || task.work_type === "Personal";
+                        const isHomework =
+                          task.work_type === "Group" ||
+                          task.work_type === "Personal";
                         if (isHomework) homeworkCounter++;
 
                         return (
                           <div
                             key={task.sid || `${date}-${index}`}
                             className={`task-item ${
-                              task.work_type === "School Event" 
-                                ? "school-event" 
-                                : task.work_type === "School Exam" 
-                                  ? "school-exam" 
-                                  : ""
+                              task.work_type === "School Event"
+                                ? "school-event"
+                                : task.work_type === "School Exam"
+                                ? "school-exam"
+                                : ""
                             }`}
                           >
                             <div className="task-header">
                               {/* แสดงตัวเลขเฉพาะ Group และ Personal */}
-                              {(task.work_type === "Group" || task.work_type === "Personal") && (
+                              {(task.work_type === "Group" ||
+                                task.work_type === "Personal") && (
                                 <strong>{homeworkCounter}. </strong>
                               )}
-                              
+
                               {/* แสดงครูและวิชา ยกเว้น School Event/Exam */}
-                              {task.work_type !== "School Event" && task.work_type !== "School Exam" && (
-                                <span className="teacher-subject">
-                                  {task.teacher} : {task.subject}
-                                </span>
-                              )}
-                              
+                              {task.work_type !== "School Event" &&
+                                task.work_type !== "School Exam" && (
+                                  <span className="teacher-subject">
+                                    {task.teacher} : {task.subject}
+                                  </span>
+                                )}
+
                               {/* แสดงประเภทงานทั้งหมด */}
-                              <span className="task-type">{task.work_type}</span>
+                              <span className="task-type">
+                                {task.work_type}
+                              </span>
                             </div>
                             <div className="task-body">{task.wtf}</div>
 
