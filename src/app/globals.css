@@ -787,5 +787,6 @@ body {
   color: #ff5151;
 }
 .school-exam-task .taskBody {
-  color: #ff5151;
+  background-color: #ff5151;
+  color: white;
 }
