@@ -29,6 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  letter-spacing: 2px; /* ระยะห่างระหว่างตัวเลข (ปรับค่าได้ตามต้องการ) */
 }
 
 .card-empty {

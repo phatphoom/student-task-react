@@ -23,6 +23,7 @@
   align-items: center;
   color: rgb(0, 0, 0);
   font-size: 1rem;
+  letter-spacing: 2px; /* ระยะห่างระหว่างตัวเลข (ปรับค่าได้ตามต้องการ) */
 }
 
 .weekday {
