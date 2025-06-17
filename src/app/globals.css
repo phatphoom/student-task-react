@@ -579,25 +579,6 @@ body {
   }
 }
 
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-.card {  
-  width: 100%;
-  height: fit-content;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2 ease, box-shadow 0.2s ease;
-  border: 3px solid #747474; /* หรือจะใช้สีอื่นก็ได้ */
-}
-
 .card-header {
   background-color: #cce6ff;
   padding: 12px;
@@ -618,19 +599,6 @@ body {
   font-style: italic;
 }
 
-.task-item {
-  border-top: 1px solid #ddd;
-  padding: 12px;
-}
-
-.task-header {
-  background-color: #fafafa;
-  padding: 8px 12px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  color: #2c9ff2;
-}
 
 .teacher-subject {
   color: #333;

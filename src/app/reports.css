@@ -1,13 +1,11 @@
 .card-container {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
   width: 100%;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
 }
 
-.card {
-  
+.card {  
   width: 100%;
   height: fit-content;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -15,8 +13,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin: 0; /* เพิ่มบรรทัดนี้ */
+  transition: transform 0.2 ease, box-shadow 0.2s ease;
+  border: 3px solid #747474; /* หรือจะใช้สีอื่นก็ได้ */
 }
 
 .card-header {
@@ -41,38 +39,35 @@
 }
 
 .task-item {
-  border-top: 1px solid #ddd;
-  padding: 12px;
-  margin: 0;
+  padding: 16px 12px; /* เพิ่ม padding ให้มากขึ้น */
+  margin: 0 0 16px 0; /* เพิ่ม margin ด้านล่าง */
   display: flex;
   flex-direction: column;
+  background-color: #fff; /* กำหนดพื้นหลังให้ชัดเจน */
+}
+
+.task-item + .task-item {
+  margin-top: 1.5rem; 
+  padding-top: 1rem; 
 }
 
 .task-header {
-  color: #2c9ff2;
+  background-color: #fafafa;
+  padding: 8px 12px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  /* ลบ flex-wrap: nowrap; */
-  /* ลบ white-space: nowrap; */
-  /* ลบ overflow: hidden; */
-  /* ลบ text-overflow: ellipsis; */
-  justify-content: space-between; /* เพิ่มบรรทัดนี้ */
-  width: 100%; /* เพิ่มบรรทัดนี้ */
+  justify-content: space-between;
+  font-weight: bold;
+  color: #2c9ff2;
 }
 
 .teacher-subject {
   color: #2c9ff2;
   flex: 1; /* ยังคงไว้ */
   min-width: 0; /* ยังคงไว้ */
-  /* ลบ white-space: nowrap; */
-  /* ลบ overflow: hidden; */
-  /* ลบ text-overflow: ellipsis; */
 }
 
 .task-type {
   color: #2c9ff2;
-  /* ลบ white-space: nowrap; */
   margin-left: auto; /* เพิ่มบรรทัดนี้ */
 }
 
@@ -88,7 +83,7 @@
     grid-template-columns: 1fr;
     padding: 0;
     margin: 0px; 
-    gap: 0;
+    gap: 16px;
   }
 
   .card {
@@ -96,7 +91,7 @@
     border-radius: 0;
     margin: 0;
     box-shadow: none;
-    border-bottom: 1px solid #ddd;
+    border: 3px solid #747474;
   }
 
   .card-header {
