@@ -9,6 +9,13 @@ export default function TaskInformation() {
   const [dateFrom, setDateFrom] = useState<string>("");
   const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
   const [fullCalendarMode, setFullCalendarMode] = useState(false);
+  const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
+  const [error, setError] = useState("");      // error validation
+  const [notes, setNotes] = useState([]);
+
+  // เพิ่ม useState สำหรับ Note และ selectedTask
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [note, setNote] = useState<string>("");
 
   useEffect(() => {
     const today = new Date();
@@ -30,6 +37,7 @@ export default function TaskInformation() {
       updateGroupedTasks();
     }
   }, [dateFrom, tasks]);
+
   useEffect(() => {
     const user = localStorage.getItem("adminName");
     const logAccess = async () => {
@@ -38,8 +46,8 @@ export default function TaskInformation() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            menu: "Work on Due Report", // แก้ชื่อเมนูให้ตรงแต่ละหน้า
-            user: user ?? "", // ส่งค่าว่าง ถ้าไม่มีชื่อ
+            menu: "Work on Due Report",
+            user: user ?? "",
             date_time: new Date().toISOString(),
           }),
         });
@@ -47,9 +55,9 @@ export default function TaskInformation() {
         console.error("Failed to log access:", err);
       }
     };
-
     logAccess();
   }, []);
+
   const updateGroupedTasks = () => {
     const fromDate = new Date(dateFrom);
     fromDate.setHours(0, 0, 0, 0);
@@ -117,6 +125,17 @@ export default function TaskInformation() {
         return dateA.getTime() - dateB.getTime();
       });
 
+  // เพิ่มฟังก์ชัน closeModal และ handleSaveNote
+  const closeModal = () => {
+    setSelectedTask(null);
+    setNote("");
+  };
+
+  const handleSaveNote = () => {
+    console.log("Saved note:", note, "for task:", selectedTask);
+    closeModal();
+  };
+
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -129,7 +148,6 @@ export default function TaskInformation() {
           </h1>
           <h2 className="title">Class Room EP105</h2>
         </div>
-
         <div className="top-right-button">
           <Link href="/Logins" className="nav-btn">
             Manage Due
@@ -139,7 +157,6 @@ export default function TaskInformation() {
           </Link>
         </div>
       </div>
-
       <div className="max-w-6xl mx-auto">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
           <div className="form-row2">
@@ -160,7 +177,6 @@ export default function TaskInformation() {
             </div>
           </div>
         </div>
-
         <div className="card-container">
           {sortedEntries.map(([date, dateTasks]) => {
             try {
@@ -179,61 +195,50 @@ export default function TaskInformation() {
                   <div className="card-header">
                     {date} <span className="weekday">{weekday}</span>
                   </div>
-
                   {dateTasks.length === 0 ? (
                     <div className="card-empty">
                       No Task Dued: Yeah!!! Very Happy
                     </div>
                   ) : (
                     <div className="task-day">
-                      {dateTasks.map((task, index) => {
-                        const isHomework =
-                          task.work_type === "Group" ||
-                          task.work_type === "Personal";
-                        if (isHomework) homeworkCounter++;
-
-                        return (
-                          <div
-                            key={task.sid || `${date}-${index}`}
-                            className={`task-item ${
-                              task.work_type === "School Event"
-                                ? "school-event"
-                                : task.work_type === "School Exam"
-                                ? "school-exam"
-                                : ""
-                            }`}
-                          >
-                            <div className="task-header">
-                              {/* แสดงตัวเลขเฉพาะ Group และ Personal */}
-                              {(task.work_type === "Group" ||
-                                task.work_type === "Personal") && (
-                                <strong>{homeworkCounter}. </strong>
-                              )}
-
-                              {/* แสดงครูและวิชา ยกเว้น School Event/Exam */}
-                              {task.work_type !== "School Event" &&
-                                task.work_type !== "School Exam" && (
-                                  <span className="teacher-subject">
-                                    {task.teacher} : {task.subject}
-                                  </span>
-                                )}
-
-                              {/* แสดงประเภทงานทั้งหมด */}
-                              <span className="task-type">
-                                {task.work_type}
+                      {dateTasks.map((task, index) => (
+                        <div
+                          key={task.sid || `${date}-${index}`}
+                          className={`task-item ${
+                            task.work_type === "School Event"
+                              ? "school-event"
+                              : task.work_type === "School Exam"
+                              ? "school-exam"
+                              : ""
+                          }`}
+                        >
+                          <div className="task-header">
+                            {(task.work_type === "Group" || task.work_type === "Personal") && (
+                              <strong>{index + 1}. </strong>
+                            )}
+                            {task.work_type !== "School Event" && task.work_type !== "School Exam" && (
+                              <span className="teacher-subject">
+                                {task.teacher} : {task.subject}
                               </span>
-                            </div>
-                            <div className="task-body">{task.wtf}</div>
-
-                            <div className="task-creator">
+                            )}
+                            <span className="task-type">{task.work_type}</span>
+                          </div>
+                          <div className="task-body">{task.wtf}</div>
+                          <div className="task-creator">
+                            <button
+                              className="open-note-btn"
+                              onClick={() => setSelectedTask(task)}
+                            >
+                              📝
+                            </button>
+                            <div className="creator-info">
                               <span className="creator-label">by :</span>
-                              <span className="creator-name">
-                                {task.created_by_name || "Unknown"}
-                              </span>
+                              <span className="creator-name">{task.created_by_name || "Unknown"}</span>
                             </div>
                           </div>
-                        );
-                      })}
+                        </div>
+                      ))}
+
                     </div>
                   )}
                 </div>
@@ -245,6 +250,66 @@ export default function TaskInformation() {
           })}
         </div>
       </div>
+      {/* เพิ่ม Modal Popup ตรงนี้ ก่อนปิด div สุดท้าย */}
+      {selectedTask && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <strong>
+                {selectedTask.teacher} : {selectedTask.subject}
+              </strong>
+              <span className="task-type">{selectedTask.work_type}</span>
+              <button onClick={closeModal} className="modal-close">
+                ✖
+              </button>
+            </div>
+
+            {/* ส่วนแสดง Note เดิม */}
+            <div className="modal-body">
+              <div className="existing-notes">
+                {notes.map((item, index) => (
+                  <div key={index} className="note-item">
+                    <div className="note-header">
+                      <strong>Note {index + 1} : by {item.name}</strong>{" "}
+                      <span className="note-date">{item.date}</span>
+                    </div>
+                    <div className="note-body">{item.text}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* textarea สำหรับเพิ่ม Note ใหม่ */}
+              <textarea
+                placeholder="Add your note..."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="modal-note"
+              />
+
+              {/* input Your Name */}
+              <input
+                type="text"
+                placeholder="Your Name *"
+                value={yourName}
+                onChange={(e) => setYourName(e.target.value)}
+                className="modal-name-input"
+              />
+
+              {/* แจ้งเตือน error */}
+              {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+            </div>
+
+            <div className="modal-footer">
+              <button onClick={handleSaveNote} className="modal-save-btn">
+                💾 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
     </div>
   );
 }
