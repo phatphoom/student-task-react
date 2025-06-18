@@ -32,3 +32,9 @@ export interface UserAdmin {
   hintword: string;
   username: string;
 }
+
+export interface Note {
+  name: string;
+  date: string;
+  text: string;
+}

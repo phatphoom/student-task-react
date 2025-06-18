@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Task, GroupedTasks } from "@/types";
+import { Task, GroupedTasks, Note } from "@/types";
 import "./reports.css";
 
 export default function TaskInformation() {
@@ -10,8 +10,8 @@ export default function TaskInformation() {
   const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
   const [fullCalendarMode, setFullCalendarMode] = useState(false);
   const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
-  const [error, setError] = useState("");      // error validation
-  const [notes, setNotes] = useState([]);
+  const [error, setError] = useState(""); // error validation
+  const [notes, setNotes] = useState<Note[]>([]);
 
   // เพิ่ม useState สำหรับ Note และ selectedTask
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -213,14 +213,16 @@ export default function TaskInformation() {
                           }`}
                         >
                           <div className="task-header">
-                            {(task.work_type === "Group" || task.work_type === "Personal") && (
+                            {(task.work_type === "Group" ||
+                              task.work_type === "Personal") && (
                               <strong>{index + 1}. </strong>
                             )}
-                            {task.work_type !== "School Event" && task.work_type !== "School Exam" && (
-                              <span className="teacher-subject">
-                                {task.teacher} : {task.subject}
-                              </span>
-                            )}
+                            {task.work_type !== "School Event" &&
+                              task.work_type !== "School Exam" && (
+                                <span className="teacher-subject">
+                                  {task.teacher} : {task.subject}
+                                </span>
+                              )}
                             <span className="task-type">{task.work_type}</span>
                           </div>
                           <div className="task-body">{task.wtf}</div>
@@ -233,12 +235,13 @@ export default function TaskInformation() {
                             </button>
                             <div className="creator-info">
                               <span className="creator-label">by :</span>
-                              <span className="creator-name">{task.created_by_name || "Unknown"}</span>
+                              <span className="creator-name">
+                                {task.created_by_name || "Unknown"}
+                              </span>
                             </div>
                           </div>
                         </div>
                       ))}
-
                     </div>
                   )}
                 </div>
@@ -270,7 +273,9 @@ export default function TaskInformation() {
                 {notes.map((item, index) => (
                   <div key={index} className="note-item">
                     <div className="note-header">
-                      <strong>Note {index + 1} : by {item.name}</strong>{" "}
+                      <strong>
+                        Note {index + 1} : by {item.name}
+                      </strong>{" "}
                       <span className="note-date">{item.date}</span>
                     </div>
                     <div className="note-body">{item.text}</div>
@@ -296,7 +301,9 @@ export default function TaskInformation() {
               />
 
               {/* แจ้งเตือน error */}
-              {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+              {error && (
+                <div className="text-red-500 text-sm mt-1">{error}</div>
+              )}
             </div>
 
             <div className="modal-footer">
@@ -307,9 +314,6 @@ export default function TaskInformation() {
           </div>
         </div>
       )}
-
-
-
     </div>
   );
 }
