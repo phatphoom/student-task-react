@@ -70,7 +70,7 @@ body {
 
 .nav-btn,
 .btn-primary {
-  background: rgb(251, 31, 31);
+  background: rgb(255 205 235);
   color: rgb(0, 0, 0);
   border: none;
   border-radius: var(--radius);
