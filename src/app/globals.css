@@ -599,7 +599,6 @@ body {
   font-style: italic;
 }
 
-
 .teacher-subject {
   color: #333;
 }
@@ -646,7 +645,7 @@ body {
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  color: #1e293b;
+  color: #5889d6;
 }
 
 .login-form {
