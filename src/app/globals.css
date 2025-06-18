@@ -759,3 +759,7 @@ body {
   background-color: #ff5151;
   color: white;
 }
+
+.dev-mode {
+  text-decoration: underline;
+}
