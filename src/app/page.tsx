@@ -325,7 +325,17 @@ export default function TaskInformation() {
                         <strong>
                           Note {index + 1} : by {item.note_by}
                         </strong>{" "}
-                        <span className="note-date">{item.note_date}</span>
+                        <span className="note-date">
+                          {new Date(item.note_date).toLocaleString("th-TH", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                              timeZone: "Asia/Bangkok",
+                          })}
+                        </span>
                       </div>
                       <div className="note-body">{item.note}</div>
                     </div>
@@ -337,6 +347,7 @@ export default function TaskInformation() {
                 )}
               </div>
               {/* textarea สำหรับเพิ่ม Note ใหม่ */}
+              <div className="note-title"> Add you Note : </div>
               <textarea
                 placeholder="Add your note..."
                 value={note}
@@ -359,7 +370,7 @@ export default function TaskInformation() {
 
             <div className="modal-footer">
               <button onClick={handleSaveNote} className="modal-save-btn">
-                💾 Save
+                Save
               </button>
             </div>
           </div>

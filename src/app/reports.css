@@ -178,8 +178,61 @@
   color: inherit;
 }
 .open-note-btn:hover {
-  opacity: 0.4;
+  opacity: 0.7;
 }
+
+.notes-container {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.note {
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: white;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 10px;
+  background-color: #b3d4fc;
+  color: rgb(0, 0, 0);
+}
+.note-header strong {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.note-content {
+  padding: 15px;
+}
+
+.note-item {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #2c9ff2;
+}
+
+.note-date {
+  color: #000000;
+  white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */}
+
+.note-title {
+  padding: 5px 15px; /* เพิ่ม padding ด้านซ้าย-ขวา ให้พื้นที่เยอะขึ้น */
+  font-size: large;
+  display: inline-flex;       /* เปลี่ยนจาก flex เป็น inline-flex */
+  text-align: center;
+  justify-content: center;    /* จัดกึ่งกลางข้อความในกล่อง */
+  background: #d68fcf;
+  border-radius: 20px;
+  color: #000000;
+  cursor: default; /* ถ้าต้องการ */
+}
+
 
 .modal-overlay {
   position: fixed;
@@ -229,7 +282,9 @@
 }
 
 .modal-close:hover {
-  color: #000;     /* เอฟเฟกต์ hover → เป็นสีดำชัดเจน */
+  color: #ff0000;     /* เอฟเฟกต์ hover → เป็นสีดำชัดเจน */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
 }
 
 
