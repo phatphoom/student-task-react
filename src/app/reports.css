@@ -233,6 +233,38 @@
   cursor: default; /* ถ้าต้องการ */
 }
 
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  .note-item {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .note-content {
+    padding: 10px;
+  }
+
+  .note-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .note-title {
+    font-size: 1rem;
+    padding: 8px 12px;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
 
 .modal-overlay {
   position: fixed;
@@ -355,3 +387,4 @@
   border-color: #f0c5ed;
   box-shadow: 0 0 3px #f0c5ed;
 }
+
