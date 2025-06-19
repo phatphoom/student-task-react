@@ -189,9 +189,6 @@ export default function TaskInformation() {
       <div className="group-button-and-text">
         <div>
           <h1 className="title">
-            <span className="dev-mode">
-              <b>DEV MODE </b>
-            </span>
             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
           </h1>
           <h2 className="title">Class Room EP105</h2>
