@@ -12,6 +12,7 @@ export default function TaskInformation() {
   const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
   const [error, setError] = useState(""); // error validation
   const [notes, setNotes] = useState<Note[]>([]);
+  
 
   // เพิ่ม useState สำหรับ Note และ selectedTask
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -131,10 +132,71 @@ export default function TaskInformation() {
     setNote("");
   };
 
-  const handleSaveNote = () => {
-    console.log("Saved note:", note, "for task:", selectedTask);
-    closeModal();
+  const handleOpenNote = async (task: Task) => {
+    setSelectedTask(task);
+    setNote("");
+    setError("");
+    setYourName("");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/task-notes?taskid=${task.taskid}`);
+  
+      // เช็ค status ก่อน
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      // เช็ค content-type header
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Response is not JSON");
+      }
+  
+      const data: Note[] = await res.json();
+      setNotes(data);
+    } catch (err) {
+      console.error("Error fetching notes:", err);
+      setNotes([]);
+      setError("ไม่สามารถโหลดโน้ตได้");
+    }
   };
+  
+
+  const handleSaveNote = async () => {
+    if (!note || !yourName) {
+      setError("กรุณากรอก Note และชื่อก่อนบันทึก");
+      return;
+    }
+  
+    if (!selectedTask) return;
+  
+    const newNote = {
+      taskid: selectedTask.taskid,
+      note: note,
+      note_by: yourName,
+      note_date: new Date().toISOString(),
+    };
+  
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/task-notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newNote),
+      });
+  
+      if (!res.ok) throw new Error("Save failed");
+  
+      const updatedNotes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes?taskid=${selectedTask.taskid}`
+      ).then((r) => r.json());
+  
+      setNotes(updatedNotes);
+      closeModal();
+    } catch (err) {
+      console.error("Error saving note:", err);
+      setError("บันทึกไม่สำเร็จ กรุณาลองใหม่");
+    }
+  };
+  
 
   return (
     <div className="p-4">
@@ -227,12 +289,14 @@ export default function TaskInformation() {
                           </div>
                           <div className="task-body">{task.wtf}</div>
                           <div className="task-creator">
-                            <button
-                              className="open-note-btn"
-                              onClick={() => setSelectedTask(task)}
-                            >
-                              📝
-                            </button>
+                          <button
+                            className="open-note-btn"
+                            onClick={() => handleOpenNote(task)}
+                          >
+                            📝
+                          </button>
+
+
                             <div className="creator-info">
                               <span className="creator-label">by :</span>
                               <span className="creator-name">
@@ -308,7 +372,7 @@ export default function TaskInformation() {
 
             <div className="modal-footer">
               <button onClick={handleSaveNote} className="modal-save-btn">
-                💾 Save
+                Save
               </button>
             </div>
           </div>

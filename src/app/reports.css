@@ -170,17 +170,15 @@
   border-radius: 4px;
 }
 
-/*button note*/
 .open-note-btn {
-  background: #ff5252;
-  color: #fff;
+  background: none;
   border: none;
-  border-radius: 24px;
-  padding: 6px 22px;
-  font-size: 20px;
+  font-size: 30px;
+  cursor: pointer;
+  color: inherit;
 }
 .open-note-btn:hover {
-  background: #e53935;
+  opacity: 0.4;
 }
 
 .modal-overlay {
@@ -196,14 +194,26 @@
   justify-content: center;
 }
 
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .modal-content {
   background: white;
   padding: 20px;
   border-radius: 12px;
   max-width: 90%;
   width: 400px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   position: relative;
+  animation: modalFadeIn 0.3s ease-out;
 }
 
 .modal-close {
@@ -245,10 +255,16 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
+  resize: none;
 }
 
+.modal-note:focus  {
+  outline: none;
+  border-color: #f0c5ed;
+  box-shadow: 0 0 3px #f0c5ed;
+}
 .modal-footer {
-  font-size: 14px;
+  font-size: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -256,16 +272,19 @@
 
 .modal-save-btn {
   padding: 6px 12px;
-  background-color: #4caf50;
+  background-color: #2c9ff2;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .modal-save-btn:hover {
-  background-color: #45a049;
+  background-color: #0077cc;
+  transform: scale(1.05);
 }
+
 
 .modal-name-input {
   width: 100%;
@@ -278,6 +297,6 @@
 
 .modal-name-input:focus {
   outline: none;
-  border-color: #4caf50;
-  box-shadow: 0 0 3px #4caf50;
+  border-color: #f0c5ed;
+  box-shadow: 0 0 3px #f0c5ed;
 }

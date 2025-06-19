@@ -1,13 +1,15 @@
 export interface Task {
   sid: number;
+  taskid: string;           // 👈 เพิ่มตรงนี้
   due_date: string;
   subject: string;
   teacher: string;
   wtf: string;
   work_type: string;
   created_by: string;
-  created_by_name?: string; // เพิ่ม field นี้
+  created_by_name?: string;
 }
+
 
 export interface GroupedTasks {
   [key: string]: Task[];
