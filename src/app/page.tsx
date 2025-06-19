@@ -131,11 +131,59 @@ export default function TaskInformation() {
     setNote("");
   };
 
-  const handleSaveNote = () => {
-    console.log("Saved note:", note, "for task:", selectedTask);
-    closeModal();
-  };
+  useEffect(() => {
+    if (selectedTask) {
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask.task_id}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setNotes(Array.isArray(data) ? data : []); // ✅ ป้องกัน map error
+        })
+        .catch((err) => {
+          console.error("Error loading notes:", err);
+          setNotes([]); // fallback
+        });
+    } else {
+      setNotes([]);
+    }
+  }, [selectedTask]);
+  const handleSaveNote = async () => {
+    if (!note || !yourName) {
+      setError("กรุณากรอกทั้ง Note และ Your Name");
+      return;
+    }
 
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task_id: selectedTask?.task_id,
+            note: note,
+            note_by: yourName,
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to save");
+
+      // รีโหลด notes
+      const newNotes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask?.task_id}`
+      ).then((res) => res.json());
+
+      setNotes(newNotes);
+      setNote("");
+      setYourName("");
+      setError("");
+    } catch (err) {
+      setError("บันทึกไม่สำเร็จ กรุณาลองใหม่");
+      console.error("Save note error:", err);
+    }
+  };
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -203,7 +251,7 @@ export default function TaskInformation() {
                     <div className="task-day">
                       {dateTasks.map((task, index) => (
                         <div
-                          key={task.sid || `${date}-${index}`}
+                          key={task.task_id}
                           className={`task-item ${
                             task.work_type === "School Event"
                               ? "school-event"
@@ -270,19 +318,24 @@ export default function TaskInformation() {
             {/* ส่วนแสดง Note เดิม */}
             <div className="modal-body">
               <div className="existing-notes">
-                {notes.map((item, index) => (
-                  <div key={index} className="note-item">
-                    <div className="note-header">
-                      <strong>
-                        Note {index + 1} : by {item.name}
-                      </strong>{" "}
-                      <span className="note-date">{item.date}</span>
+                {Array.isArray(notes) && notes.length > 0 ? (
+                  notes.map((item, index) => (
+                    <div key={index} className="note-item">
+                      <div className="note-header">
+                        <strong>
+                          Note {index + 1} : by {item.note_by}
+                        </strong>{" "}
+                        <span className="note-date">{item.note_date}</span>
+                      </div>
+                      <div className="note-body">{item.note}</div>
                     </div>
-                    <div className="note-body">{item.text}</div>
+                  ))
+                ) : (
+                  <div className="note-item text-gray-500">
+                    No notes available
                   </div>
-                ))}
+                )}
               </div>
-
               {/* textarea สำหรับเพิ่ม Note ใหม่ */}
               <textarea
                 placeholder="Add your note..."
@@ -290,7 +343,6 @@ export default function TaskInformation() {
                 onChange={(e) => setNote(e.target.value)}
                 className="modal-note"
               />
-
               {/* input Your Name */}
               <input
                 type="text"
@@ -299,7 +351,6 @@ export default function TaskInformation() {
                 onChange={(e) => setYourName(e.target.value)}
                 className="modal-name-input"
               />
-
               {/* แจ้งเตือน error */}
               {error && (
                 <div className="text-red-500 text-sm mt-1">{error}</div>

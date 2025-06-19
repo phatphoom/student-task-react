@@ -1,5 +1,6 @@
 export interface Task {
   sid: number;
+  task_id: number;
   due_date: string;
   subject: string;
   teacher: string;
@@ -34,7 +35,9 @@ export interface UserAdmin {
 }
 
 export interface Note {
-  name: string;
-  date: string;
-  text: string;
+  task_id: string;
+  note_id: number;
+  note: string;
+  note_by: string;
+  note_date: string;
 }
