@@ -470,7 +470,7 @@ textarea.inputEdit {
 /* Note count styling */
 .note-count {
   font-size: 0.8em;
-  color: #ff8ff9;
+  color: #0005ff;
   margin-left: 2px;
   font-weight: bold;
   background: rgba(255, 255, 255, 0.2);
@@ -489,9 +489,9 @@ textarea.inputEdit {
   align-items: center;
   transition: all 0.2s ease;
   padding: 5px;
+  margin-right: auto; /* ✅ ดันไปด้านซ้าย */
 }
 
 .open-note-btn:hover {
   color: #0077cc;
-  transform: scale(1.1);
 }
