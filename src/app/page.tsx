@@ -323,15 +323,15 @@ export default function TaskInformation() {
                           Note {index + 1} : by {item.note_by}
                         </strong>{" "}
                         <span className="note-date">
-                          {new Date(item.note_date).toLocaleString("th-TH", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                              timeZone: "Asia/Bangkok",
-                          })}
+                        {new Date(item.note_date).toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "short", // ใช้ "long" ถ้าอยากให้เป็นชื่อเดือนเต็ม
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                          timeZone: "Asia/Bangkok",
+                        })}
                         </span>
                       </div>
                       <div className="note-body">{item.note}</div>
