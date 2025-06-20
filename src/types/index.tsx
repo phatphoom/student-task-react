@@ -8,6 +8,7 @@ export interface Task {
   work_type: string;
   created_by: string;
   created_by_name?: string; // เพิ่ม field นี้
+  last_updated_by?: string;
 }
 
 export interface GroupedTasks {

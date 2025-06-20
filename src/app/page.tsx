@@ -323,7 +323,19 @@ export default function TaskInformation() {
                             <div className="creator-info">
                               <span className="creator-label">by :</span>
                               <span className="creator-name">
-                                {task.created_by_name || "Unknown"}
+                                {(() => {
+                                  const creator =
+                                    task.created_by_name || "Unknown";
+                                  const editor = task.last_updated_by;
+
+                                  // ถ้าไม่มี editor หรือ editor เป็นคนเดียวกับ creator
+                                  if (!editor || editor === creator) {
+                                    return creator;
+                                  }
+
+                                  // ถ้ามี editor และเป็นคนต่างกัน
+                                  return `${creator} / ${editor}`;
+                                })()}
                               </span>
                             </div>
                           </div>
