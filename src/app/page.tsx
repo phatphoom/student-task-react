@@ -41,22 +41,27 @@ export default function TaskInformation() {
 
   // ฟังก์ชันสำหรับโหลด note counts ของทุก task
   const loadTaskNoteCounts = async (tasksData: Task[]) => {
-    const counts: { [key: number]: number } = {};
+    try {
+      const promises = tasksData.map(async (task) => {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${task.task_id}`
+          );
+          const noteData = await res.json();
+          return [task.task_id, Array.isArray(noteData) ? noteData.length : 0];
+        } catch (err) {
+          console.error(`Error loading notes for task ${task.task_id}:`, err);
+          return [task.task_id, 0];
+        }
+      });
 
-    for (const task of tasksData) {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${task.task_id}`
-        );
-        const noteData = await res.json();
-        counts[task.task_id] = Array.isArray(noteData) ? noteData.length : 0;
-      } catch (err) {
-        console.error(`Error loading notes for task ${task.task_id}:`, err);
-        counts[task.task_id] = 0;
-      }
+      const results = await Promise.all(promises);
+      const counts: { [key: number]: number } = Object.fromEntries(results);
+
+      setTaskNoteCounts(counts);
+    } catch (err) {
+      console.error("Failed to load task note counts:", err);
     }
-
-    setTaskNoteCounts(counts);
   };
 
   useEffect(() => {
