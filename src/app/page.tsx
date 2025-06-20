@@ -12,7 +12,7 @@ export default function TaskInformation() {
   const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
   const [error, setError] = useState(""); // error validation
   const [notes, setNotes] = useState<Note[]>([]);
-
+ 
   // เพิ่ม useState สำหรับ Note และ selectedTask
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
