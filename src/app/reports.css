@@ -200,6 +200,7 @@
   background-color: #b3d4fc;
   color: rgb(0, 0, 0);
 }
+
 .note-header strong {
   font-size: 14px;
   font-weight: 600;
@@ -385,6 +386,6 @@
 
 .note-count {
   font-size: 0.8em;
-  color: #666;
+  color: #ff8ff9;
   margin-left: 2px;
 }

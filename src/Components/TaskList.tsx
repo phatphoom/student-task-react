@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Task, EditData } from "@/types";
+import { Task, EditData, Note } from "@/types";
 import "./tasklist.css";
 
 export default function TaskList({
@@ -11,7 +11,7 @@ export default function TaskList({
   startDate: string; // YYYY‑MM‑DD
 }) {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [editingId, setEditingId] = useState<string | null>(null); // เก็บ composite key "sid-task_id"
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<EditData>({
     due_date: "",
     subject: "",
@@ -19,8 +19,15 @@ export default function TaskList({
     wtf: "",
     work_type: "",
     created_by: "",
-    // last_updated_by: "", // เพิ่ม field นี้
   });
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [note, setNote] = useState("");
+  const [yourName, setYourName] = useState("");
+  const [error, setError] = useState("");
+  const [taskNoteCounts, setTaskNoteCounts] = useState<{
+    [key: number]: number;
+  }>({});
 
   useEffect(() => {
     fetchTasks();
@@ -39,13 +46,33 @@ export default function TaskList({
         return td >= start;
       });
       setTasks(filtered);
+      loadTaskNoteCounts(filtered);
     } catch (err) {
       console.error("Error fetching tasks:", err);
     }
   };
 
+  const loadTaskNoteCounts = async (tasksData: Task[]) => {
+    const counts: { [key: number]: number } = {};
+
+    for (const task of tasksData) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${task.task_id}`
+        );
+        const noteData = await res.json();
+        counts[task.task_id] = Array.isArray(noteData) ? noteData.length : 0;
+      } catch (err) {
+        console.error(`Error loading notes for task ${task.task_id}:`, err);
+        counts[task.task_id] = 0;
+      }
+    }
+
+    setTaskNoteCounts(counts);
+  };
+
   const handleEdit = (task: Task) => {
-    setEditingId(`${task.sid}-${task.task_id}`); // ใช้ composite key
+    setEditingId(`${task.sid}-${task.task_id}`);
     setEditData({
       due_date: task.due_date ? task.due_date.split("T")[0] : "",
       subject: task.subject || "",
@@ -57,9 +84,7 @@ export default function TaskList({
   };
 
   const handleSave = async (taskId: string) => {
-    // เปลี่ยน parameter จาก id: number เป็น taskId: string
     try {
-      // ดึง user info จาก localStorage (หรือใช้ค่า default ถ้าไม่มี)
       let userId = null;
       try {
         const userInfo = localStorage.getItem("userInfo");
@@ -75,11 +100,11 @@ export default function TaskList({
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
         created_by: editData.created_by,
-        last_updated_by: userId || editData.last_updated_by || 1, // ใช้ค่าจาก localStorage, editData, หรือ default
+        last_updated_by: userId || editData.last_updated_by || 1,
       };
-      // console.log(updatedTask);
+
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, // ใช้ taskId แทน id
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -101,12 +126,10 @@ export default function TaskList({
   };
 
   const handleDelete = async (taskId: string) => {
-    // เปลี่ยน parameter จาก id: number เป็น taskId: string
     if (!confirm("Are you sure you want to delete this task?")) return;
 
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
-        // ใช้ taskId แทน id
         method: "DELETE",
       });
       fetchTasks();
@@ -123,24 +146,12 @@ export default function TaskList({
       wtf: "",
       work_type: "",
       created_by: "",
-      last_updated_by: "", // เพิ่ม field นี้
     });
   };
 
   const handleCancel = () => {
     setEditingId(null);
     resetEditData();
-  };
-
-  const generateDateRange = (start: Date, days: number): string[] => {
-    const dates: string[] = [];
-    const current = new Date(start);
-    current.setHours(0, 0, 0, 0);
-    for (let i = 0; i <= days; i++) {
-      dates.push(current.toLocaleDateString("en-GB"));
-      current.setDate(current.getDate() + 1);
-    }
-    return dates;
   };
 
   const generateDateRangeFromTo = (start: Date, end: Date): string[] => {
@@ -205,6 +216,103 @@ export default function TaskList({
       });
   };
 
+  const openNoteModal = async (task: Task) => {
+    setSelectedTask(task);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${task.task_id}`
+      );
+      const data = await res.json();
+      setNotes(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error loading notes:", err);
+      setNotes([]);
+    }
+  };
+
+  const closeNoteModal = () => {
+    setSelectedTask(null);
+    setNote("");
+    setYourName("");
+    setError("");
+  };
+
+  const handleSaveNote = async () => {
+    if (!note || !yourName) {
+      setError("Please enter both Note and Your Name");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task_id: selectedTask?.task_id,
+            note: note,
+            note_by: yourName,
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to save note");
+
+      const newNotes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask?.task_id}`
+      ).then((res) => res.json());
+
+      setNotes(newNotes);
+      setNote("");
+      setYourName("");
+      setError("");
+
+      if (selectedTask) {
+        setTaskNoteCounts((prev) => ({
+          ...prev,
+          [selectedTask.task_id]: Array.isArray(newNotes) ? newNotes.length : 0,
+        }));
+      }
+    } catch (err) {
+      setError("Failed to save note. Please try again.");
+      console.error("Save note error:", err);
+    }
+  };
+
+  const handleDeleteNote = async (noteId: number) => {
+    const confirmed = confirm("Are you sure you want to delete this note?");
+    if (!confirmed) return;
+  
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${noteId}`, {
+        method: "DELETE",
+      });
+  
+      if (res.ok) {
+        // อัพเดท state notes โดยตรง
+        setNotes(prevNotes => prevNotes.filter(note => note.note_id !== noteId));
+        
+        // อัพเดทจำนวนโน็ตใน taskNoteCounts
+        if (selectedTask) {
+          setTaskNoteCounts(prev => ({
+            ...prev,
+            [selectedTask.task_id]: prev[selectedTask.task_id] - 1
+          }));
+        }
+        
+        alert("Note deleted successfully.");
+      } else {
+        const err = await res.json();
+        console.error("Delete failed:", err);
+        alert("Failed to delete note.");
+      }
+    } catch (err) {
+      console.error("Error deleting note:", err);
+      alert("Error deleting note.");
+    }
+  };
+
   return (
     <div className="cardContainer">
       {groupAndSortTasks().map(([date, tasksOnDate]) => {
@@ -234,7 +342,7 @@ export default function TaskList({
 
                 return (
                   <div
-                    key={`${t.sid}-${t.task_id}`} // ใช้ composite key ที่ unique
+                    key={`${t.sid}-${t.task_id}`}
                     className={`taskCard ${
                       t.work_type === "School Event"
                         ? "school-event-task"
@@ -244,18 +352,18 @@ export default function TaskList({
                     }`}
                     data-work-type={t.work_type}
                   >
-                    {editingId === `${t.sid}-${t.task_id}` ? ( // ใช้ composite key เพื่อเปรียบเทียบ
+                    {editingId === `${t.sid}-${t.task_id}` ? (
                       <div className="editForm">
                         <EditForm
                           editData={editData}
                           setEditData={setEditData}
-                          handleSave={() => handleSave(String(t.task_id))} // ยังใช้ task_id อย่างเดียวสำหรับ API
+                          handleSave={() => handleSave(String(t.task_id))}
                           handleCancel={handleCancel}
                         />
                       </div>
                     ) : (
                       <>
-                        <div className="taskHeader">
+                         <div className="taskHeader">
                           {isHomework && <span>{homeworkCounter}. </span>}
                           {t.work_type !== "School Event" &&
                             t.work_type !== "School Exam" && (
@@ -275,6 +383,16 @@ export default function TaskList({
                         </div>
 
                         <div className="taskActions">
+                        <button
+                          className="open-note-btn"
+                          onClick={() => openNoteModal(t)}
+                        >
+                          📝
+                          {taskNoteCounts[t.task_id] > 0 && (
+                            <span className="note-count">({taskNoteCounts[t.task_id]})</span>
+                          )}
+                           </button>
+
                           <button
                             onClick={() => handleEdit(t)}
                             className="editBtn"
@@ -282,7 +400,7 @@ export default function TaskList({
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(String(t.task_id))} // แปลงเป็น string
+                            onClick={() => handleDelete(String(t.task_id))}
                             className="deleteBtn"
                           >
                             Delete
@@ -291,12 +409,87 @@ export default function TaskList({
                       </>
                     )}
                   </div>
+
                 );
               })
             )}
           </div>
         );
       })}
+
+      {/* Note Modal */}
+      {selectedTask && (
+        <div className="modal-overlay" onClick={closeNoteModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <strong>
+                {selectedTask.teacher} : {selectedTask.subject}
+              </strong>
+              <span className="typeTag">{selectedTask.work_type}</span>
+              <button onClick={closeNoteModal} className="modal-close">
+                ✖
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="existing-notes">
+                {notes.length > 0 ? (
+                  notes.map((item, index) => (
+                    <div key={index} className="note-item">
+                      <div className="note-header">
+                        <strong>
+                          Note {index + 1} : by {item.note_by}
+                        </strong>{" "}
+                        <span className="note-date">
+                          {new Date(item.note_date).toLocaleString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })}
+                        </span>
+                        <button
+                          onClick={() => handleDeleteNote(item.note_id)}
+                          className="delete-note-btn"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      <div className="note-body">{item.note}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="note-item">No notes available</div>
+                )}
+              </div>
+
+              <div className="note-title">Add your Note:</div>
+              <textarea
+                placeholder="Add your note..."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="modal-note"
+              />
+              <input
+                type="text"
+                placeholder="Your Name *"
+                value={yourName}
+                onChange={(e) => setYourName(e.target.value)}
+                className="modal-name-input"
+              />
+              {error && <div className="error-message">{error}</div>}
+            </div>
+
+            <div className="modal-footer">
+              <button onClick={handleSaveNote} className="editBtn">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
