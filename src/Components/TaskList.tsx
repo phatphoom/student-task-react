@@ -11,7 +11,7 @@ export default function TaskList({
   startDate: string; // YYYY‑MM‑DD
 }) {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null); // เก็บ composite key "sid-task_id"
   const [editData, setEditData] = useState<EditData>({
     due_date: "",
     subject: "",
@@ -19,6 +19,7 @@ export default function TaskList({
     wtf: "",
     work_type: "",
     created_by: "",
+    // last_updated_by: "", // เพิ่ม field นี้
   });
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function TaskList({
   };
 
   const handleEdit = (task: Task) => {
-    setEditingId(task.sid);
+    setEditingId(`${task.sid}-${task.task_id}`); // ใช้ composite key
     setEditData({
       due_date: task.due_date ? task.due_date.split("T")[0] : "",
       subject: task.subject || "",
@@ -55,16 +56,30 @@ export default function TaskList({
     });
   };
 
-  const handleSave = async (id: number) => {
+  const handleSave = async (taskId: string) => {
+    // เปลี่ยน parameter จาก id: number เป็น taskId: string
     try {
+      // ดึง user info จาก localStorage (หรือใช้ค่า default ถ้าไม่มี)
+      let userId = null;
+      try {
+        const userInfo = localStorage.getItem("userInfo");
+        if (userInfo) {
+          const parsed = JSON.parse(userInfo);
+          userId = parsed.user_id || parsed.id;
+        }
+      } catch (e) {
+        console.warn("Cannot access localStorage, using default user_id");
+      }
+
       const updatedTask = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
         created_by: editData.created_by,
+        last_updated_by: userId || editData.last_updated_by || 1, // ใช้ค่าจาก localStorage, editData, หรือ default
       };
-      console.log(updatedTask);
+      // console.log(updatedTask);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, // ใช้ taskId แทน id
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -85,11 +100,13 @@ export default function TaskList({
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (taskId: string) => {
+    // เปลี่ยน parameter จาก id: number เป็น taskId: string
     if (!confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
+        // ใช้ taskId แทน id
         method: "DELETE",
       });
       fetchTasks();
@@ -105,6 +122,8 @@ export default function TaskList({
       teacher: "",
       wtf: "",
       work_type: "",
+      created_by: "",
+      last_updated_by: "", // เพิ่ม field นี้
     });
   };
 
@@ -209,12 +228,13 @@ export default function TaskList({
               <div className="card-empty">No Task Dued: Yeah!!! Very Happy</div>
             ) : (
               sortedTasks.map((t) => {
-                const isHomework = t.work_type === "Group" || t.work_type === "Personal";
+                const isHomework =
+                  t.work_type === "Group" || t.work_type === "Personal";
                 if (isHomework) homeworkCounter++;
 
                 return (
                   <div
-                    key={t.sid}
+                    key={`${t.sid}-${t.task_id}`} // ใช้ composite key ที่ unique
                     className={`taskCard ${
                       t.work_type === "School Event"
                         ? "school-event-task"
@@ -224,12 +244,12 @@ export default function TaskList({
                     }`}
                     data-work-type={t.work_type}
                   >
-                    {editingId === t.sid ? (
+                    {editingId === `${t.sid}-${t.task_id}` ? ( // ใช้ composite key เพื่อเปรียบเทียบ
                       <div className="editForm">
                         <EditForm
                           editData={editData}
                           setEditData={setEditData}
-                          handleSave={() => handleSave(t.sid)}
+                          handleSave={() => handleSave(String(t.task_id))} // ยังใช้ task_id อย่างเดียวสำหรับ API
                           handleCancel={handleCancel}
                         />
                       </div>
@@ -237,11 +257,12 @@ export default function TaskList({
                       <>
                         <div className="taskHeader">
                           {isHomework && <span>{homeworkCounter}. </span>}
-                          {(t.work_type !== "School Event" && t.work_type !== "School Exam") && (
-                            <strong>
-                              {t.teacher} : {t.subject}
-                            </strong>
-                          )}
+                          {t.work_type !== "School Event" &&
+                            t.work_type !== "School Exam" && (
+                              <strong>
+                                {t.teacher} : {t.subject}
+                              </strong>
+                            )}
                           <span className="typeTag">{t.work_type}</span>
                         </div>
                         <div className="taskBody">{t.wtf}</div>
@@ -261,7 +282,7 @@ export default function TaskList({
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(t.sid)}
+                            onClick={() => handleDelete(String(t.task_id))} // แปลงเป็น string
                             className="deleteBtn"
                           >
                             Delete
@@ -330,6 +351,7 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
           className="inputEdit"
         />
       </div>
+
       <div className="taskActions">
         <button onClick={handleSave} className="editBtn">
           Save

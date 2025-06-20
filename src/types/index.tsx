@@ -26,6 +26,7 @@ export interface EditData {
   wtf: string;
   work_type: string;
   created_by?: string; // 👈 เพิ่มตรงนี้
+  last_updated_by?: string; // 👈 เพิ่มตรงนี้
 }
 
 export interface UserAdmin {
