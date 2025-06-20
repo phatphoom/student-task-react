@@ -12,7 +12,12 @@ export default function TaskInformation() {
   const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
   const [error, setError] = useState(""); // error validation
   const [notes, setNotes] = useState<Note[]>([]);
- 
+
+  // เพิ่ม state สำหรับเก็บ note counts ของแต่ละ task
+  const [taskNoteCounts, setTaskNoteCounts] = useState<{
+    [key: number]: number;
+  }>({});
+
   // เพิ่ม useState สำหรับ Note และ selectedTask
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
@@ -28,9 +33,31 @@ export default function TaskInformation() {
       .then((res) => res.json())
       .then((data: Task[]) => {
         setTasks(data);
+        // โหลด note counts สำหรับแต่ละ task
+        loadTaskNoteCounts(data);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
+
+  // ฟังก์ชันสำหรับโหลด note counts ของทุก task
+  const loadTaskNoteCounts = async (tasksData: Task[]) => {
+    const counts: { [key: number]: number } = {};
+
+    for (const task of tasksData) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${task.task_id}`
+        );
+        const noteData = await res.json();
+        counts[task.task_id] = Array.isArray(noteData) ? noteData.length : 0;
+      } catch (err) {
+        console.error(`Error loading notes for task ${task.task_id}:`, err);
+        counts[task.task_id] = 0;
+      }
+    }
+
+    setTaskNoteCounts(counts);
+  };
 
   useEffect(() => {
     if (dateFrom && tasks.length > 0) {
@@ -148,6 +175,7 @@ export default function TaskInformation() {
       setNotes([]);
     }
   }, [selectedTask]);
+
   const handleSaveNote = async () => {
     if (!note || !yourName) {
       setError("กรุณากรอกทั้ง Note และ Your Name");
@@ -179,11 +207,20 @@ export default function TaskInformation() {
       setNote("");
       setYourName("");
       setError("");
+
+      // อัพเดท note count ใน state
+      if (selectedTask) {
+        setTaskNoteCounts((prev) => ({
+          ...prev,
+          [selectedTask.task_id]: Array.isArray(newNotes) ? newNotes.length : 0,
+        }));
+      }
     } catch (err) {
       setError("บันทึกไม่สำเร็จ กรุณาลองใหม่");
       console.error("Save note error:", err);
     }
   };
+
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -276,7 +313,12 @@ export default function TaskInformation() {
                               className="open-note-btn"
                               onClick={() => setSelectedTask(task)}
                             >
-                              📝
+                              📝{" "}
+                              {taskNoteCounts[task.task_id] > 0 && (
+                                <span className="note-count">
+                                  ({taskNoteCounts[task.task_id]})
+                                </span>
+                              )}
                             </button>
                             <div className="creator-info">
                               <span className="creator-label">by :</span>
@@ -323,15 +365,15 @@ export default function TaskInformation() {
                           Note {index + 1} : by {item.note_by}
                         </strong>{" "}
                         <span className="note-date">
-                        {new Date(item.note_date).toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "short", // ใช้ "long" ถ้าอยากให้เป็นชื่อเดือนเต็ม
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                          timeZone: "Asia/Bangkok",
-                        })}
+                          {new Date(item.note_date).toLocaleString("en-GB", {
+                            day: "2-digit",
+                            month: "short", // ใช้ "long" ถ้าอยากให้เป็นชื่อเดือนเต็ม
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                            timeZone: "Asia/Bangkok",
+                          })}
                         </span>
                       </div>
                       <div className="note-body">{item.note}</div>

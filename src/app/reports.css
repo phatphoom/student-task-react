@@ -5,7 +5,7 @@
   width: 100%;
 }
 
-.card {  
+.card {
   width: 100%;
   height: fit-content;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -18,8 +18,8 @@
 }
 
 .card-header {
-  background-color: #b3d4fc; 
-  padding: .5rem;
+  background-color: #b3d4fc;
+  padding: 0.5rem;
   font-weight: bold;
   text-align: center;
   font-size: 1rem;
@@ -47,8 +47,8 @@
 }
 
 .task-item + .task-item {
-  margin-top: 1.5rem; 
-  padding-top: 1rem; 
+  margin-top: 1.5rem;
+  padding-top: 1rem;
 }
 
 .task-header {
@@ -82,7 +82,7 @@
   .card-container {
     grid-template-columns: 1fr;
     padding: 0;
-    margin: 0px; 
+    margin: 0px;
     gap: 16px;
   }
 
@@ -98,9 +98,7 @@
     padding: 12px;
     font-size: 1rem;
   }
-
 }
-
 
 .task-item.school-event {
   background-color: #f4dbf2 !important;
@@ -110,7 +108,7 @@
 
 .task-item.school-event .task-header {
   background-color: #f0c5ed !important;
-} 
+}
 
 .task-creator {
   margin-top: 8px;
@@ -219,14 +217,15 @@
 
 .note-date {
   color: #000000;
-  white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */}
+  white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
 
 .note-title {
   padding: 5px 15px; /* เพิ่ม padding ด้านซ้าย-ขวา ให้พื้นที่เยอะขึ้น */
   font-size: large;
-  display: inline-flex;       /* เปลี่ยนจาก flex เป็น inline-flex */
+  display: inline-flex; /* เปลี่ยนจาก flex เป็น inline-flex */
   text-align: center;
-  justify-content: center;    /* จัดกึ่งกลางข้อความในกล่อง */
+  justify-content: center; /* จัดกึ่งกลางข้อความในกล่อง */
   background: #d68fcf;
   border-radius: 20px;
   color: #000000;
@@ -265,7 +264,6 @@
   }
 }
 
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -303,22 +301,20 @@
 
 .modal-close {
   position: absolute;
-  top: 12px;       /* เดิม 8px → ขยับลงเล็กน้อย */
-  right: 12px;     /* คงไว้เท่าเดิม */
+  top: 12px; /* เดิม 8px → ขยับลงเล็กน้อย */
+  right: 12px; /* คงไว้เท่าเดิม */
   background: transparent;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  z-index: 10;     /* เพิ่ม z-index ให้ลอยขึ้น */
-  color: #555;     /* สีปุ่ม → เปลี่ยนเป็นสีเทาอ่อนดูสุภาพ */
+  z-index: 10; /* เพิ่ม z-index ให้ลอยขึ้น */
+  color: #555; /* สีปุ่ม → เปลี่ยนเป็นสีเทาอ่อนดูสุภาพ */
 }
 
 .modal-close:hover {
-  color: #ff0000;     /* เอฟเฟกต์ hover → เป็นสีดำชัดเจน */
+  color: #ff0000; /* เอฟเฟกต์ hover → เป็นสีดำชัดเจน */
   transition: background-color 0.3s ease, transform 0.2s ease;
-
 }
-
 
 .modal-header {
   font-weight: bold;
@@ -345,7 +341,7 @@
   resize: none;
 }
 
-.modal-note:focus  {
+.modal-note:focus {
   outline: none;
   border-color: #f0c5ed;
   box-shadow: 0 0 3px #f0c5ed;
@@ -372,7 +368,6 @@
   transform: scale(1.05);
 }
 
-
 .modal-name-input {
   width: 100%;
   margin-top: 10px;
@@ -388,3 +383,8 @@
   box-shadow: 0 0 3px #f0c5ed;
 }
 
+.note-count {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: 2px;
+}
