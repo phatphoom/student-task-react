@@ -608,8 +608,9 @@ body {
 }
 
 .task-body {
-  padding: 8px 12px;
+  padding: 8px 0;
   white-space: pre-wrap;
+  word-break: break-word; /* ตัดคำเมื่อจำเป็น */
   color: #0005ff;
   font-size: 1rem;
   line-height: 1.5;

@@ -71,12 +71,6 @@
   margin-left: auto; /* เพิ่มบรรทัดนี้ */
 }
 
-.task-body {
-  padding: 8px 0;
-  white-space: pre-wrap;
-  word-break: break-word; /* ตัดคำเมื่อจำเป็น */
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .card-container {
