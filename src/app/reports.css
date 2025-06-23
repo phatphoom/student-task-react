@@ -293,7 +293,11 @@
   position: relative;
   animation: modalFadeIn 0.3s ease-out;
 
+<<<<<<< HEAD
   max-height: 90vh;
+=======
+  max-height: 95vh;
+>>>>>>> main
   overflow-y: auto;
 }
 

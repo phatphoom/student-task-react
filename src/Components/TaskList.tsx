@@ -457,7 +457,14 @@ export default function TaskList({
                           Delete
                         </button>
                       </div>
-                      <div className="note-body">{item.note}</div>
+                      <div className="note-body">
+                        {item.note.split("\n").map((line, idx) => (
+                          <span key={idx}>
+                            {line}
+                            <br />
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   ))
                 ) : (
