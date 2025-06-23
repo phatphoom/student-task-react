@@ -203,6 +203,17 @@ textarea.inputEdit {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   position: relative;
   animation: modalFadeIn 0.3s ease-out;
+
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .modal-close {
@@ -495,3 +506,4 @@ textarea.inputEdit {
 .open-note-btn:hover {
   color: #0077cc;
 }
+
