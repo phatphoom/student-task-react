@@ -242,6 +242,9 @@ export default function TaskInformation() {
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
+          <Link href="/room-announcement" className="nav-btn">
+            Room 
+          </Link>
         </div>
       </div>
       <div className="max-w-6xl mx-auto">
