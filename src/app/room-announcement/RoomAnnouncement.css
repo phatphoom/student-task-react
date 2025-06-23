@@ -1,5 +1,17 @@
-.container {
+* {
+  font-family: "Kanit", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* .container {
   padding: 1.5rem;
+} */
+
+.group-button-and-text {
+  padding-bottom: 15px;
+  background-color: #ececec;
 }
 
 .title {
@@ -11,6 +23,22 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-top: 0.25rem;
+}
+
+.nav-btn3 {
+  color: #1a1aff; /* น้ำเงินดูหรูขึ้น */
+  border: none;
+  padding: 14px 32px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-family: "Kanit", sans-serif;
+  margin-top: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  
 }
 
 .nav-buttons {

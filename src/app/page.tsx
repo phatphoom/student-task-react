@@ -236,14 +236,15 @@ export default function TaskInformation() {
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
+
+          <Link href="/room-announcement" className="nav-btn3">
+                Room Announcement
+            </Link>
           <Link href="/Logins" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
-          </Link>
-          <Link href="/room-announcement" className="nav-btn">
-            Room 
           </Link>
         </div>
       </div>
