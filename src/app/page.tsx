@@ -1,10 +1,28 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import Link from "next/link";
+import { Session } from "next-auth";
+import { useEffect, useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
+
 import { Task, GroupedTasks, Note } from "@/types";
+
 import "./reports.css";
+import { GoogleUserResponse } from "@/types/google-signin";
 
 export default function TaskInformation() {
+  const { data: session, status, update } = useSession();
+
+  // console.log(session?.user?.username); // from your DB
+  // console.log(session?.user?.email); // from Google
+  // console.log(session?.user?.userType); // from your DB
+  // console.log(session?.user?.id); // from your DB
+
+  const [username, setUsername] = useState("");
+  const [isChecking, setIsChecking] = useState(false);
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+  const [shouldPrompt, setShouldPrompt] = useState(false);
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [dateFrom, setDateFrom] = useState<string>("");
   const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
@@ -38,6 +56,111 @@ export default function TaskInformation() {
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
+
+  useEffect(() => {
+    const verifyGoogleSignIn = async () => {
+      if (status === "authenticated" && session?.user?.email) {
+        const userExists = await checkIfUserExists(session.user.email);
+
+        if (!userExists) {
+          setShouldPrompt(true);
+        }
+      }
+    };
+
+    verifyGoogleSignIn();
+  }, [session, status]);
+
+  const handleGoogleSignIn = async (session: Session) => {
+    if (!username.trim()) {
+      alert("Please enter a valid username");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/google`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session.user.email,
+            username: username.trim(),
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+
+        if (res.status === 409) {
+          alert(errorData.message || "User already exists.");
+        } else {
+          alert(errorData.message || "Something went wrong.");
+        }
+
+        throw new Error(errorData.message || "Error occurred");
+      }
+
+      const data = (await res.json()) as GoogleUserResponse;
+      setShouldPrompt(false);
+      await update(); // re-fetches session data by re-calling your `session()` callback
+    } catch (err) {
+      console.error("Error syncing user:", err);
+    }
+  };
+
+  const checkIfUserExists = async (email: string): Promise<boolean> => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/check-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to check user existence");
+      }
+
+      const data = (await res.json()) as GoogleUserResponse;
+      return data.exists;
+    } catch (err) {
+      console.error("Error checking user existence:", err);
+      return false;
+    }
+  };
+
+  const checkUsername = async (value: string) => {
+    if (!value.trim()) return;
+
+    setIsChecking(true);
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/api/check-username?username=${encodeURIComponent(value)}`
+      );
+      const data = await res.json();
+      setIsAvailable(data.available);
+    } catch (err) {
+      console.error("Error checking username:", err);
+      setIsAvailable(null);
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handleCloseGoogleSignInModal = () => {
+    signOut();
+    setShouldPrompt(false);
+  };
 
   // ฟังก์ชันสำหรับโหลด note counts ของทุก task
   const loadTaskNoteCounts = async (tasksData: Task[]) => {
@@ -233,22 +356,43 @@ export default function TaskInformation() {
           <h1 className="title">
             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
           </h1>
-          <h2 className="title">Class Room EP105</h2>
+
+          {/* <div style={{ display: 'flex', flexDirection: 'row'}}> */}
+          <div className="flex flex-row space-x-2">
+            <h2 className="title">Class Room EP105</h2>
+
+            {session && session.user.username ? (
+              <>
+                <p>Welcome, {session.user.username}!</p>
+                <button onClick={() => signOut()}>Sign Out</button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => signIn("google")}>
+                  Sign In with Google
+                </button>
+                {/* <button
+                  onClick={() => popupCenter("/sign-in", "Google Sign In")}
+                >
+                  Sign In with Google
+                </button> */}
+              </>
+            )}
+          </div>
         </div>
         <div className="top-right-button">
-
           <Link href="/room-announcement" className="nav-btn3">
-                Room Announcement
-            </Link>
+            Room Announcement
+          </Link>
           <Link href="/Logins" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-          {/* <Link href="/my-student-plan" className="nav-btn">
+          <Link href="/my-student-plan" className="nav-btn">
             My Study Plan
-          </Link> */}
+          </Link>
         </div>
       </div>
       <div className="max-w-6xl mx-auto">
@@ -441,6 +585,55 @@ export default function TaskInformation() {
             <div className="modal-footer">
               <button onClick={handleSaveNote} className="modal-save-btn">
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {shouldPrompt && session && (
+        <div className="modal-overlay">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <button
+                onClick={handleCloseGoogleSignInModal}
+                className="modal-close"
+              >
+                ✖
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="username">Create a new username to continue</div>
+              <input
+                type="text"
+                className="modal-name-input"
+                placeholder="Create a new username"
+                value={username}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setUsername(val);
+                  setIsAvailable(null);
+                }}
+                onBlur={() => checkUsername(username)}
+              />
+
+              {isChecking && <p>Checking...</p>}
+              {isAvailable === true && (
+                <p style={{ color: "green" }}>Username is available ✅</p>
+              )}
+              {isAvailable === false && (
+                <p style={{ color: "red" }}>Username is already taken ❌</p>
+              )}
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="modal-save-btn"
+                disabled={!username || isAvailable === false}
+                onClick={() => handleGoogleSignIn(session)}
+              >
+                Continue
               </button>
             </div>
           </div>
