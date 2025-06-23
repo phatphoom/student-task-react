@@ -117,6 +117,21 @@ body {
   background: #5482bc;
 }
 
+.nav-btn3 {
+  color: #2c9ff2;
+  border: none;
+  padding: 14px 32px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-family: "Kanit", sans-serif;
+  margin-top: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
 /* สำหรับ form row ที่ต้องการให้อยู่ในบรรทัดเดียวกัน */
 .form-row {
   background: #ff8acf12;
