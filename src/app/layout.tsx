@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Kanit } from "next/font/google";
 import "./globals.css";
 
+import AuthProvider from "../Contexts/session-provider";
+
 const kanit = Kanit({
   weight: ["400"],
   variable: "--font-kanit",
@@ -19,10 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${kanit.variable} ${kanit.variable} antialiased`}>
-        {children}
-      </body>
-    </html>
-  );
+		<html lang="en">
+			<body className={`${kanit.variable} ${kanit.variable} antialiased`}>
+				<AuthProvider>{children}</AuthProvider>
+			</body>
+		</html>
+	);
 }
