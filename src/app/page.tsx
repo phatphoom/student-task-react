@@ -305,8 +305,14 @@ export default function TaskInformation() {
   }, [selectedTask]);
 
   const handleSaveNote = async () => {
-    if (!note || !yourName) {
+    // Validate inputs
+    if (!note?.trim() || !yourName?.trim()) {
       setError("กรุณากรอกทั้ง Note และ Your Name");
+      return;
+    }
+
+    if (!selectedTask?.task_id) {
+      setError("กรุณาเลือก Task ก่อนเพิ่ม Note");
       return;
     }
 
@@ -317,18 +323,22 @@ export default function TaskInformation() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            task_id: selectedTask?.task_id,
-            note: note,
-            note_by: yourName,
+            task_id: selectedTask.task_id,
+            note: note.trim(),
+            note_by: yourName.trim(),
           }),
         }
       );
 
-      if (!res.ok) throw new Error("Failed to save");
+      const responseData = await res.json();
 
-      // รีโหลด notes
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to save note");
+      }
+
+      // Success - reload notes
       const newNotes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask?.task_id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask.task_id}`
       ).then((res) => res.json());
 
       setNotes(newNotes);
@@ -336,7 +346,6 @@ export default function TaskInformation() {
       setYourName("");
       setError("");
 
-      // อัพเดท note count ใน state
       if (selectedTask) {
         setTaskNoteCounts((prev) => ({
           ...prev,
