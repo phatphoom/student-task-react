@@ -1,3 +1,4 @@
+//app/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -13,11 +14,6 @@ import { GoogleUserResponse } from "@/types/google-signin";
 export default function TaskInformation() {
   const { data: session, status, update } = useSession();
 
-  // console.log(session?.user?.username); // from your DB
-  // console.log(session?.user?.email); // from Google
-  // console.log(session?.user?.userType); // from your DB
-  // console.log(session?.user?.id); // from your DB
-
   const [username, setUsername] = useState("");
   const [isChecking, setIsChecking] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
@@ -27,16 +23,14 @@ export default function TaskInformation() {
   const [dateFrom, setDateFrom] = useState<string>("");
   const [groupedTasks, setGroupedTasks] = useState<GroupedTasks>({});
   const [fullCalendarMode, setFullCalendarMode] = useState(false);
-  const [yourName, setYourName] = useState(""); // ชื่อผู้พิมพ์
-  const [error, setError] = useState(""); // error validation
+  const [yourName, setYourName] = useState("");
+  const [error, setError] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
 
-  // เพิ่ม state สำหรับเก็บ note counts ของแต่ละ task
   const [taskNoteCounts, setTaskNoteCounts] = useState<{
     [key: number]: number;
   }>({});
 
-  // เพิ่ม useState สำหรับ Note และ selectedTask
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
 
@@ -51,7 +45,6 @@ export default function TaskInformation() {
       .then((res) => res.json())
       .then((data: Task[]) => {
         setTasks(data);
-        // โหลด note counts สำหรับแต่ละ task
         loadTaskNoteCounts(data);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
@@ -106,7 +99,7 @@ export default function TaskInformation() {
 
       const data = (await res.json()) as GoogleUserResponse;
       setShouldPrompt(false);
-      await update(); // re-fetches session data by re-calling your `session()` callback
+      await update();
     } catch (err) {
       console.error("Error syncing user:", err);
     }
@@ -162,7 +155,6 @@ export default function TaskInformation() {
     setShouldPrompt(false);
   };
 
-  // ฟังก์ชันสำหรับโหลด note counts ของทุก task
   const loadTaskNoteCounts = async (tasksData: Task[]) => {
     try {
       const promises = tasksData.map(async (task) => {
@@ -212,6 +204,28 @@ export default function TaskInformation() {
     };
     logAccess();
   }, []);
+
+  // เพิ่มฟังก์ชัน sortTasksInDate เหมือนใน TaskList
+  const sortTasksInDate = (tasksOnDate: Task[]) => {
+    return tasksOnDate.sort((a, b) => {
+      const getPriority = (workType: string) => {
+        switch (workType) {
+          case "School Event":
+            return 1;
+          case "School Exam":
+            return 2;
+          case "Group":
+            return 3;
+          case "Personal":
+            return 4;
+          default:
+            return 5;
+        }
+      };
+
+      return getPriority(a.work_type) - getPriority(b.work_type);
+    });
+  };
 
   const updateGroupedTasks = () => {
     const fromDate = new Date(dateFrom);
@@ -280,7 +294,6 @@ export default function TaskInformation() {
         return dateA.getTime() - dateB.getTime();
       });
 
-  // เพิ่มฟังก์ชัน closeModal และ handleSaveNote
   const closeModal = () => {
     setSelectedTask(null);
     setNote("");
@@ -293,11 +306,11 @@ export default function TaskInformation() {
       )
         .then((res) => res.json())
         .then((data) => {
-          setNotes(Array.isArray(data) ? data : []); // ✅ ป้องกัน map error
+          setNotes(Array.isArray(data) ? data : []);
         })
         .catch((err) => {
           console.error("Error loading notes:", err);
-          setNotes([]); // fallback
+          setNotes([]);
         });
     } else {
       setNotes([]);
@@ -305,7 +318,6 @@ export default function TaskInformation() {
   }, [selectedTask]);
 
   const handleSaveNote = async () => {
-    // Validate inputs
     if (!note?.trim() || !yourName?.trim()) {
       setError("กรุณากรอกทั้ง Note และ Your Name");
       return;
@@ -336,7 +348,6 @@ export default function TaskInformation() {
         throw new Error(responseData.error || "Failed to save note");
       }
 
-      // Success - reload notes
       const newNotes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask.task_id}`
       ).then((res) => res.json());
@@ -366,7 +377,6 @@ export default function TaskInformation() {
             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
           </h1>
 
-          {/* <div style={{ display: 'flex', flexDirection: 'row'}}> */}
           <div className="flex flex-row space-x-2">
             <h2 className="title">Class Room EP105</h2>
 
@@ -380,28 +390,17 @@ export default function TaskInformation() {
                 <button onClick={() => signIn("google")}>
                   Sign In with Google
                 </button>
-                {/* <button
-                  onClick={() => popupCenter("/sign-in", "Google Sign In")}
-                >
-                  Sign In with Google
-                </button> */}
               </>
             )}
           </div>
         </div>
         <div className="top-right-button">
-          {/* <Link href="/room-announcement" className="nav-btn3">
-            Room Announcement
-          </Link> */}
           <Link href="/Logins" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-          {/* <Link href="/my-student-plan" className="nav-btn">
-            My Study Plan
-          </Link> */}
         </div>
       </div>
       <div className="max-w-6xl mx-auto">
@@ -435,6 +434,8 @@ export default function TaskInformation() {
                 weekday: "short",
               }).format(dateObj);
 
+              // เรียง tasks ในวันนั้นตาม priority
+              const sortedTasks = sortTasksInDate(dateTasks);
               let homeworkCounter = 0;
 
               return (
@@ -442,70 +443,73 @@ export default function TaskInformation() {
                   <div className="card-header">
                     {date} <span className="weekday">{weekday}</span>
                   </div>
-                  {dateTasks.length === 0 ? (
+                  {sortedTasks.length === 0 ? (
                     <div className="card-empty">
                       No Task Dued: Yeah!!! Very Happy
                     </div>
                   ) : (
                     <div className="task-day">
-                      {dateTasks.map((task, index) => (
-                        <div
-                          key={task.task_id}
-                          className={`task-item ${
-                            task.work_type === "School Event"
-                              ? "school-event"
-                              : task.work_type === "School Exam"
-                              ? "school-exam"
-                              : ""
-                          }`}
-                        >
-                          <div className="task-header">
-                            {(task.work_type === "Group" ||
-                              task.work_type === "Personal") && (
-                              <strong>{index + 1}. </strong>
-                            )}
-                            {task.work_type !== "School Event" &&
-                              task.work_type !== "School Exam" && (
-                                <span className="teacher-subject">
-                                  {task.teacher} : {task.subject}
-                                </span>
-                              )}
-                            <span className="task-type">{task.work_type}</span>
-                          </div>
-                          <div className="task-body">{task.wtf}</div>
-                          <div className="task-creator">
-                            <button
-                              className="open-note-btn"
-                              onClick={() => setSelectedTask(task)}
-                            >
-                              📝{" "}
-                              {taskNoteCounts[task.task_id] > 0 && (
-                                <span className="note-count">
-                                  ({taskNoteCounts[task.task_id]})
-                                </span>
-                              )}
-                            </button>
-                            <div className="creator-info">
-                              <span className="creator-label">by :</span>
-                              <span className="creator-name">
-                                {(() => {
-                                  const creator =
-                                    task.created_by_name || "Unknown";
-                                  const editor = task.last_updated_by;
+                      {sortedTasks.map((task) => {
+                        const isHomework =
+                          task.work_type === "Group" || task.work_type === "Personal";
+                        if (isHomework) homeworkCounter++;
 
-                                  // ถ้าไม่มี editor หรือ editor เป็นคนเดียวกับ creator
-                                  if (!editor || editor === creator) {
-                                    return creator;
-                                  }
+                        return (
+                          <div
+                            key={task.task_id}
+                            className={`task-item ${
+                              task.work_type === "School Event"
+                                ? "school-event"
+                                : task.work_type === "School Exam"
+                                ? "school-exam"
+                                : ""
+                            }`}
+                          >
+                            <div className="task-header">
+                              {isHomework && (
+                                <strong>{homeworkCounter}. </strong>
+                              )}
+                              {task.work_type !== "School Event" &&
+                                task.work_type !== "School Exam" && (
+                                  <span className="teacher-subject">
+                                    {task.teacher} : {task.subject}
+                                  </span>
+                                )}
+                              <span className="task-type">{task.work_type}</span>
+                            </div>
+                            <div className="task-body">{task.wtf}</div>
+                            <div className="task-creator">
+                              <button
+                                className="open-note-btn"
+                                onClick={() => setSelectedTask(task)}
+                              >
+                                📝{" "}
+                                {taskNoteCounts[task.task_id] > 0 && (
+                                  <span className="note-count">
+                                    ({taskNoteCounts[task.task_id]})
+                                  </span>
+                                )}
+                              </button>
+                              <div className="creator-info">
+                                <span className="creator-label">by :</span>
+                                <span className="creator-name">
+                                  {(() => {
+                                    const creator =
+                                      task.created_by_name || "Unknown";
+                                    const editor = task.last_updated_by;
 
-                                  // ถ้ามี editor และเป็นคนต่างกัน
-                                  return `${creator} / ${editor}`;
-                                })()}
-                              </span>
+                                    if (!editor || editor === creator) {
+                                      return creator;
+                                    }
+
+                                    return `${creator} / ${editor}`;
+                                  })()}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -517,7 +521,7 @@ export default function TaskInformation() {
           })}
         </div>
       </div>
-      {/* เพิ่ม Modal Popup ตรงนี้ ก่อนปิด div สุดท้าย */}
+
       {selectedTask && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -531,7 +535,6 @@ export default function TaskInformation() {
               </button>
             </div>
 
-            {/* ส่วนแสดง Note เดิม */}
             <div className="modal-body">
               <div className="existing-notes">
                 {Array.isArray(notes) && notes.length > 0 ? (
@@ -544,7 +547,7 @@ export default function TaskInformation() {
                         <span className="note-date">
                           {new Date(item.note_date).toLocaleString("en-GB", {
                             day: "2-digit",
-                            month: "short", // ใช้ "long" ถ้าอยากให้เป็นชื่อเดือนเต็ม
+                            month: "short",
                             year: "numeric",
                             hour: "2-digit",
                             minute: "2-digit",
@@ -569,7 +572,6 @@ export default function TaskInformation() {
                   </div>
                 )}
               </div>
-              {/* textarea สำหรับเพิ่ม Note ใหม่ */}
               <div className="note-title"> Add you Note : </div>
               <textarea
                 placeholder="Add your note..."
@@ -577,7 +579,6 @@ export default function TaskInformation() {
                 onChange={(e) => setNote(e.target.value)}
                 className="modal-note"
               />
-              {/* input Your Name */}
               <input
                 type="text"
                 placeholder="Your Name *"
@@ -585,7 +586,6 @@ export default function TaskInformation() {
                 onChange={(e) => setYourName(e.target.value)}
                 className="modal-name-input"
               />
-              {/* แจ้งเตือน error */}
               {error && (
                 <div className="text-red-500 text-sm mt-1">{error}</div>
               )}
