@@ -97,11 +97,14 @@ export default function TaskList({
         console.warn("Cannot access localStorage, using default user_id");
       }
 
+    const adminName = localStorage.getItem("adminName");
+
       const updatedTask = {
         ...editData,
         due_date: editData.due_date ? `${editData.due_date}T00:00:00Z` : null,
         created_by: editData.created_by,
-        last_updated_by: userId || editData.last_updated_by || 1,
+        // last_updated_by: userId || editData.last_updated_by || 1,
+        last_updated_by: adminName
       };
 
       const res = await fetch(
@@ -284,16 +287,16 @@ export default function TaskList({
   const handleDeleteNote = async (noteId: number) => {
     const confirmed = confirm("Are you sure you want to delete this note?");
     if (!confirmed) return;
-  
+
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${noteId}`, {
         method: "DELETE",
       });
-  
+
       if (res.ok) {
         // อัพเดท state notes โดยตรง
         setNotes(prevNotes => prevNotes.filter(note => note.note_id !== noteId));
-        
+
         // อัพเดทจำนวนโน็ตใน taskNoteCounts
         if (selectedTask) {
           setTaskNoteCounts(prev => ({
@@ -301,7 +304,7 @@ export default function TaskList({
             [selectedTask.task_id]: prev[selectedTask.task_id] - 1
           }));
         }
-        
+
         alert("Note deleted successfully.");
       } else {
         const err = await res.json();
