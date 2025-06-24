@@ -381,18 +381,18 @@ export default function TaskInformation() {
           </div>
         </div>
         <div className="top-right-button">
-          <Link href="/room-announcement" className="nav-btn3">
+          {/* <Link href="/room-announcement" className="nav-btn3">
             Room Announcement
-          </Link>
+          </Link> */}
           <Link href="/Logins" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-          <Link href="/my-student-plan" className="nav-btn">
+          {/* <Link href="/my-student-plan" className="nav-btn">
             My Study Plan
-          </Link>
+          </Link> */}
         </div>
       </div>
       <div className="max-w-6xl mx-auto">
