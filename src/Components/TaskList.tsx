@@ -45,6 +45,7 @@ export default function TaskList({
         td.setHours(0, 0, 0, 0);
         return td >= start;
       });
+      console.log(filtered)
       setTasks(filtered);
       loadTaskNoteCounts(filtered);
     } catch (err) {

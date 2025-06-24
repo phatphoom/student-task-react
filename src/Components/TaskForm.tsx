@@ -16,6 +16,7 @@ export default function TaskForm({
   const [workType, setWorkType] = useState<string>("Personal");
   const [wtf, setWtf] = useState<string>("");
   const [subjects, setSubjects] = useState<Subject[]>([]);
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/subjects`)
       .then((res) => res.json())
@@ -28,11 +29,13 @@ export default function TaskForm({
     setDueDate(today);
     onDateChange(today);
   }, [onDateChange]);
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
     setDueDate(date);
     onDateChange(date);
   };
+
   const handleSubmit = async () => {
     let finalDueDate = dueDate;
 
@@ -41,7 +44,6 @@ export default function TaskForm({
         alert("Please fill in What to Finish.");
         return;
       }
-      // finalDueDate = new Date().toISOString().split("T")[0];
     } else {
       if (!dueDate || !teacher || !subject || !wtf) {
         alert("Please fill in all required fields.");
@@ -49,7 +51,7 @@ export default function TaskForm({
       }
     }
 
-    const adminId = localStorage.getItem("adminId");
+    const adminUsername = localStorage.getItem("adminUsername");
 
     const body = {
       task_id: "TASK_" + Date.now(),
@@ -58,7 +60,7 @@ export default function TaskForm({
       subject: workType === "School Event" ? "" : subject,
       wtf,
       work_type: workType,
-      created_by: adminId ? parseInt(adminId) : null,
+      created_by: adminUsername || null,
       created_on: new Date().toISOString(),
       delindicator: false,
     };
@@ -79,7 +81,7 @@ export default function TaskForm({
       alert("Task Added!");
       await fetchTasks();
       onTaskAdded();
-      // รีเซ็ตฟอร์ม
+      // Reset form
       const todayStr = new Date().toISOString().split("T")[0];
       setDueDate(todayStr);
       setWtf("");
@@ -102,15 +104,15 @@ export default function TaskForm({
       setSubject("");
     }
   }, [teacher, subjects]);
+
   const fetchTasks = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`);
-      // const data = await res.json();
-      // console.log("Fetched tasks:", data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
+
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -121,17 +123,15 @@ export default function TaskForm({
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
-
           <Link href="/room-announcement" className="nav-btn3">
-                Room Announcement
-            </Link>
+            Room Announcement
+          </Link>
           <Link href="/Manages" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-
         </div>
       </div>
 
@@ -207,7 +207,6 @@ export default function TaskForm({
             onChange={(e) => setWorkType(e.target.value)}
             className="form-select status-select"
           >
-            {/* <option value="">เลือกประเภทงาน</option> */}
             <option>Group</option>
             <option>Personal</option>
             <option>School Event</option>
@@ -217,7 +216,7 @@ export default function TaskForm({
       </div>
 
       <div
-        className="form-group"
+        className="form-group" 
         style={{ marginTop: "20px", marginBottom: "20px" }}
       >
         <label className="form-label">What to finish *</label>
