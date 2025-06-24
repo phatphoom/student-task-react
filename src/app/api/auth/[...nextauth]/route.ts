@@ -4,7 +4,8 @@ import type { NextAuthOptions } from "next-auth";
 import axios from "axios";
 import { GoogleUserResponse } from "@/types/google-signin";
 
-export const authOptions: NextAuthOptions = {
+// export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID ?? "",
