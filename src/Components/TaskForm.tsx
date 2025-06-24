@@ -51,7 +51,7 @@ export default function TaskForm({
       }
     }
 
-    const adminUsername = localStorage.getItem("adminUsername");
+    const adminUsername = localStorage.getItem("adminName");
 
     const body = {
       task_id: "TASK_" + Date.now(),
@@ -216,7 +216,7 @@ export default function TaskForm({
       </div>
 
       <div
-        className="form-group" 
+        className="form-group"
         style={{ marginTop: "20px", marginBottom: "20px" }}
       >
         <label className="form-label">What to finish *</label>
