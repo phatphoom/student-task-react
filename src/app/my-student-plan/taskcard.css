@@ -1,0 +1,294 @@
+/* taskcard.css */
+.cardContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-top: 20px;
+    grid-auto-flow: dense; /* เพิ่มบรรทัดนี้ */
+  }
+  
+.empty-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: #666;
+}
+  
+.dateCard {
+    background: #f9f9f9;
+    height: fit-content;
+    min-height: 100px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 3px solid #747474;
+}
+  
+.dateHeader {
+    background-color: #b3d4fc;
+    padding: 0.5rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+  
+.weekday {
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin-left: auto;
+}
+  
+.taskCard {
+    color: #2c9ff2;
+    background-color: #fafafa;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+  
+.taskHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+  
+.typeTag {
+    font-size: 1rem;
+    background-color: #fff;
+    padding: 0.2rem 0.4rem;
+    margin-left: auto;
+}
+  
+.taskBody {
+    background-color: white;
+    color: #0005ff;
+    padding: 0.5rem;
+    margin: 0.4rem 0;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+  
+.taskActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+  
+.editBtn,
+.deleteBtn,
+.doneBtn {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+  
+.editBtn:hover,
+.deleteBtn:hover,
+.doneBtn:hover {
+    transform: scale(1.05);
+}
+  
+.editBtn {
+    background-color: #001797;
+    color: white;
+}
+  
+.deleteBtn {
+    background-color: #f37e75;
+    color: white;
+}
+  
+.doneBtn {
+    background-color: #4CAF50;
+    color: white;
+}
+  
+.taskCreator {
+    margin-top: 8px;
+    color: #4e4e4e;
+    display: flex;
+    align-items: end;
+    justify-content: flex-end;
+    font-size: 0.9rem;
+}
+  
+.creatorLabel {
+    margin-right: 4px;
+}
+  
+.creatorName {
+    font-style: italic;
+}
+  
+  /* สไตล์สำหรับ Add more activities */
+.add-activities-btn {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    background-color: #f0f0f0;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #555;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+  
+.add-activities-btn:hover {
+    background-color: #e0e0e0;
+}
+  
+.activity-form {
+    background-color: #f9f9f9;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+  
+.activity-form .form-group {
+    margin-bottom: 12px;
+}
+  
+.activity-form label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: #555;
+    
+}
+  
+.activity-form input[type="time"],
+.activity-form input[type="number"],
+.activity-form textarea {
+    
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+  
+.activity-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+  
+.form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+  
+.save-btn,
+.discard-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+  
+.save-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+  
+.save-btn:hover {
+    background-color: #45a049;
+}
+  
+.discard-btn {
+    background-color: #f44336;
+    color: white;
+}
+  
+.discard-btn:hover {
+    background-color: #d32f2f;
+}
+  
+  /* Responsive Styles */
+@media (max-width: 768px) {
+    .cardContainer {
+      grid-template-columns: 1fr;
+    }
+    
+    .dateHeader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .weekday {
+      margin-left: 0;
+      margin-top: 4px;
+    }
+    
+    .taskActions {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .editBtn,
+    .deleteBtn,
+    .doneBtn {
+      flex: 1;
+      min-width: 80px;
+      margin: 2px;
+    }
+    
+    .activity-form {
+      padding: 8px;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .save-btn,
+    .discard-btn {
+      width: 100%;
+    }
+}
+  
+  @media (max-width: 480px) {
+    .taskHeader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .typeTag {
+      margin-left: 0;
+      margin-top: 4px;
+    }
+    
+    .taskBody {
+      padding: 0.3rem;
+      font-size: 0.9rem;
+    }
+    
+    .add-activities-btn {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+    
+    .activity-form input[type="time"],
+    .activity-form input[type="number"],
+    .activity-form textarea {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+}
