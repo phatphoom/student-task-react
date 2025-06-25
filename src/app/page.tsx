@@ -629,11 +629,11 @@ export default function TaskInformation() {
                                     onClick={() => handleOpenActivityModal(task)}
                                 >
                                     ✍️{" "}
-                                    {taskNoteCounts[task.task_id] > 0 && (
+                                    {/* {taskNoteCounts[task.task_id] > 0 && (
                                         <span className="note-count">
                                         ({taskNoteCounts[task.task_id]})
                                         </span>
-                                    )}
+                                    )} */}
                                 </button>
                             )}
 
