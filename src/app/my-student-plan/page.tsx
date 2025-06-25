@@ -1,3 +1,4 @@
+//app/my-student-plan/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,6 +12,13 @@ export default function MyStudentPlan() {
   const [newDueDate, setNewDueDate] = useState("");
   const [newStartTime, setNewStartTime] = useState("");
   const [newDuration, setNewDuration] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState(getTodayDate()); // ใช้ฟังก์ชัน getTodayDate ถ้ามี
+  const [fullCalendarMode, setFullCalendarMode] = useState(false);
+  function getTodayDate() {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // YYYY-MM-DD
+  }
+
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/student-plans`)
@@ -40,78 +48,59 @@ export default function MyStudentPlan() {
 
   return (
     <div className="p-4">
-      <div className="top-right-button">
-        <Link href="/room-announcement" className="nav-btn3">Room Announcement</Link>
-        <Link href="/Logins" className="nav-btn">Manage Due</Link>
-        <Link href="/" className="nav-btn2">Work on Due Report</Link>
-        <Link href="/my-student-plan" className="nav-btn">My Study Plan</Link>
-      </div>
+      <div className="group-button-and-text">
+        <div>
+          <h1 className="title">
+            Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
+          </h1>
 
-      <h1 className="page-title">My Study Plan</h1>
+          <div className="flex flex-row space-x-2">
+            <h2 className="title">Class Room EP105</h2>
 
-      <div className="add-form">
-        <input
-          className="input"
-          placeholder="Activity Title *"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-        />
-        <textarea
-          className="textarea"
-          placeholder="Description"
-          value={newDescription}
-          onChange={(e) => setNewDescription(e.target.value)}
-        />
-        <input
-          type="date"
-          className="input"
-          value={newDueDate}
-          onChange={(e) => setNewDueDate(e.target.value)}
-        />
-        <div className="time-duration-group">
-          <input
-            type="time"
-            className="input"
-            value={newStartTime}
-            onChange={(e) => setNewStartTime(e.target.value)}
-          />
-          <input
-            type="number"
-            className="input"
-            min={0}
-            placeholder="Estimate Duration (hrs)"
-            value={newDuration}
-            onChange={(e) => setNewDuration(e.target.value)}
-          />
+          </div>
         </div>
-        <button className="add-btn" onClick={handleAddPlan}>
-          Add More Activity
-        </button>
+
+        <div className="top-right-button">
+          <Link href="/room-announcement" className="nav-btn3">
+            Room Announcement
+          </Link>
+          <Link href="/Logins" className="nav-btn">
+            Manage Due
+          </Link>
+          <Link href="/" className="nav-btn2">
+            Work on Due Report
+          </Link>
+          <Link href="/my-student-plan" className="nav-btn">
+            My Study plan
+          </Link>
+        </div>
       </div>
 
-      <div className="plan-container">
-        {plans.length === 0 ? (
-          <div className="plan-empty">No Study Plan Yet</div>
-        ) : (
-          <ul className="plan-list">
-            {plans.map((plan, index) => (
-              <li key={index} className="plan-item">
-                <div className="plan-time">
-                  <strong>{plan.start_time || "-"}</strong> ·{" "}
-                  {plan.duration !== null && plan.duration !== undefined && plan.duration !== ""
-                    ? `${plan.duration} hr${Number(plan.duration) > 1 ? "s" : ""}`
-                    : "-"}
-                </div>
-                <div className="plan-title">{plan.title}</div>
-                <div className="plan-desc">{plan.description}</div>
-                <div className="plan-date">
-                  Due: {new Date(plan.due_date).toLocaleDateString("en-GB")}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* ส่วน Date From + Full Calendar Mode */}
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+          <div className="form-row2">
+            <div className="form-group2">
+              <label className="form-label2">Date From : </label>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="form-input"
+              />
+              <button
+                className="full-calendar-btn"
+                onClick={() => setFullCalendarMode(!fullCalendarMode)}
+              >
+                {fullCalendarMode ? "Normal Mode" : "Full Calendar Mode"}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* เนื้อหาอื่น ๆ ของ My Study Plan ต่อจากนี้ */}
     </div>
   );
+
 }

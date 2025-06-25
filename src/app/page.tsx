@@ -395,11 +395,17 @@ export default function TaskInformation() {
           </div>
         </div>
         <div className="top-right-button">
+          <Link href="/room-announcement" className="nav-btn3">
+            Room Announcement
+          </Link>
           <Link href="/Logins" className="nav-btn">
             Manage Due
           </Link>
           <Link href="/" className="nav-btn2">
             Work on Due Report
+          </Link>
+          <Link href="/my-student-plan" className="nav-btn">
+            My Study plan
           </Link>
         </div>
       </div>

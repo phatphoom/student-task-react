@@ -123,9 +123,9 @@ export default function TaskForm({
           <h2 className="title">Class Room EP105</h2>
         </div>
         <div className="top-right-button">
-          {/* <Link href="/room-announcement" className="nav-btn3">
+          <Link href="/room-announcement" className="nav-btn3">
             Room Announcement
-          </Link> */}
+          </Link>
           <Link href="/Manages" className="nav-btn">
             Manage Due
           </Link>
