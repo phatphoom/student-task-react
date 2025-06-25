@@ -444,7 +444,7 @@ export default function TaskInformation() {
                 est_dur_min: hours * 60 + minutes,
                 datetime: datetime,
                 // utcString,
-                // startTime,
+                start_time: startTime,
                 description,
                 status: "Pending",
             };

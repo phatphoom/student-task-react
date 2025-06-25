@@ -28,6 +28,7 @@ export type CreateStudyPlanRequest = {
 	description: string;
 	est_dur_min: number;
 	status: string;
+	start_time: string;
 };
 
 export default function ActivityModal(props: Props) {
@@ -138,7 +139,7 @@ export default function ActivityModal(props: Props) {
 	// 	}));
 	// };
 	const handleStartTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-		onChange("startTime", e.target.value);
+		onChange("startTime", e.target.value + ":00");
 	};
 
 	return (
