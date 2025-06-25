@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import { Session } from "next-auth";
 import { useEffect, useState } from "react";
@@ -7,6 +8,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Task, GroupedTasks, Note } from "@/types";
 import "./reports.css";
 import { GoogleUserResponse } from "@/types/google-signin";
+import ActivityModal, { ActivityInput, CreateStudyPlanRequest } from "@/Components/ActivityModal";
 
 export default function TaskInformation() {
   const { data: session, status, update } = useSession();
@@ -31,17 +33,28 @@ export default function TaskInformation() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
 
-  // New states for task todo modal
-  const [todoDate, setTodoDate] = useState("");
-  const [todoStartTime, setTodoStartTime] = useState("");
-  const [todoNote, setTodoNote] = useState("");
-  const [todoDuration, setTodoDuration] = useState("");
-  const [showTodoModal, setShowTodoModal] = useState(false);
+  const [hasStudyPlan, setHasStudyPlan] = useState<boolean>(false)
+  const [inputState, setInputState] = useState<ActivityInput>({
+		hours: 0,
+		minutes: 0,
+		datetime: "",
+		utcString: "",
+		startTime: "",
+		description: "",
+	});
+  const [isOpenActivityModal, setIsOpenActivityModal] = useState<boolean>(false)
+
+//   // New states for task todo modal
+//   const [todoDate, setTodoDate] = useState("");
+//   const [todoStartTime, setTodoStartTime] = useState("");
+//   const [todoNote, setTodoNote] = useState("");
+//   const [todoDuration, setTodoDuration] = useState("");
+//   const [showTodoModal, setShowTodoModal] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setDateFrom(today);
-    setTodoDate(today);
+    // setTodoDate(today);
   }, []);
 
   useEffect(() => {
@@ -59,9 +72,12 @@ export default function TaskInformation() {
       if (status === "authenticated" && session?.user?.email) {
         const userExists = await checkIfUserExists(session.user.email);
 
-        if (!userExists) {
-          setShouldPrompt(true);
+        if (userExists) {
+            setHasStudyPlan(true)
+            return
         }
+
+        setShouldPrompt(true);
       }
     };
 
@@ -364,49 +380,110 @@ export default function TaskInformation() {
     }
   };
 
-  const handleOpenTaskTodo = (task: Task) => {
-    setSelectedTask(task);
-    setShowTodoModal(true);
-    const today = new Date().toISOString().split("T")[0];
-    setTodoDate(today);
-  };
+//   const handleOpenTaskTodo = (task: Task) => {
+//     setSelectedTask(task);
+//     setShowTodoModal(true);
+//     const today = new Date().toISOString().split("T")[0];
+//     setTodoDate(today);
+//   };
 
-  const handleSaveTodo = async () => {
-    if (!selectedTask || !todoDate || !todoStartTime) {
-      setError("Please fill in required fields");
-      return;
+//   const handleSaveTodo = async () => {
+//     if (!selectedTask || !todoDate || !todoStartTime) {
+//       setError("Please fill in required fields");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           task_id: selectedTask.task_id,
+//           date: todoDate,
+//           start_time: todoStartTime,
+//           duration: parseFloat(todoDuration) || 0,
+//           note: todoNote,
+//           status: "pending",
+//           task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
+//           task_description: selectedTask.wtf,
+//         }),
+//       });
+
+//       if (response.ok) {
+//         // setShowTodoModal(false);
+//         window.location.href = "/my-student-plan";
+//       } else {
+//         const errorData = await response.json();
+//         setError(errorData.message || "Failed to save todo");
+//       }
+//     } catch (err) {
+//       setError("Failed to save todo. Please try again.");
+//       console.error("Save todo error:", err);
+//     }
+//   };
+
+    const onChangeActivityInput = <K extends keyof ActivityInput>(key: K, value: ActivityInput[K]) => {
+        setInputState((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const handleCreateStudyPlan = async () => {
+        if (!session || !session.user.username) {
+            console.error('username is required')
+            return;
+        }
+
+        try {
+            const { hours, minutes, datetime, utcString, startTime, description } =
+                inputState;
+
+            const request: CreateStudyPlanRequest = {
+                username: session?.user.username,
+                task_id: String(selectedTask?.task_id) ?? "", // task_id is invalid type should be fix later
+                est_dur_min: hours * 60 + minutes,
+                datetime: datetime,
+                // utcString,
+                // startTime,
+                description,
+                status: "Pending",
+            };
+
+            // todo: handle response and type
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/study-plan`,
+                request,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            setSelectedTask(null);
+            setIsOpenActivityModal(false)
+            // todo: swal
+            alert('Add to my study plan successfully')
+        } catch (err) {
+            console.error("error while try to add my study plan", err);
+        }
+    };
+
+    const handleOpenActivityModal = (task: Task) => {
+        setSelectedTask(task);
+        setIsOpenActivityModal
+        setInputState({
+            ...inputState,
+            // localDateTime:  new Date().toISOString().split("T")[0]
+            datetime: new Date(task.due_date).toISOString().split("T")[0],
+        })
+        setIsOpenActivityModal(true)
+    };
+
+    const handleCloseActivityModal = () => {
+        setSelectedTask(null);
+        setIsOpenActivityModal(false)
     }
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          task_id: selectedTask.task_id,
-          date: todoDate,
-          start_time: todoStartTime,
-          duration: parseFloat(todoDuration) || 0,
-          note: todoNote,
-          status: "pending",
-          task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
-          task_description: selectedTask.wtf,
-        }),
-      });
-
-      if (response.ok) {
-        setShowTodoModal(false);
-        window.location.href = "/my-student-plan";
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Failed to save todo");
-      }
-    } catch (err) {
-      setError("Failed to save todo. Please try again.");
-      console.error("Save todo error:", err);
-    }
-  };
 
   const sortedEntries = fullCalendarMode
     ? getSortedEntries()
@@ -451,9 +528,11 @@ export default function TaskInformation() {
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-          <Link href="/my-student-plan" className="nav-btn">
-            My Study plan
-          </Link>
+          { hasStudyPlan && (
+            <Link href="/my-student-plan" className="nav-btn">
+                My Study plan
+            </Link>
+          )}
         </div>
       </div>
       <div className="max-w-6xl mx-auto">
@@ -543,8 +622,8 @@ export default function TaskInformation() {
                                 </span>
                               )}
                             </button>
-                            
-                            <button
+
+                            {/* <button
                               className="open-task-btn"
                               onClick={() => handleOpenTaskTodo(task)}
                             >
@@ -554,7 +633,21 @@ export default function TaskInformation() {
                                   ({taskNoteCounts[task.task_id]})
                                 </span>
                               )}
-                            </button>
+                            </button> */}
+
+                            { hasStudyPlan && (
+                                <button
+                                    className="open-task-btn"
+                                    onClick={() => handleOpenActivityModal(task)}
+                                >
+                                    📃{" "}
+                                    {taskNoteCounts[task.task_id] > 0 && (
+                                        <span className="note-count">
+                                        ({taskNoteCounts[task.task_id]})
+                                        </span>
+                                    )}
+                                </button>
+                            )}
 
                             <div className="creator-info">
                               <span className="creator-label">by :</span>
@@ -587,7 +680,7 @@ export default function TaskInformation() {
         })}
       </div>
 
-      {selectedTask && (
+      {selectedTask && !isOpenActivityModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -665,7 +758,8 @@ export default function TaskInformation() {
         </div>
       )}
 
-      {showTodoModal && selectedTask && (
+      {/* separate into activitymodal */}
+      {/* {showTodoModal && selectedTask && (
         <div className="modal-overlay" onClick={() => setShowTodoModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -674,7 +768,7 @@ export default function TaskInformation() {
                 ✖
               </button>
             </div>
-            
+
             <div className="modal-body">
               <div className="form-group">
                 <label>Task:</label>
@@ -731,13 +825,13 @@ export default function TaskInformation() {
             </div>
 
             <div className="modal-footer">
-              <button 
+              <button
                 onClick={() => setShowTodoModal(false)}
                 className="discard-btn"
               >
                 Discard
               </button>
-              <button 
+              <button
                 onClick={handleSaveTodo}
                 className="confirm-btn"
               >
@@ -746,7 +840,17 @@ export default function TaskInformation() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+        {isOpenActivityModal && (
+            <ActivityModal
+                inputState={inputState}
+                selectedTask={selectedTask!!}
+                onSave={handleCreateStudyPlan}
+                onChange={onChangeActivityInput}
+                onClose={handleCloseActivityModal}
+            />
+        )}
 
       {shouldPrompt && session && (
         <div className="modal-overlay">
