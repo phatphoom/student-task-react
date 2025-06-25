@@ -441,11 +441,12 @@ export default function MyStudentPlan() {
                         </div>
                         <div className="taskBody">
                           {task.wtf && (
-                            <p>Task Details: {task.wtf}</p>
+                            <p className="Detail-Task">Task Details: <span className="Detail-Description">{task.wtf}</span></p>
                           )}
+                          <p className="Plan-Task"> Plan Description: <span className="Plan-Description">{study_plan.description || 'No description'}</span></p>
+
                           <p>Time: {study_plan.start_time || 'Not specified'}</p>
                           <p>Duration: {Math.floor((study_plan.est_dur_min || 0) / 60)} hours</p>
-                          <p>Plan Description: {study_plan.description || 'No description'}</p>
                           {/* แสดงข้อมูล wtf จาก Task เสมอ */}
 
                           {task.work_type && (
