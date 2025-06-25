@@ -623,24 +623,12 @@ export default function TaskInformation() {
                               )}
                             </button>
 
-                            {/* <button
-                              className="open-task-btn"
-                              onClick={() => handleOpenTaskTodo(task)}
-                            >
-                              📃{" "}
-                              {taskNoteCounts[task.task_id] > 0 && (
-                                <span className="note-count">
-                                  ({taskNoteCounts[task.task_id]})
-                                </span>
-                              )}
-                            </button> */}
-
                             { hasStudyPlan && (
                                 <button
                                     className="open-task-btn"
                                     onClick={() => handleOpenActivityModal(task)}
                                 >
-                                    📃{" "}
+                                    ✍️{" "}
                                     {taskNoteCounts[task.task_id] > 0 && (
                                         <span className="note-count">
                                         ({taskNoteCounts[task.task_id]})

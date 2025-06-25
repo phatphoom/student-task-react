@@ -396,3 +396,18 @@
   margin-left: 2px;
   font-weight: bold;
 }
+
+.open-task-btn {
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: inherit;
+  margin-right: auto;
+  margin-left: -25px;
+  transform: translateX(-2px);
+}
+
+.open-task-btn:hover {
+  opacity: 0.7;
+}
