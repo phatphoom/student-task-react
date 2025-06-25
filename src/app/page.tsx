@@ -8,7 +8,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Task, GroupedTasks, Note } from "@/types";
 import "./reports.css";
 import { GoogleUserResponse } from "@/types/google-signin";
-import ActivityModal, { ActivityInput, CreateStudyPlanRequest } from "@/Components/ActivityModal";
+import ActivityModal, {
+  ActivityInput,
+  CreateStudyPlanRequest,
+} from "@/Components/ActivityModal";
 
 export default function TaskInformation() {
   const { data: session, status, update } = useSession();
@@ -33,23 +36,24 @@ export default function TaskInformation() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
 
-  const [hasStudyPlan, setHasStudyPlan] = useState<boolean>(false)
+  const [hasStudyPlan, setHasStudyPlan] = useState<boolean>(false);
   const [inputState, setInputState] = useState<ActivityInput>({
-		hours: 0,
-		minutes: 0,
-		datetime: "",
-		utcString: "",
-		startTime: "",
-		description: "",
-	});
-  const [isOpenActivityModal, setIsOpenActivityModal] = useState<boolean>(false)
+    hours: 0,
+    minutes: 0,
+    datetime: "",
+    utcString: "",
+    startTime: "",
+    description: "",
+  });
+  const [isOpenActivityModal, setIsOpenActivityModal] =
+    useState<boolean>(false);
 
-//   // New states for task todo modal
-//   const [todoDate, setTodoDate] = useState("");
-//   const [todoStartTime, setTodoStartTime] = useState("");
-//   const [todoNote, setTodoNote] = useState("");
-//   const [todoDuration, setTodoDuration] = useState("");
-//   const [showTodoModal, setShowTodoModal] = useState(false);
+  //   // New states for task todo modal
+  //   const [todoDate, setTodoDate] = useState("");
+  //   const [todoStartTime, setTodoStartTime] = useState("");
+  //   const [todoNote, setTodoNote] = useState("");
+  //   const [todoDuration, setTodoDuration] = useState("");
+  //   const [showTodoModal, setShowTodoModal] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -73,8 +77,8 @@ export default function TaskInformation() {
         const userExists = await checkIfUserExists(session.user.email);
 
         if (userExists) {
-            setHasStudyPlan(true)
-            return
+          setHasStudyPlan(true);
+          return;
         }
 
         setShouldPrompt(true);
@@ -380,110 +384,113 @@ export default function TaskInformation() {
     }
   };
 
-//   const handleOpenTaskTodo = (task: Task) => {
-//     setSelectedTask(task);
-//     setShowTodoModal(true);
-//     const today = new Date().toISOString().split("T")[0];
-//     setTodoDate(today);
-//   };
+  //   const handleOpenTaskTodo = (task: Task) => {
+  //     setSelectedTask(task);
+  //     setShowTodoModal(true);
+  //     const today = new Date().toISOString().split("T")[0];
+  //     setTodoDate(today);
+  //   };
 
-//   const handleSaveTodo = async () => {
-//     if (!selectedTask || !todoDate || !todoStartTime) {
-//       setError("Please fill in required fields");
-//       return;
-//     }
+  //   const handleSaveTodo = async () => {
+  //     if (!selectedTask || !todoDate || !todoStartTime) {
+  //       setError("Please fill in required fields");
+  //       return;
+  //     }
 
-//     try {
-//       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           task_id: selectedTask.task_id,
-//           date: todoDate,
-//           start_time: todoStartTime,
-//           duration: parseFloat(todoDuration) || 0,
-//           note: todoNote,
-//           status: "pending",
-//           task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
-//           task_description: selectedTask.wtf,
-//         }),
-//       });
+  //     try {
+  //       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           task_id: selectedTask.task_id,
+  //           date: todoDate,
+  //           start_time: todoStartTime,
+  //           duration: parseFloat(todoDuration) || 0,
+  //           note: todoNote,
+  //           status: "pending",
+  //           task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
+  //           task_description: selectedTask.wtf,
+  //         }),
+  //       });
 
-//       if (response.ok) {
-//         // setShowTodoModal(false);
-//         window.location.href = "/my-student-plan";
-//       } else {
-//         const errorData = await response.json();
-//         setError(errorData.message || "Failed to save todo");
-//       }
-//     } catch (err) {
-//       setError("Failed to save todo. Please try again.");
-//       console.error("Save todo error:", err);
-//     }
-//   };
+  //       if (response.ok) {
+  //         // setShowTodoModal(false);
+  //         window.location.href = "/my-student-plan";
+  //       } else {
+  //         const errorData = await response.json();
+  //         setError(errorData.message || "Failed to save todo");
+  //       }
+  //     } catch (err) {
+  //       setError("Failed to save todo. Please try again.");
+  //       console.error("Save todo error:", err);
+  //     }
+  //   };
 
-    const onChangeActivityInput = <K extends keyof ActivityInput>(key: K, value: ActivityInput[K]) => {
-        setInputState((prev) => ({ ...prev, [key]: value }));
-    };
+  const onChangeActivityInput = <K extends keyof ActivityInput>(
+    key: K,
+    value: ActivityInput[K]
+  ) => {
+    setInputState((prev) => ({ ...prev, [key]: value }));
+  };
 
-    const handleCreateStudyPlan = async () => {
-        if (!session || !session.user.username) {
-            console.error('username is required')
-            return;
-        }
-
-        try {
-            const { hours, minutes, datetime, utcString, startTime, description } =
-                inputState;
-
-            const request: CreateStudyPlanRequest = {
-                username: session?.user.username,
-                task_id: String(selectedTask?.task_id) ?? "", // task_id is invalid type should be fix later
-                est_dur_min: hours * 60 + minutes,
-                datetime: datetime,
-                // utcString,
-                start_time: startTime,
-                description,
-                status: "pending",
-            };
-
-            // todo: handle response and type
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/study-plan`,
-                request,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            setSelectedTask(null);
-            setIsOpenActivityModal(false)
-            // todo: swal
-            alert('Add to my study plan successfully')
-        } catch (err) {
-            console.error("error while try to add my study plan", err);
-        }
-    };
-
-    const handleOpenActivityModal = (task: Task) => {
-        setSelectedTask(task);
-        setIsOpenActivityModal
-        setInputState({
-            ...inputState,
-            // localDateTime:  new Date().toISOString().split("T")[0]
-            datetime: new Date(task.due_date).toISOString().split("T")[0],
-        })
-        setIsOpenActivityModal(true)
-    };
-
-    const handleCloseActivityModal = () => {
-        setSelectedTask(null);
-        setIsOpenActivityModal(false)
+  const handleCreateStudyPlan = async () => {
+    if (!session || !session.user.username) {
+      console.error("username is required");
+      return;
     }
+
+    try {
+      const { hours, minutes, datetime, utcString, startTime, description } =
+        inputState;
+
+      const request: CreateStudyPlanRequest = {
+        username: session?.user.username,
+        task_id: String(selectedTask?.task_id) ?? "", // task_id is invalid type should be fix later
+        est_dur_min: hours * 60 + minutes,
+        datetime: datetime,
+        // utcString,
+        start_time: startTime,
+        description,
+        status: "pending",
+      };
+
+      // todo: handle response and type
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/study-plan`,
+        request,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setSelectedTask(null);
+      setIsOpenActivityModal(false);
+      // todo: swal
+      alert("Add to my study plan successfully");
+    } catch (err) {
+      console.error("error while try to add my study plan", err);
+    }
+  };
+
+  const handleOpenActivityModal = (task: Task) => {
+    setSelectedTask(task);
+    setIsOpenActivityModal;
+    setInputState({
+      ...inputState,
+      // localDateTime:  new Date().toISOString().split("T")[0]
+      datetime: new Date(task.due_date).toISOString().split("T")[0],
+    });
+    setIsOpenActivityModal(true);
+  };
+
+  const handleCloseActivityModal = () => {
+    setSelectedTask(null);
+    setIsOpenActivityModal(false);
+  };
 
   const sortedEntries = fullCalendarMode
     ? getSortedEntries()
@@ -512,7 +519,7 @@ export default function TaskInformation() {
             ) : (
               <>
                 <button onClick={() => signIn("google")}>
-                  Sign In with Google
+                  Sign In with Google.
                 </button>
               </>
             )}
@@ -528,9 +535,9 @@ export default function TaskInformation() {
           <Link href="/" className="nav-btn2">
             Work on Due Report
           </Link>
-          { hasStudyPlan && (
+          {hasStudyPlan && (
             <Link href="/my-student-plan" className="nav-btn">
-                My Study plan
+              My Study plan
             </Link>
           )}
         </div>
@@ -583,7 +590,8 @@ export default function TaskInformation() {
                   <div className="task-day">
                     {sortedTasks.map((task) => {
                       const isHomework =
-                        task.work_type === "Group" || task.work_type === "Personal";
+                        task.work_type === "Group" ||
+                        task.work_type === "Personal";
                       if (isHomework) homeworkCounter++;
 
                       return (
@@ -598,9 +606,7 @@ export default function TaskInformation() {
                           }`}
                         >
                           <div className="task-header">
-                            {isHomework && (
-                              <strong>{homeworkCounter}. </strong>
-                            )}
+                            {isHomework && <strong>{homeworkCounter}. </strong>}
                             {task.work_type !== "School Event" &&
                               task.work_type !== "School Exam" && (
                                 <span className="teacher-subject">
@@ -623,18 +629,18 @@ export default function TaskInformation() {
                               )}
                             </button>
 
-                            { hasStudyPlan && (
-                                <button
-                                    className="open-task-btn"
-                                    onClick={() => handleOpenActivityModal(task)}
-                                >
-                                    ✍️{" "}
-                                    {/* {taskNoteCounts[task.task_id] > 0 && (
+                            {hasStudyPlan && (
+                              <button
+                                className="open-task-btn"
+                                onClick={() => handleOpenActivityModal(task)}
+                              >
+                                ✍️{" "}
+                                {/* {taskNoteCounts[task.task_id] > 0 && (
                                         <span className="note-count">
                                         ({taskNoteCounts[task.task_id]})
                                         </span>
                                     )} */}
-                                </button>
+                              </button>
                             )}
 
                             <div className="creator-info">
@@ -830,15 +836,15 @@ export default function TaskInformation() {
         </div>
       )} */}
 
-        {isOpenActivityModal && (
-            <ActivityModal
-                inputState={inputState}
-                selectedTask={selectedTask!!}
-                onSave={handleCreateStudyPlan}
-                onChange={onChangeActivityInput}
-                onClose={handleCloseActivityModal}
-            />
-        )}
+      {isOpenActivityModal && (
+        <ActivityModal
+          inputState={inputState}
+          selectedTask={selectedTask!!}
+          onSave={handleCreateStudyPlan}
+          onChange={onChangeActivityInput}
+          onClose={handleCloseActivityModal}
+        />
+      )}
 
       {shouldPrompt && session && (
         <div className="modal-overlay">
