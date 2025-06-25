@@ -1,13 +1,10 @@
-//app/page.tsx
 "use client";
 
 import Link from "next/link";
 import { Session } from "next-auth";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-
 import { Task, GroupedTasks, Note } from "@/types";
-
 import "./reports.css";
 import { GoogleUserResponse } from "@/types/google-signin";
 
@@ -34,10 +31,17 @@ export default function TaskInformation() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [note, setNote] = useState<string>("");
 
+  // New states for task todo modal
+  const [todoDate, setTodoDate] = useState("");
+  const [todoStartTime, setTodoStartTime] = useState("");
+  const [todoNote, setTodoNote] = useState("");
+  const [todoDuration, setTodoDuration] = useState("");
+  const [showTodoModal, setShowTodoModal] = useState(false);
+
   useEffect(() => {
-    const today = new Date();
-    const todayStr = today.toISOString().split("T")[0];
-    setDateFrom(todayStr);
+    const today = new Date().toISOString().split("T")[0];
+    setDateFrom(today);
+    setTodoDate(today);
   }, []);
 
   useEffect(() => {
@@ -205,7 +209,6 @@ export default function TaskInformation() {
     logAccess();
   }, []);
 
-  // เพิ่มฟังก์ชัน sortTasksInDate เหมือนใน TaskList
   const sortTasksInDate = (tasksOnDate: Task[]) => {
     return tasksOnDate.sort((a, b) => {
       const getPriority = (workType: string) => {
@@ -286,14 +289,6 @@ export default function TaskInformation() {
     return entries;
   };
 
-  const sortedEntries = fullCalendarMode
-    ? getSortedEntries()
-    : Object.entries(groupedTasks).sort(([a], [b]) => {
-        const dateA = new Date(a.split(".").reverse().join("-"));
-        const dateB = new Date(b.split(".").reverse().join("-"));
-        return dateA.getTime() - dateB.getTime();
-      });
-
   const closeModal = () => {
     setSelectedTask(null);
     setNote("");
@@ -369,6 +364,58 @@ export default function TaskInformation() {
     }
   };
 
+  const handleOpenTaskTodo = (task: Task) => {
+    setSelectedTask(task);
+    setShowTodoModal(true);
+    const today = new Date().toISOString().split("T")[0];
+    setTodoDate(today);
+  };
+
+  const handleSaveTodo = async () => {
+    if (!selectedTask || !todoDate || !todoStartTime) {
+      setError("Please fill in required fields");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          task_id: selectedTask.task_id,
+          date: todoDate,
+          start_time: todoStartTime,
+          duration: parseFloat(todoDuration) || 0,
+          note: todoNote,
+          status: "pending",
+          task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
+          task_description: selectedTask.wtf,
+        }),
+      });
+
+      if (response.ok) {
+        setShowTodoModal(false);
+        window.location.href = "/my-student-plan";
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to save todo");
+      }
+    } catch (err) {
+      setError("Failed to save todo. Please try again.");
+      console.error("Save todo error:", err);
+    }
+  };
+
+  const sortedEntries = fullCalendarMode
+    ? getSortedEntries()
+    : Object.entries(groupedTasks).sort(([a], [b]) => {
+        const dateA = new Date(a.split(".").reverse().join("-"));
+        const dateB = new Date(b.split(".").reverse().join("-"));
+        return dateA.getTime() - dateB.getTime();
+      });
+
   return (
     <div className="p-4">
       <div className="group-button-and-text">
@@ -429,103 +476,115 @@ export default function TaskInformation() {
             </div>
           </div>
         </div>
-        <div className="card-container">
-          {sortedEntries.map(([date, dateTasks]) => {
-            try {
-              const [day, month, year] = date.split(".").map(Number);
-              const dateObj = new Date(year, month - 1, day);
-              if (isNaN(dateObj.getTime())) throw new Error("Invalid Date");
+      </div>
+      <div className="card-container">
+        {sortedEntries.map(([date, dateTasks]) => {
+          try {
+            const [day, month, year] = date.split(".").map(Number);
+            const dateObj = new Date(year, month - 1, day);
+            if (isNaN(dateObj.getTime())) throw new Error("Invalid Date");
 
-              const weekday = new Intl.DateTimeFormat("en-US", {
-                weekday: "short",
-              }).format(dateObj);
+            const weekday = new Intl.DateTimeFormat("en-US", {
+              weekday: "short",
+            }).format(dateObj);
 
-              // เรียง tasks ในวันนั้นตาม priority
-              const sortedTasks = sortTasksInDate(dateTasks);
-              let homeworkCounter = 0;
+            const sortedTasks = sortTasksInDate(dateTasks);
+            let homeworkCounter = 0;
 
-              return (
-                <div key={date} className="card">
-                  <div className="card-header">
-                    {date} <span className="weekday">{weekday}</span>
+            return (
+              <div key={date} className="card">
+                <div className="card-header">
+                  {date} <span className="weekday">{weekday}</span>
+                </div>
+                {sortedTasks.length === 0 ? (
+                  <div className="card-empty">
+                    No Task Dued: Yeah!!! Very Happy
                   </div>
-                  {sortedTasks.length === 0 ? (
-                    <div className="card-empty">
-                      No Task Dued: Yeah!!! Very Happy
-                    </div>
-                  ) : (
-                    <div className="task-day">
-                      {sortedTasks.map((task) => {
-                        const isHomework =
-                          task.work_type === "Group" || task.work_type === "Personal";
-                        if (isHomework) homeworkCounter++;
+                ) : (
+                  <div className="task-day">
+                    {sortedTasks.map((task) => {
+                      const isHomework =
+                        task.work_type === "Group" || task.work_type === "Personal";
+                      if (isHomework) homeworkCounter++;
 
-                        return (
-                          <div
-                            key={task.task_id}
-                            className={`task-item ${
-                              task.work_type === "School Event"
-                                ? "school-event"
-                                : task.work_type === "School Exam"
-                                ? "school-exam"
-                                : ""
-                            }`}
-                          >
-                            <div className="task-header">
-                              {isHomework && (
-                                <strong>{homeworkCounter}. </strong>
-                              )}
-                              {task.work_type !== "School Event" &&
-                                task.work_type !== "School Exam" && (
-                                  <span className="teacher-subject">
-                                    {task.teacher} : {task.subject}
-                                  </span>
-                                )}
-                              <span className="task-type">{task.work_type}</span>
-                            </div>
-                            <div className="task-body">{task.wtf}</div>
-                            <div className="task-creator">
-                              <button
-                                className="open-note-btn"
-                                onClick={() => setSelectedTask(task)}
-                              >
-                                📝{" "}
-                                {taskNoteCounts[task.task_id] > 0 && (
-                                  <span className="note-count">
-                                    ({taskNoteCounts[task.task_id]})
-                                  </span>
-                                )}
-                              </button>
-                              <div className="creator-info">
-                                <span className="creator-label">by :</span>
-                                <span className="creator-name">
-                                  {(() => {
-                                    const creator =
-                                      task.created_by_name || "Unknown";
-                                    const editor = task.last_updated_by;
-
-                                    if (!editor || editor === creator) {
-                                      return creator;
-                                    }
-
-                                    return `${creator} / ${editor}`;
-                                  })()}
+                      return (
+                        <div
+                          key={task.task_id}
+                          className={`task-item ${
+                            task.work_type === "School Event"
+                              ? "school-event"
+                              : task.work_type === "School Exam"
+                              ? "school-exam"
+                              : ""
+                          }`}
+                        >
+                          <div className="task-header">
+                            {isHomework && (
+                              <strong>{homeworkCounter}. </strong>
+                            )}
+                            {task.work_type !== "School Event" &&
+                              task.work_type !== "School Exam" && (
+                                <span className="teacher-subject">
+                                  {task.teacher} : {task.subject}
                                 </span>
-                              </div>
+                              )}
+                            <span className="task-type">{task.work_type}</span>
+                          </div>
+                          <div className="task-body">{task.wtf}</div>
+                          <div className="task-creator">
+                            <button
+                              className="open-note-btn"
+                              onClick={() => setSelectedTask(task)}
+                            >
+                              📝{" "}
+                              {taskNoteCounts[task.task_id] > 0 && (
+                                <span className="note-count">
+                                  ({taskNoteCounts[task.task_id]})
+                                </span>
+                              )}
+                            </button>
+                            
+                            <button
+                              className="open-task-btn"
+                              onClick={() => handleOpenTaskTodo(task)}
+                            >
+                              📃{" "}
+                              {taskNoteCounts[task.task_id] > 0 && (
+                                <span className="note-count">
+                                  ({taskNoteCounts[task.task_id]})
+                                </span>
+                              )}
+                            </button>
+
+                            <div className="creator-info">
+                              <span className="creator-label">by :</span>
+                              <span className="creator-name">
+                                {(() => {
+                                  const creator =
+                                    task.created_by_name || "Unknown";
+                                  const editor = task.last_updated_by;
+
+                                  if (!editor || editor === creator) {
+                                    return creator;
+                                  }
+
+                                  return `${creator} / ${editor}`;
+                                })()}
+                              </span>
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            } catch (err) {
-              console.error("Skipping invalid date:", date);
-              return null;
-            }
-          })}
-        </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          } catch (err) {
+            console.error("Skipping invalid date:", date);
+            return null;
+          }
+        })}
       </div>
 
       {selectedTask && (
@@ -600,6 +659,89 @@ export default function TaskInformation() {
             <div className="modal-footer">
               <button onClick={handleSaveNote} className="modal-save-btn">
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTodoModal && selectedTask && (
+        <div className="modal-overlay" onClick={() => setShowTodoModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Date and Time To-Do</h3>
+              <button onClick={() => setShowTodoModal(false)} className="modal-close">
+                ✖
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Task:</label>
+                <div className="task-info">
+                  <strong>{selectedTask.teacher} : {selectedTask.subject}</strong>
+                  <p>{selectedTask.wtf}</p>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Date *</label>
+                <input
+                  type="date"
+                  value={todoDate}
+                  onChange={(e) => setTodoDate(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Start Time *</label>
+                <input
+                  type="time"
+                  value={todoStartTime}
+                  onChange={(e) => setTodoStartTime(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>My Note</label>
+                <textarea
+                  value={todoNote}
+                  onChange={(e) => setTodoNote(e.target.value)}
+                  className="form-textarea"
+                  placeholder="Add your notes here..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Estimate Duration (Hours)</label>
+                <input
+                  type="number"
+                  value={todoDuration}
+                  onChange={(e) => setTodoDuration(e.target.value)}
+                  className="form-input"
+                  min="0"
+                  step="0.5"
+                  placeholder="0.5"
+                />
+              </div>
+
+              {error && <div className="error-message">{error}</div>}
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                onClick={() => setShowTodoModal(false)}
+                className="discard-btn"
+              >
+                Discard
+              </button>
+              <button 
+                onClick={handleSaveTodo}
+                className="confirm-btn"
+              >
+                Confirm
               </button>
             </div>
           </div>
