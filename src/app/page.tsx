@@ -529,7 +529,7 @@ export default function TaskInformation() {
             Work on Due Report
           </Link>
           { hasStudyPlan && (
-            <Link href="/my-study-plan" className="nav-btn">
+            <Link href="/my-student-plan" className="nav-btn">
                 My Study plan
             </Link>
           )}
