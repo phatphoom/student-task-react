@@ -440,9 +440,14 @@ export default function MyStudentPlan() {
                           </span>
                         </div>
                         <div className="taskBody">
+                          {task.wtf && (
+                            <p>Task Details: {task.wtf}</p>
+                          )}
                           <p>Time: {study_plan.start_time || 'Not specified'}</p>
                           <p>Duration: {Math.floor((study_plan.est_dur_min || 0) / 60)} hours</p>
-                          <p>Description: {study_plan.description || task.wtf || 'No description'}</p>
+                          <p>Plan Description: {study_plan.description || 'No description'}</p>
+                          {/* แสดงข้อมูล wtf จาก Task เสมอ */}
+
                           {task.work_type && (
                             <p>Type: {task.work_type}</p>
                           )}
