@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { Kanit } from 'next/font/google';
+
+import { TopNav } from '@/components/TopNav';
+
 import './globals.css';
 
 import AuthProvider from '../contexts/session-provider';
@@ -22,8 +25,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${kanit.variable} ${kanit.variable} antialiased`}>
-                <AuthProvider>{children}</AuthProvider>
+            <body className={`${kanit.variable} antialiased`}>
+                <AuthProvider>
+                    <TopNav />
+                    <main className="p-4">{children}</main>
+                </AuthProvider>
             </body>
         </html>
     );
