@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Kanit } from 'next/font/google';
 import './globals.css';
 
-import AuthProvider from '../Contexts/session-provider';
+import AuthProvider from '../contexts/session-provider';
 
 const kanit = Kanit({
     weight: ['400'],

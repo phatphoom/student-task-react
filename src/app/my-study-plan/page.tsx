@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import './mystudy.css';
-import './taskcard.css';
-import ActivityModal from '@/components/ActivityModal';
+// import "./mystudy.css";
+// import "./taskcard.css";
 
 interface StudyPlan {
     sp_id: string;
@@ -307,7 +306,6 @@ export default function MyStudentPlan() {
                     </Link>
                 </div>
             </div>
-
 
             {/* Study Plans List */}
             <div className="cardContainer">

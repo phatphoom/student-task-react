@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import TaskForm from '@/Components/TaskForm';
-import TaskList from '@/Components/TaskList';
+import TaskForm from '@/components/TaskForm';
+import TaskList from '@/components/TaskList';
 
 export default function Page() {
     const [refresh, setRefresh] = useState(false);

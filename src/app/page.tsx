@@ -11,7 +11,7 @@ import { GoogleUserResponse } from '@/types/google-signin';
 import ActivityModal, {
     ActivityInput,
     CreateStudyPlanRequest,
-} from '@/Components/ActivityModal';
+} from '@/components/ActivityModal';
 
 export default function TaskInformation() {
     const { data: session, status, update } = useSession();
