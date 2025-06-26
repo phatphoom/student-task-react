@@ -1,616 +1,615 @@
-@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
-  font-family: "Kanit", sans-serif;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    font-family: 'Kanit', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 :root {
-  --primary-color: #69bcff;
-  --secondary-color: #764ba2;
-  --accent-color: #f093fb;
-  --background-color: #f8fafc;
-  --text-color: #2d3748;
-  --text-light: #718096;
-  --border-color: #e2e8f0;
-  --card-bg: #ffffff;
-  --radius: 16px;
-  --radius-lg: 24px;
-  --active-color: #ff9933; /* สีตอน active */
+    --primary-color: #69bcff;
+    --secondary-color: #764ba2;
+    --accent-color: #f093fb;
+    --background-color: #f8fafc;
+    --text-color: #2d3748;
+    --text-light: #718096;
+    --border-color: #e2e8f0;
+    --card-bg: #ffffff;
+    --radius: 16px;
+    --radius-lg: 24px;
+    --active-color: #ff9933; /* สีตอน active */
 }
 
 body {
-  font-family: "Kanit", sans-serif;
-  color: var(--text-color);
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background-color: var(--background-color);
+    font-family: 'Kanit', sans-serif;
+    color: var(--text-color);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--background-color);
 }
 
 .student-task-container {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 40px;
-  margin: 40px auto;
-  max-width: 950px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 40px auto;
+    max-width: 950px;
 }
 
 .title h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: black;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: black;
 }
 
 .title h5 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: black;
-  margin-bottom: 20px;
-  border-radius: 13px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: black;
+    margin-bottom: 20px;
+    border-radius: 13px;
 }
 
 .group-button-and-text {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
 }
 
 .top-right-button {
-  position: relative; /* หรือไม่ต้องใส่ก็ได้ */
-  display: flex;
-  gap: 10px;
-  margin-top: 0;
+    position: relative; /* หรือไม่ต้องใส่ก็ได้ */
+    display: flex;
+    gap: 10px;
+    margin-top: 0;
 }
 
 .nav-btn,
 .btn-primary {
-  background: rgb(255 205 235);
-  color: rgb(0, 0, 0);
-  border: none;
-  border-radius: var(--radius);
-  padding: 14px 32px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-  font-family: "Kanit", sans-serif;
-  margin-top: 20px;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  transition: background 0.3s;
-  text-decoration: none;
+    background: rgb(255 205 235);
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px 32px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    font-family: 'Kanit', sans-serif;
+    margin-top: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    transition: background 0.3s;
+    text-decoration: none;
 }
 
 .btn-primary:hover {
-  background: blue;
+    background: blue;
 }
 
 .nav-btn:hover {
-  background: rgb(181, 86, 143);
+    background: rgb(181, 86, 143);
 }
 
 .nav-btn2 {
-  background: #b3d4fd;
-  color: rgb(0, 0, 0);
-  border: none;
-  border-radius: var(--radius);
-  padding: 14px 32px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-  font-family: "Kanit", sans-serif;
-  margin-top: 20px;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  transition: background 0.3s;
-  text-decoration: none;
+    background: #b3d4fd;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px 32px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    font-family: 'Kanit', sans-serif;
+    margin-top: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    transition: background 0.3s;
+    text-decoration: none;
 }
 
 .nav-btn2:hover {
-  background: #5482bc;
+    background: #5482bc;
 }
 
 .nav-btn3 {
-  color: #2c9ff2;
-  border: none;
-  padding: 14px 32px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-  font-family: "Kanit", sans-serif;
-  margin-top: 20px;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  text-decoration: none;
+    color: #2c9ff2;
+    border: none;
+    padding: 14px 32px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    font-family: 'Kanit', sans-serif;
+    margin-top: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
 }
 
 p {
-  margin: auto 0;
-  font-size: 1srem;
-  color: #34495e;
+    margin: auto 0;
+    font-size: 1srem;
+    color: #34495e;
 }
 
 button {
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  font-size: 1rem;
-  padding: 8px 16px;
-  background-color: #2c9ff2;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    padding: 8px 16px;
+    background-color: #2c9ff2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
 /* button:hover {
   background-color: #0a65a1;
 } */
 
-
 /* สำหรับ form row ที่ต้องการให้อยู่ในบรรทัดเดียวกัน */
 .form-row {
-  background: #ff8acf12;
-  padding: 20px;
-  border-radius: 14px;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+    background: #ff8acf12;
+    padding: 20px;
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .form-row2 {
-  background: #b3d4fe5c;
-  padding: 20px;
-  border-radius: 14px;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+    background: #b3d4fe5c;
+    padding: 20px;
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 /* Form Groups */
 .form-group {
-  background: #ff8acf12;
-  padding: 10px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    background: #ff8acf12;
+    padding: 10px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .form-group2 {
-  background: #b3d4fe5c;
-  padding: 10px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    background: #b3d4fe5c;
+    padding: 10px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* Form Elements */
 .form-label2 {
-  min-width: auto;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-color);
-  white-space: nowrap;
-  margin-bottom: 5px;
+    min-width: auto;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    margin-bottom: 5px;
 }
 
 .form-label {
-  min-width: auto;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-color);
-  white-space: nowrap;
-  margin-bottom: 5px;
+    min-width: auto;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    margin-bottom: 5px;
 }
 
 .form-input,
 .form-select {
-  font-family: "Kanit", sans-serif;
-  padding: 12px 16px;
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius);
-  font-size: 1.1rem;
-  background: #ffffff;
-  box-sizing: border-box;
-  resize: none;
+    font-family: 'Kanit', sans-serif;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    background: #ffffff;
+    box-sizing: border-box;
+    resize: none;
 }
 
 .form-textarea {
-  font-family: "Kanit", sans-serif;
-  padding: 12px 16px;
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius);
-  font-size: 1.1rem;
-  background: #ffffff;
-  box-sizing: border-box;
-  resize: none;
-  min-height: 180px;
+    font-family: 'Kanit', sans-serif;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    background: #ffffff;
+    box-sizing: border-box;
+    resize: none;
+    min-height: 180px;
 }
 
-.form-input[type="date"] {
-  min-width: auto;
+.form-input[type='date'] {
+    min-width: auto;
 }
 
 .form-select {
-  min-width: auto;
-  cursor: pointer;
+    min-width: auto;
+    cursor: pointer;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  body {
-    padding: 0;
-    margin: 0;
-    font-family: "Kanit", sans-serif;
-    background-color: #f5f7fa;
-  }
+    body {
+        padding: 0;
+        margin: 0;
+        font-family: 'Kanit', sans-serif;
+        background-color: #f5f7fa;
+    }
 
-  .group-button-and-text {
-    justify-content: center;
-    flex-direction: column; /* ถ้าอยากให้เรียงแนวตั้งเมื่อหน้าจอแคบ */
-    align-items: center; /* ให้อยู่กึ่งกลางแนวขวางด้วย */
-    gap: 1rem; /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
-  }
+    .group-button-and-text {
+        justify-content: center;
+        flex-direction: column; /* ถ้าอยากให้เรียงแนวตั้งเมื่อหน้าจอแคบ */
+        align-items: center; /* ให้อยู่กึ่งกลางแนวขวางด้วย */
+        gap: 1rem; /* เพิ่มช่องว่างระหว่างปุ่มและข้อความ ถ้ามี */
+    }
 
-  .nav-btn,
-  .btn-primary,
-  .nav-btn2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    padding: 14px;
-    margin: 10px 0;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.3s;
-  }
+    .nav-btn,
+    .btn-primary,
+    .nav-btn2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: auto;
+        padding: 14px;
+        margin: 10px 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
 
-  .btn-primary {
-    background: rgb(0, 197, 0);
-    color: white;
-    border: none;
-  }
+    .btn-primary {
+        background: rgb(0, 197, 0);
+        color: white;
+        border: none;
+    }
 
-  .btn-primary:hover {
-    background: blue;
-  }
+    .btn-primary:hover {
+        background: blue;
+    }
 
-  .nav-btn {
-    background: rgb(255 205 235);
-    color: rgb(0, 0, 0);
-  }
+    .nav-btn {
+        background: rgb(255 205 235);
+        color: rgb(0, 0, 0);
+    }
 
-  .nav-btn:hover {
-    background: rgb(181, 86, 143);
-  }
+    .nav-btn:hover {
+        background: rgb(181, 86, 143);
+    }
 
-  .nav-btn2 {
-    background: #b3d4fd;
-    color: rgb(0, 0, 0);
-  }
+    .nav-btn2 {
+        background: #b3d4fd;
+        color: rgb(0, 0, 0);
+    }
 
-  .nav-btn2:hover {
-    background: #5482bc;
-  }
+    .nav-btn2:hover {
+        background: #5482bc;
+    }
 
-  .form-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
+    .form-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
 
-  .form-group {
-    width: 100%;
-    max-width: 100%;
-  }
+    .form-group {
+        width: 100%;
+        max-width: 100%;
+    }
 
-  .form-input,
-  .form-select,
-  .form-textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-size: 1rem;
-  }
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 1rem;
+    }
 
-  .title {
-    font-size: 2rem;
-    margin-bottom: 24px;
-    color: #222;
-    text-align: center;
-  }
+    .title {
+        font-size: 2rem;
+        margin-bottom: 24px;
+        color: #222;
+        text-align: center;
+    }
 
-  .tableWrapperClass {
-    overflow-x: auto;
-    margin: 16px 0;
-    border-radius: 12px;
-  }
+    .tableWrapperClass {
+        overflow-x: auto;
+        margin: 16px 0;
+        border-radius: 12px;
+    }
 
-  .tableClass {
-    min-width: 600px;
-  }
+    .tableClass {
+        min-width: 600px;
+    }
 
-  .success-message,
-  .error-message,
-  .info-card {
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
+    .success-message,
+    .error-message,
+    .info-card {
+        width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
 
-  .buttonSaveClass,
-  .buttonCancelClass,
-  .editButtonClass,
-  .deleteButtonClass {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 8px;
-  }
+    .buttonSaveClass,
+    .buttonCancelClass,
+    .editButtonClass,
+    .deleteButtonClass {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+        border-radius: 8px;
+    }
 }
 
 .btn-primary {
-  padding: 10px 20px;
-  background: var(--primary-color);
-  color: #fff;
-  font-size: 1rem;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background 0.2s;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .tableWrapperClass {
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
 }
 
 .tableClass {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: "Kanit", sans-serif;
-  font-size: 1rem;
-  color: var(--text-color);
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1rem;
+    color: var(--text-color);
 }
 
 .tableClass th,
 .tableClass td {
-  border-left: 1px solid #e9e9e9;
-  border-right: 1px solid #e9e9e9;
-  border-top: 1px solid #e9e9e9; /* เพิ่มขอบบน */
-  border-bottom: 1px solid #e9e9e9; /* เพิ่มขอบล่าง */
-  padding: 8px;
-  text-align: left;
+    border-left: 1px solid #e9e9e9;
+    border-right: 1px solid #e9e9e9;
+    border-top: 1px solid #e9e9e9; /* เพิ่มขอบบน */
+    border-bottom: 1px solid #e9e9e9; /* เพิ่มขอบล่าง */
+    padding: 8px;
+    text-align: left;
 }
 
 .theadClass {
-  background: var(--primary-color);
-  color: white;
+    background: var(--primary-color);
+    color: white;
 }
 
 .thClass {
-  padding: 20px 24px;
-  text-align: left;
-  font-weight: 700;
-  font-size: 1.1rem;
-  border: none;
-  color: white;
+    padding: 20px 24px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    color: white;
 }
 
 .tbodyClass tr {
-  background: #ffffff;
-  border-bottom: 1px solid var(--border-color);
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tbodyClass tr:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .tdClass {
-  padding: 16px 24px;
-  vertical-align: middle;
-  /* border: none; */
+    padding: 16px 24px;
+    vertical-align: middle;
+    /* border: none; */
 }
 
 .inputClass {
-  width: 100%;
-  padding: 10px 16px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  background: #ffffff;
-  resize: none;
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #ffffff;
+    resize: none;
 }
 
 .inputClass:focus {
-  border-color: var(--primary-color);
-  outline: none;
+    border-color: var(--primary-color);
+    outline: none;
 }
 
 .buttonSaveClass {
-  margin-right: 10px;
-  background: #48bb78;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  border: none;
-  cursor: pointer;
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
+    margin-right: 10px;
+    background: #48bb78;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
 }
 
 .buttonSaveClass:hover {
-  background: #38a169;
+    background: #38a169;
 }
 
 .buttonCancelClass {
-  background: #a0aec0;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  border: none;
-  cursor: pointer;
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
+    background: #a0aec0;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
 }
 
 .buttonCancelClass:hover {
-  background: #718096;
+    background: #718096;
 }
 
 .editButtonClass {
-  background: #4299e1;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  border: none;
-  cursor: pointer;
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
-  margin-right: 8px;
+    background: #4299e1;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    margin-right: 8px;
 }
 
 .editButtonClass:hover {
-  background: #3182ce;
+    background: #3182ce;
 }
 
 .deleteButtonClass {
-  background: #f56565;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  border: none;
-  cursor: pointer;
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
+    background: #f56565;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
 }
 
 .deleteButtonClass:hover {
-  background: #e53e3e;
+    background: #e53e3e;
 }
 
 .info-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin: 20px 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 20px 0;
 }
 
 .success-message {
-  background: rgba(72, 187, 120, 0.1);
-  border: 1px solid rgba(72, 187, 120, 0.3);
-  color: #2f855a;
-  padding: 16px 20px;
-  border-radius: var(--radius);
-  margin: 16px 0;
-  font-weight: 600;
+    background: rgba(72, 187, 120, 0.1);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+    color: #2f855a;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin: 16px 0;
+    font-weight: 600;
 }
 
 .error-message {
-  background: rgba(245, 101, 101, 0.1);
-  border: 1px solid rgba(245, 101, 101, 0.3);
-  color: #c53030;
-  padding: 16px 20px;
-  border-radius: var(--radius);
-  margin: 16px 0;
-  font-weight: 600;
+    background: rgba(245, 101, 101, 0.1);
+    border: 1px solid rgba(245, 101, 101, 0.3);
+    color: #c53030;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin: 16px 0;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
+    body {
+        padding: 10px;
+    }
 
-  .student-task-container {
-    padding: 24px 20px;
-    margin: 20px auto;
-    border-radius: var(--radius);
-  }
+    .student-task-container {
+        padding: 24px 20px;
+        margin: 20px auto;
+        border-radius: var(--radius);
+    }
 
-  .title {
-    font-size: 2rem;
-  }
+    .title {
+        font-size: 2rem;
+    }
 
-  .nav-btn,
-  .btn-primary {
-    padding: 12px 24px;
-    font-size: 1rem;
-    width: auto;
-  }
+    .nav-btn,
+    .btn-primary {
+        padding: 12px 24px;
+        font-size: 1rem;
+        width: auto;
+    }
 
-  .form-input,
-  .form-select,
-  .form-textarea {
-    padding: 12px 16px;
-    font-size: 1rem;
-    resize: none;
-  }
+    .form-input,
+    .form-select,
+    .form-textarea {
+        padding: 12px 16px;
+        font-size: 1rem;
+        resize: none;
+    }
 
-  .tableWrapperClass {
-    margin-top: 24px;
-    border-radius: var(--radius);
-    overflow-x: auto;
-  }
+    .tableWrapperClass {
+        margin-top: 24px;
+        border-radius: var(--radius);
+        overflow-x: auto;
+    }
 
-  .thClass {
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    border: 1px solid var(--border-color);
-  }
+    .thClass {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        border: 1px solid var(--border-color);
+    }
 
-  .tdClass {
-    padding: 12px 16px;
-    border: 1px solid var(--border-color);
-  }
+    .tdClass {
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+    }
 
-  /* .form-actions {
+    /* .form-actions {
     flex-direction: column;
     gap: 12px;
   }
@@ -621,196 +620,194 @@ button {
 }
 
 @media (max-width: 480px) {
-  .title {
-    font-size: 1.75rem;
-  }
+    .title {
+        font-size: 1.75rem;
+    }
 }
 
 .card-header {
-  background-color: #cce6ff;
-  padding: 12px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 16px;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-color: #cce6ff;
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .card-empty {
-  padding: 20px;
-  text-align: center;
-  font-weight: 500;
-  color: var(--text-light);
-  font-style: italic;
+    padding: 20px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--text-light);
+    font-style: italic;
 }
 
 .teacher-subject {
-  color: #333;
+    color: #333;
 }
 
 .task-type {
-  color: #333;
+    color: #333;
 }
 
 .task-body {
-  padding: 8px 0;
-  white-space: pre-wrap;
-  word-break: break-word; /* ตัดคำเมื่อจำเป็น */
-  color: #0005ff;
-  font-size: 1rem;
-  line-height: 1.5;
+    padding: 8px 0;
+    white-space: pre-wrap;
+    word-break: break-word; /* ตัดคำเมื่อจำเป็น */
+    color: #0005ff;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 /* app/globals.css */
 
 body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f6fa;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
 }
 
 .login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f5f6fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f5f6fa;
 }
 
 .login-box {
-  background-color: #ffffff;
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 400px;
+    background-color: #ffffff;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
 }
 
 .login-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: #5889d6;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #5889d6;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
 .login-label {
-  font-size: 0.95rem;
-  color: #334155;
-  margin-bottom: 0.5rem;
-  display: block;
+    font-size: 0.95rem;
+    color: #334155;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
 .login-input {
-  width: 100%; /* ✅ กว้างเต็มพื้นที่ */
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #f9fafb;
+    width: 100%; /* ✅ กว้างเต็มพื้นที่ */
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: #f9fafb;
 }
 
 .login-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-  background-color: #ffffff;
-  outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background-color: #ffffff;
+    outline: none;
 }
 
 .login-button {
-  width: 100%; /* ✅ เพิ่มความกว้างให้เต็มเหมือน input */
-  padding: 0.75rem 1rem;
-  background-color: #3b82f6;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+    width: 100%; /* ✅ เพิ่มความกว้างให้เต็มเหมือน input */
+    padding: 0.75rem 1rem;
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .login-button:hover {
-  background-color: #2563eb;
+    background-color: #2563eb;
 }
 
 .login-error {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: -0.5rem;
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: -0.5rem;
 }
 
 .login-success {
-  color: #10b981;
-  font-size: 0.875rem;
-  margin-top: -0.5rem;
+    color: #10b981;
+    font-size: 0.875rem;
+    margin-top: -0.5rem;
 }
 
 .input-with-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .login-input {
-  width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem; /* เพิ่ม padding ด้านขวาให้มีที่ว่างสำหรับปุ่มลูกตา */
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #f9fafb;
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem; /* เพิ่ม padding ด้านขวาให้มีที่ว่างสำหรับปุ่มลูกตา */
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: #f9fafb;
 }
 
 .toggle-password {
-  position: absolute;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #6b7280;
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #6b7280;
 }
 
 .toggle-password:hover {
-  color: #374151;
+    color: #374151;
 }
 
 /* 为School Event类型的任务添加特殊背景色 */
 .school-event-task {
-  background-color: #f4dbf2 !important;
-  border-left: 4px solid #d68fcf;
+    background-color: #f4dbf2 !important;
+    border-left: 4px solid #d68fcf;
 }
 
 .school-event-task .task-header {
-  background-color: #f0c5ed !important;
+    background-color: #f0c5ed !important;
 }
 
 .school-exam-task {
-  /* background-color: #f4dbf2 !important; */
-  border-left: 4px solid #d68fcf;
+    /* background-color: #f4dbf2 !important; */
+    border-left: 4px solid #d68fcf;
 }
 
 .school-exam-task .typeTag {
-  color: #ff5151;
+    color: #ff5151;
 }
 .school-exam-task .taskBody {
-  background-color: #ff5151;
-  color: white;
+    background-color: #ff5151;
+    color: white;
 }
 
 .dev-mode {
-  text-decoration: underline;
-  color: #b3d4fc; 
-    
+    text-decoration: underline;
+    color: #b3d4fc;
 }
-

@@ -1,6 +1,6 @@
-import NextAuth from "next-auth";
+import NextAuth from 'next-auth';
 
-declare module "next-auth" {
+declare module 'next-auth' {
     interface Session {
         // user: {
         //     name?: string;
@@ -17,10 +17,10 @@ declare module "next-auth" {
             id: string;
             hintword?: string;
             username: string;
-            email?: string
+            email?: string;
             userType: string;
             createdBy: string;
-            createdOn: string
+            createdOn: string;
         };
     }
 
