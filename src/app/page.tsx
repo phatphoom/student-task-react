@@ -556,7 +556,7 @@ export default function TaskInformation() {
                         Room Announcement
                     </Link>
                     <Link
-                        href="/Logins"
+                        href="/login"
                         className="nav-btn"
                     >
                         Manage Due

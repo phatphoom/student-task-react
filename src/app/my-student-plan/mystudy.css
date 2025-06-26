@@ -1,6 +1,6 @@
 /* mystudy.css */
 
-body {
+/* body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #ffffff;
     margin: 0;
@@ -229,10 +229,10 @@ body {
 .plan-date {
     font-size: 0.9rem;
     color: #555;
-}
+} */
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .header {
         flex-direction: column;
         align-items: stretch;
@@ -280,4 +280,4 @@ body {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;
     }
-}
+} */
