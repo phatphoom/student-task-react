@@ -120,15 +120,15 @@ export default function TaskForm({
 
     return (
         <div className="p-4">
-            <div className="group-button-and-text">
+            {/* <div className="position relative flex items-start justify-between">
                 <div>
-                    <h1 className="title">
+                    <h1 className="text-[2.5rem] font-extrabold text-black">
                         Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0
                         Build20250611
                     </h1>
                     <h2 className="title">Class Room EP105</h2>
                 </div>
-                <div className="top-right-button">
+                <div className="relative mt-0 flex gap-2.5">
                     <Link
                         href="/room-announcement"
                         className="nav-btn3"
@@ -154,22 +154,26 @@ export default function TaskForm({
                         My Study plan
                     </Link>
                 </div>
-            </div>
+            </div> */}
 
-            <div className="form-row">
-                <div className="form-group">
-                    <label className="form-label">Due Date *</label>
+            <div className="mb-5 flex flex-wrap items-start gap-5 rounded-2xl bg-[#ff8acf12] p-5">
+                <div className="flex flex-col gap-2 rounded-[14px] bg-[#ff8acf12] p-2.5 md:w-full md:max-w-full">
+                    <label className="mb-1.5 min-w-max text-base font-bold whitespace-nowrap text-[#2d3748]">
+                        Due Date *
+                    </label>
                     <input
                         type="date"
                         value={dueDate}
                         onChange={handleDateChange}
-                        className="form-input date-input"
+                        className="box-border resize-none rounded-xl border-2 border-[#e2e8f0] bg-white px-4 py-3 font-[Kanit] text-[1.1rem]"
                     />
                 </div>
                 {workType !== 'School Event' && workType !== 'School Exam' && (
                     <>
-                        <div className="form-group">
-                            <label className="form-label">Teacher *</label>
+                        <div className="flex flex-col gap-2 rounded-[14px] bg-[#ff8acf12] p-2.5 md:w-full md:max-w-full">
+                            <label className="mb-1.5 min-w-max text-base font-bold whitespace-nowrap text-[#2d3748]">
+                                Teacher *
+                            </label>
                             <select
                                 value={teacher}
                                 onChange={e => {
@@ -183,7 +187,7 @@ export default function TaskForm({
                                         setSubject('');
                                     }
                                 }}
-                                className="form-select items-select"
+                                className="box-border resize-none rounded-xl border-2 border-[#e2e8f0] bg-white px-4 py-3 font-[Kanit] text-[1.1rem]"
                             >
                                 <option value="">Select Teacher</option>
                                 {[...new Set(subjects.map(s => s.teacher))].map(
@@ -198,8 +202,10 @@ export default function TaskForm({
                                 )}
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label className="form-label">Subject *</label>
+                        <div className="flex flex-col gap-2 rounded-[14px] bg-[#ff8acf12] p-2.5 md:w-full md:max-w-full">
+                            <label className="mb-1.5 min-w-max text-base font-bold whitespace-nowrap text-[#2d3748]">
+                                Subject *
+                            </label>
                             <select
                                 value={subject}
                                 onChange={e => {
@@ -213,7 +219,7 @@ export default function TaskForm({
                                         setTeacher('');
                                     }
                                 }}
-                                className="form-select items-select"
+                                className="items-select box-border resize-none rounded-xl border-2 border-[#e2e8f0] bg-white px-4 py-3 font-[Kanit] text-[1.1rem]"
                             >
                                 <option value="">Select Subject</option>
                                 {[...new Set(subjects.map(s => s.subject))].map(
@@ -231,12 +237,14 @@ export default function TaskForm({
                     </>
                 )}
 
-                <div className="form-group">
-                    <label className="form-label">Work Type *</label>
+                <div className="flex flex-col gap-2 rounded-[14px] bg-[#ff8acf12] p-2.5">
+                    <label className="mb-1.5 min-w-max text-base font-bold whitespace-nowrap text-[#2d3748] md:w-full md:max-w-full">
+                        Work Type *
+                    </label>
                     <select
                         value={workType}
                         onChange={e => setWorkType(e.target.value)}
-                        className="form-select status-select"
+                        className="box-border resize-none rounded-xl border-2 border-[#e2e8f0] bg-white px-4 py-3 font-[Kanit] text-[1.1rem]"
                     >
                         <option>Group</option>
                         <option>Personal</option>
@@ -246,23 +254,23 @@ export default function TaskForm({
                 </div>
             </div>
 
-            <div
-                className="form-group"
-                style={{ marginTop: '20px', marginBottom: '20px' }}
-            >
-                <label className="form-label">What to finish *</label>
+            <div className="mt-[20px] mb-[20px] flex flex-col gap-[8px] rounded-[14px] bg-[#ff8a???cf12] p-[10px] md:w-full md:max-w-full">
+                M
+                <label className="mb-1.5 min-w-auto text-base font-bold whitespace-nowrap text-[#2d3748]">
+                    What to finish *
+                </label>
                 <textarea
                     value={wtf}
                     onChange={e => setWtf(e.target.value)}
                     placeholder="What to finish"
-                    className="form-textarea"
+                    className="font-kanit md box-border min-h-[180px] resize-none rounded-2xl border-2 border-[#e2e8f0] bg-white px-4 py-3 text-base focus:border-[#69bcff] focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)] focus:outline-none md:w-full md:rounded-md md:border-2 md:border-[#ccc] md:p-2.5"
                     rows={9}
                 />
             </div>
 
             <button
                 onClick={handleSubmit}
-                className="btn-primary mt-4"
+                className="focus:ring-opacity-50 rounded-xl bg-[#69bcff] px-5 py-2 text-base font-semibold text-white transition-colors duration-200 hover:cursor-pointer hover:bg-blue-600 focus:outline-none"
             >
                 Add Task
             </button>

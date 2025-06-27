@@ -52,7 +52,7 @@ export default function Page() {
     }
 
     return (
-        <div className='p-4"'>
+        <div className="">
             <TaskForm
                 onTaskAdded={triggerRefresh}
                 onDateChange={setStartDate}
