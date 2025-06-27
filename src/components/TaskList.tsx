@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Task, EditData, Note } from '@/types';
-// import './tasklist.css';
+import './tasklist.css';
 
 export default function TaskList({
     refreshTrigger,
@@ -340,7 +340,7 @@ export default function TaskList({
     };
 
     return (
-        <div className="grid w-full [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] gap-4 p-4">
+        <div className="cardContainer">
             {groupAndSortTasks().map(([date, tasksOnDate]) => {
                 let [d, m, y] = date.split('/').map(Number);
                 if (y > 2500) y -= 543;
@@ -355,17 +355,14 @@ export default function TaskList({
                 return (
                     <div
                         key={date}
-                        className="h-fit min-h-[100px] w-full border-[3px] border-[#747474] bg-[#f9f9f9] shadow-md"
+                        className="dateCard"
                     >
-                        <div className="spacing flex items-center justify-between bg-[#b3d4fc] p-2 text-base font-bold text-black">
-                            {date}{' '}
-                            <span className="ml-auto text-base font-bold uppercase">
-                                {weekday}
-                            </span>
+                        <div className="dateHeader">
+                            {date} <span className="weekday">{weekday}</span>
                         </div>
 
                         {tasks.length === 0 ? (
-                            <div className="p-5 text-center font-medium text-[color:#718096] italic">
+                            <div className="card-empty">
                                 No Task Dued: Yeah!!! Very Happy
                             </div>
                         ) : (
@@ -378,18 +375,18 @@ export default function TaskList({
                                 return (
                                     <div
                                         key={`${t.sid}-${t.task_id}`}
-                                        className={`box-border p-2 ${
+                                        className={`taskCard ${
                                             t.work_type === 'School Event'
-                                                ? 'border-l-4 border-l-[#d68fcf] bg-[#f4dbf2] text-[#2c9ff2]'
+                                                ? 'school-event-task'
                                                 : t.work_type === 'School Exam'
-                                                  ? 'border-l-4 border-l-[#d68fcf] bg-[#f4dbf2]'
-                                                  : 'bg-[#fafafa] text-[#2c9ff2]'
+                                                  ? 'school-exam-task'
+                                                  : ''
                                         }`}
                                         data-work-type={t.work_type}
                                     >
                                         {editingId ===
                                         `${t.sid}-${t.task_id}` ? (
-                                            <div className="flex flex-col gap-[0.8rem]">
+                                            <div className="editForm">
                                                 <EditForm
                                                     editData={editData}
                                                     setEditData={setEditData}
@@ -403,7 +400,7 @@ export default function TaskList({
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="mb-2 flex items-center gap-2">
+                                                <div className="taskHeader">
                                                     {isHomework && (
                                                         <span>
                                                             {homeworkCounter}
@@ -419,27 +416,27 @@ export default function TaskList({
                                                                 {t.subject}
                                                             </strong>
                                                         )}
-                                                    <span className="p-[0.2rem 0.4rem] mr-auto rounded-sm bg-[#fff] text-base">
+                                                    <span className="typeTag">
                                                         {t.work_type}
                                                     </span>
                                                 </div>
-                                                <div className="m-[0.4rem 0] border-radius[4px] bg-white p-2 text-base break-words whitespace-pre-wrap text-[#0005ff]">
+                                                <div className="taskBody">
                                                     {t.wtf}
                                                 </div>
 
-                                                <div className="mt-[8xp] flex items-end justify-end text-[#4e4e4e]">
-                                                    <span className="mr-[4px]">
+                                                <div className="taskCreator">
+                                                    <span className="creatorLabel">
                                                         by :
                                                     </span>
-                                                    <span className="italic">
+                                                    <span className="creatorName">
                                                         {t.created_by_name ||
                                                             'Unknown'}
                                                     </span>
                                                 </div>
 
-                                                <div className="mt-2 flex justify-end gap-2">
+                                                <div className="taskActions">
                                                     <button
-                                                        className="mr-auto flex cursor-pointer items-center border-none bg-none p-[5px] text-[24px] text-[#2c9ff2] transition-all duration-200 ease-in-out hover:text-[#0077cc]"
+                                                        className="open-note-btn"
                                                         onClick={() =>
                                                             openNoteModal(t)
                                                         }
@@ -448,7 +445,7 @@ export default function TaskList({
                                                         {taskNoteCounts[
                                                             t.task_id
                                                         ] > 0 && (
-                                                            <span className="bg-[rgba(255,255,255,0.2) p-[2px 6px] ml-[2px] rounded-xl text-[0.8rem] font-bold text-[#0005ff]">
+                                                            <span className="note-count">
                                                                 (
                                                                 {
                                                                     taskNoteCounts[
@@ -465,7 +462,7 @@ export default function TaskList({
                                                         onClick={() =>
                                                             handleEdit(t)
                                                         }
-                                                        className="scale-[1.05] cursor-pointer rounded-sm border-none bg-[#87d18a] px-3 py-1.5 text-base text-white transition-all duration-200 ease-in-out hover:bg-[#308533]"
+                                                        className="editBtn"
                                                     >
                                                         Edit
                                                     </button>
@@ -477,7 +474,7 @@ export default function TaskList({
                                                                 ),
                                                             )
                                                         }
-                                                        className="cursor-pointer rounded border-none bg-red-400 px-3 py-1.5 text-base text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-green-700"
+                                                        className="deleteBtn"
                                                     >
                                                         Delete
                                                     </button>
@@ -495,42 +492,42 @@ export default function TaskList({
             {/* Note Modal */}
             {selectedTask && (
                 <div
-                    className="fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,.5)]"
+                    className="modal-overlay"
                     onClick={closeNoteModal}
                 >
                     <div
-                        className="animate-modalFadeIn relativemax-md:w-[95%] max-h-[95vh] w-[400px] max-w-[90%] overflow-y-auto rounded-xl bg-white p-5 shadow-lg max-md:rounded-[10px] max-md:p-[15px]"
+                        className="modal-content"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="relative mb-3 flex items-center justify-between pr-[30px] font-bold text-[#2c9ff2] max-md:w-[95%] max-md:rounded-[10px] max-md:p-[15px]">
+                        <div className="modal-header">
                             <strong>
                                 {selectedTask.teacher} : {selectedTask.subject}
                             </strong>
-                            <span className="ml-auto rounded-[4px] bg-white px-[0.4rem] py-[0.2rem] text-base max-md:mt-[5px] max-md:self-start">
+                            <span className="typeTag">
                                 {selectedTask.work_type}
                             </span>
                             <button
                                 onClick={closeNoteModal}
-                                className="absolute top-[12px] right-[12px] z-10 cursor-pointer border-none bg-transparent text-xl text-[#555] hover:scale-105 hover:text-[#ff0000] hover:transition-[background-color,transform] hover:duration-300 hover:ease-in-out"
+                                className="modal-close"
                             >
                                 ✖
                             </button>
                         </div>
 
-                        <div className="mb-3 text-base">
+                        <div className="modal-body">
                             <div className="existing-notes">
                                 {notes.length > 0 ? (
                                     notes.map((item, index) => (
                                         <div
                                             key={index}
-                                            className="animate-noteFadeIn mb-4 border-b border-gray-200 pb-4"
+                                            className="note-item"
                                         >
-                                            <div className="relative flex items-center justify-between bg-[#b3d4fc] px-4 py-3 text-black max-md:flex-col max-md:items-start max-md:p-[12px]">
-                                                <strong className="flex-1 text-[15px] font-semibold max-md:mb-[5px] max-md:text-[14px]">
+                                            <div className="note-header">
+                                                <strong>
                                                     Note {index + 1} : by{' '}
                                                     {item.note_by}
                                                 </strong>{' '}
-                                                <span className="mr-10 ml-10 text-right text-[0.85rem] text-[#00000] max-md:ml-0 max-md:w-full max-md:text-left max-md:text-[0.8rem]">
+                                                <span className="note-date">
                                                     {new Date(
                                                         item.note_date,
                                                     ).toLocaleString('en-GB', {
@@ -548,7 +545,7 @@ export default function TaskList({
                                                             item.note_id,
                                                         )
                                                     }
-                                                    className="cursor-pointer rounded-sm border-none bg-[#f37e75] p-1.5 text-[0.85rem] text-white transition-all duration-200 ease-in hover:scale-105 hover:bg-[#e74c3c] max-md:px-[10px] max-md:py-[5px] max-md:text-[0.8rem]"
+                                                    className="delete-note-btn"
                                                 >
                                                     Delete
                                                 </button>
@@ -566,39 +563,35 @@ export default function TaskList({
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="animate-noteFadeIn mb-4 border-b border-gray-200 pt-4 pb-4">
+                                    <div className="note-item">
                                         No notes available
                                     </div>
                                 )}
                             </div>
 
-                            <div className="my-10 inline-block rounded-full bg-[#d68fcf] px-4 py-2 text-center text-base font-medium text-black max-md:px-[12px] max-md:py-[6px] max-md:text-[0.9rem]">
-                                Add your Note:
-                            </div>
+                            <div className="note-title">Add your Note:</div>
                             <textarea
                                 placeholder="Add your note..."
                                 value={note}
                                 onChange={e => setNote(e.target.value)}
-                                className="mt-2.5 h-20 w-full resize-none rounded-lg border border-[#ccc] p-2 text-sm focus:border-[#f0c5ed] focus:shadow-[0_0_3px_#f0c5ed] focus:outline-none max-md:h-[100px]"
+                                className="modal-note"
                             />
                             <input
                                 type="text"
                                 placeholder="Your Name *"
                                 value={yourName}
                                 onChange={e => setYourName(e.target.value)}
-                                className="border-[1px solid #ccc] mt-2.5 w-full rounded-[8px] p-2 text-sm"
+                                className="modal-name-input"
                             />
                             {error && (
-                                <div className="p-[16px 20px] m-[16px 0] border-[1px solid rgba(245,101,101,0.1)] rounded-2xl bg-[rgba(245,101,101,0.1)] font-semibold text-[#c53030]">
-                                    {error}
-                                </div>
+                                <div className="error-message">{error}</div>
                             )}
                         </div>
 
-                        <div className="flex items-center justify-between text-xl">
+                        <div className="modal-footer">
                             <button
                                 onClick={handleSaveNote}
-                                className="cursor-pointer rounded border-none bg-green-400 px-3 py-1.5 text-base text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-green-700"
+                                className="editBtn"
                             >
                                 Save
                             </button>
@@ -613,10 +606,8 @@ export default function TaskList({
 function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
     return (
         <>
-            <div className="flex flex-col gap-[0.3rem]">
-                <label className="text-[0.9rem] font-medium text-[#333]">
-                    Teacher:
-                </label>
+            <div className="editFormField">
+                <label>Teacher:</label>
                 <input
                     value={editData.teacher}
                     onChange={e =>
@@ -625,13 +616,11 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             teacher: e.target.value,
                         }))
                     }
-                    className="box-border w-full rounded-[4px] border border-[#ddd] bg-white p-[0.4rem] text-[0.9rem] focus:border-[#b3d4fc] focus:outline-2 focus:outline-[#b3d4fc]"
+                    className="inputEdit"
                 />
             </div>
-            <div className="flex flex-col gap-[0.3rem]">
-                <label className="text-[0.9rem] font-medium text-[#333]">
-                    Subject:
-                </label>
+            <div className="editFormField">
+                <label>Subject:</label>
                 <input
                     value={editData.subject}
                     onChange={e =>
@@ -640,13 +629,11 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             subject: e.target.value,
                         }))
                     }
-                    className="box-border w-full rounded-[4px] border border-[#ddd] bg-white p-[0.4rem] text-[0.9rem] focus:border-[#b3d4fc] focus:outline-2 focus:outline-[#b3d4fc]"
+                    className="inputEdit"
                 />
             </div>
-            <div className="flex flex-col gap-[0.3rem]">
-                <label className="text-[0.9rem] font-medium text-[#333]">
-                    Type:
-                </label>
+            <div className="editFormField">
+                <label>Type:</label>
                 <select
                     value={editData.work_type}
                     onChange={e =>
@@ -655,7 +642,7 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             work_type: e.target.value,
                         }))
                     }
-                    className="box-border w-full rounded-[4px] border border-[#ddd] bg-white p-[0.4rem] text-[0.9rem] focus:border-[#b3d4fc] focus:outline-2 focus:outline-[#b3d4fc]"
+                    className="inputEdit"
                 >
                     <option value="">Select Type</option>
                     <option value="Group">Group</option>
@@ -664,10 +651,8 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                     <option value="School Exam">School Exam</option>
                 </select>
             </div>
-            <div className="flex flex-col gap-[0.3rem]">
-                <label className="text-[0.9rem] font-medium text-[#333]">
-                    Description:
-                </label>
+            <div className="editFormField">
+                <label>Description:</label>
                 <textarea
                     value={editData.wtf}
                     onChange={e =>
@@ -677,20 +662,20 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                         }))
                     }
                     rows={3}
-                    className="box-border min-h-[60px] w-full resize-y rounded-[4px] border border-[#ddd] bg-white p-[0.4rem] text-[0.9rem] focus:border-[#b3d4fc] focus:outline-2 focus:outline-[#b3d4fc]"
+                    className="inputEdit"
                 />
             </div>
 
-            <div className="mt-2 flex justify-end gap-2">
+            <div className="taskActions">
                 <button
                     onClick={handleSave}
-                    className="cursor-pointer rounded border-none bg-green-400 px-3 py-1.5 text-base text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-green-700"
+                    className="editBtn"
                 >
                     Save
                 </button>
                 <button
                     onClick={handleCancel}
-                    className="cursor-pointer rounded border-none bg-red-400 px-3 py-1.5 text-base text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-green-700"
+                    className="deleteBtn"
                 >
                     Cancel
                 </button>
