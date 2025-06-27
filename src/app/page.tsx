@@ -612,7 +612,7 @@ export default function TaskInformation() {
                                                             </button>
                                                         )}
 
-                                                        <div className="flex items-center gap-1">
+                                                        <div className="flex items-center gap-1 font-bold italic">
                                                             <span className="mr-1">
                                                                 by :
                                                             </span>

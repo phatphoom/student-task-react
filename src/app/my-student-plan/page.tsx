@@ -267,40 +267,42 @@ export default function MyStudentPlan() {
     }
 
     return (
-        <div className="p-4 font-sans bg-white min-h-screen">
+        <div className="min-h-screen bg-white p-4 font-sans">
             {/* Header Section */}
-            <div className="flex justify-between items-start flex-wrap bg-blue-50 p-4 rounded mb-4 gap-4">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-4 rounded bg-blue-50 p-4">
                 <div className="max-w-full flex-1">
-                    <h1 className="text-2xl font-bold text-slate-800 ">
+                    <h1 className="text-2xl font-bold text-slate-800">
                         Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0
                         Build20250611
                     </h1>
-                    <h2 className="text-xl text-gray-800 mt-2 m-0">Class Room EP105</h2>
+                    <h2 className="m-0 mt-2 text-xl text-gray-800">
+                        Class Room EP105
+                    </h2>
                 </div>
-                <div className="flex gap-4 flex-wrap items-center">
+                <div className="flex flex-wrap items-center gap-4">
                     <Link
-                        href="/room-announcement"
-                        className="px-6 py-3 text-black font-bold rounded-full bg-white hover:bg-blue-100 hover:shadow-md transition duration-200 text-base"
+                        href="/room-announcement/"
+                        className="rounded-full bg-white px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-blue-100 hover:shadow-md"
                     >
-                        <span className="text-blue-600 font-bold text-base whitespace-nowrap ">
+                        <span className="text-base font-bold whitespace-nowrap text-blue-600">
                             Room Announcement
-                            </span>
+                        </span>
                     </Link>
                     <Link
                         href="/login"
-                        className="px-6 py-3 text-black font-bold rounded-md bg-pink-200 hover:bg-pink-300 hover:shadow-md transition duration-200 text-base"
+                        className="rounded-md bg-pink-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-pink-300 hover:shadow-md"
                     >
                         Manage Due
                     </Link>
                     <Link
                         href="/"
-                        className="px-6 py-3 text-black font-bold rounded-md bg-blue-200 hover:bg-blue-300 hover:shadow-md transition duration-200 text-base"
+                        className="rounded-md bg-blue-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-blue-300 hover:shadow-md"
                     >
                         Work on Due Report
                     </Link>
                     <Link
                         href="/my-student-plan"
-                        className="px-6 py-3 text-black font-bold rounded-md bg-emerald-200 hover:bg-emerald-300 hover:shadow-md transition duration-200 text-base"
+                        className="rounded-md bg-emerald-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-emerald-300 hover:shadow-md"
                     >
                         My Study plan
                     </Link>
@@ -308,9 +310,11 @@ export default function MyStudentPlan() {
             </div>
 
             {/* Study Plans List */}
-            <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-3 w-full mt-5">
+            <div className="mt-5 grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                 {sortedDates.length === 0 ? (
-                    <div className="col-span-full text-center p-5 text-xl text-gray-600">No study plans found</div>
+                    <div className="col-span-full p-5 text-center text-xl text-gray-600">
+                        No study plans found
+                    </div>
                 ) : (
                     sortedDates.map(date => {
                         const plansForDate = groupedStudyPlans[date] || [];
@@ -324,16 +328,18 @@ export default function MyStudentPlan() {
                         return (
                             <div
                                 key={date}
-                                className="bg-gray-100 h-fit min-h-24 w-full shadow-md border-4 border-gray-600"
+                                className="h-fit min-h-24 w-full border-4 border-gray-600 bg-gray-100 shadow-md"
                             >
-                                <div className="bg-blue-200 p-2 font-bold flex justify-between items-center text-black text-base tracking-wider">
+                                <div className="flex items-center justify-between bg-blue-200 p-2 text-base font-bold tracking-wider text-black">
                                     {formattedDate}{' '}
-                                    <span className="font-bold text-base uppercase ml-auto">{weekday}</span>
+                                    <span className="ml-auto text-base font-bold uppercase">
+                                        {weekday}
+                                    </span>
                                 </div>
 
                                 {/* Add more activities button */}
                                 <button
-                                    className="w-full py-3 px-4 my-3 bg-white border-2 border-blue-600 rounded-md cursor-pointer text-blue-600 text-base font-medium text-center transition-all duration-300 shadow-sm hover:bg-blue-600 hover:text-white hover:-translate-y-px hover:shadow-lg hover:shadow-blue-600/20"
+                                    className="my-3 w-full cursor-pointer rounded-md border-2 border-blue-600 bg-white px-4 py-3 text-center text-base font-medium text-blue-600 shadow-sm transition-all duration-300 hover:-translate-y-px hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/20"
                                     onClick={() => handleAddActivityClick(date)}
                                 >
                                     Add more activities
@@ -341,69 +347,80 @@ export default function MyStudentPlan() {
 
                                 {/* Activity form (shown only for current card) */}
                                 {showAddForm && currentCardDate === date && (
-                                    <div className="bg-white border border-pink-300 p-4 my-4 rounded-lg shadow-sm">
+                                    <div className="my-4 rounded-lg border border-pink-300 bg-white p-4 shadow-sm">
                                         {/* Time Input */}
                                         <div className="mb-4">
-                                        <label className="block mb-1 text-sm font-medium text-pink-800">
-                                            Time
-                                        </label>
-                                        <input
-                                            type="time"
-                                            value={newActivity.time}
-                                            onChange={e =>
-                                            setNewActivity({ ...newActivity, time: e.target.value })
-                                            }
-                                            className="w-full p-2 border border-pink-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
-                                        />
+                                            <label className="mb-1 block text-sm font-medium text-pink-800">
+                                                Time
+                                            </label>
+                                            <input
+                                                type="time"
+                                                value={newActivity.time}
+                                                onChange={e =>
+                                                    setNewActivity({
+                                                        ...newActivity,
+                                                        time: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full rounded-md border border-pink-300 p-2 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                                            />
                                         </div>
 
                                         {/* Duration Input */}
                                         <div className="mb-4">
-                                        <label className="block mb-1 text-sm font-medium text-pink-800">
-                                            Duration (Hours)
-                                        </label>
-                                        <input
-                                            type="number"
-                                            value={newActivity.duration}
-                                            onChange={e =>
-                                            setNewActivity({ ...newActivity, duration: e.target.value })
-                                            }
-                                            placeholder="Estimate duration"
-                                            min="0"
-                                            className="w-full p-2 border border-pink-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
-                                        />
+                                            <label className="mb-1 block text-sm font-medium text-pink-800">
+                                                Duration (Hours)
+                                            </label>
+                                            <input
+                                                type="number"
+                                                value={newActivity.duration}
+                                                onChange={e =>
+                                                    setNewActivity({
+                                                        ...newActivity,
+                                                        duration:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                placeholder="Estimate duration"
+                                                min="0"
+                                                className="w-full rounded-md border border-pink-300 p-2 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                                            />
                                         </div>
 
                                         {/* Description */}
                                         <div className="mb-4">
-                                        <label className="block mb-1 text-sm font-medium text-pink-800">
-                                            My Note
-                                        </label>
-                                        <textarea
-                                            value={newActivity.description}
-                                            onChange={e =>
-                                            setNewActivity({ ...newActivity, description: e.target.value })
-                                            }
-                                            placeholder="What to do..."
-                                            rows={3}
-                                            className="w-full p-2 border border-pink-300 rounded-md text-sm resize-y focus:outline-none focus:ring-2 focus:ring-pink-300"
-                                        />
+                                            <label className="mb-1 block text-sm font-medium text-pink-800">
+                                                My Note
+                                            </label>
+                                            <textarea
+                                                value={newActivity.description}
+                                                onChange={e =>
+                                                    setNewActivity({
+                                                        ...newActivity,
+                                                        description:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                placeholder="What to do..."
+                                                rows={3}
+                                                className="w-full resize-y rounded-md border border-pink-300 p-2 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                                            />
                                         </div>
 
                                         {/* Buttons */}
-                                        <div className="flex gap-3 mt-4 justify-end">
-                                        <button
-                                            className="px-4 py-2 rounded-md text-sm font-semibold bg-green-500 text-white hover:bg-green-600 transition"
-                                            onClick={handleSaveActivity}
-                                        >
-                                            Save
-                                        </button>
-                                        <button
-                                            className="px-4 py-2 rounded-md text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition"
-                                            onClick={handleDiscardActivity}
-                                        >
-                                            Discard
-                                        </button>
+                                        <div className="mt-4 flex justify-end gap-3">
+                                            <button
+                                                className="rounded-md bg-green-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-600"
+                                                onClick={handleSaveActivity}
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                className="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
+                                                onClick={handleDiscardActivity}
+                                            >
+                                                Discard
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -412,12 +429,14 @@ export default function MyStudentPlan() {
                                 {plansForDate.map(({ study_plan, task }) => (
                                     <div
                                         key={study_plan.sp_id}
-                                        className="text-blue-600 bg-gray-50 p-2 mb-4 box-border transition-all duration-300"
+                                        className="mb-4 box-border bg-gray-50 p-2 text-blue-600 transition-all duration-300"
                                     >
                                         {editingPlanId === study_plan.sp_id ? (
-                                            <div className="bg-gray-100 p-3 my-2 rounded border border-gray-300">
+                                            <div className="my-2 rounded border border-gray-300 bg-gray-100 p-3">
                                                 <div className="mb-3">
-                                                    <label className="block mb-1 text-sm text-gray-600">Time</label>
+                                                    <label className="mb-1 block text-sm text-gray-600">
+                                                        Time
+                                                    </label>
                                                     <input
                                                         type="time"
                                                         value={
@@ -430,11 +449,11 @@ export default function MyStudentPlan() {
                                                                     .value,
                                                             })
                                                         }
-                                                        className="w-full p-2 border border-gray-300 rounded text-sm"
+                                                        className="w-full rounded border border-gray-300 p-2 text-sm"
                                                     />
                                                 </div>
                                                 <div className="mb-3">
-                                                    <label className="block mb-1 text-sm text-gray-600">
+                                                    <label className="mb-1 block text-sm text-gray-600">
                                                         Duration (Hours)
                                                     </label>
                                                     <input
@@ -452,11 +471,13 @@ export default function MyStudentPlan() {
                                                         }
                                                         placeholder="Estimate duration"
                                                         min="0"
-                                                        className="w-full p-2 border border-gray-300 rounded text-sm"
+                                                        className="w-full rounded border border-gray-300 p-2 text-sm"
                                                     />
                                                 </div>
                                                 <div className="mb-3">
-                                                    <label className="block mb-1 text-sm text-gray-600">My Note</label>
+                                                    <label className="mb-1 block text-sm text-gray-600">
+                                                        My Note
+                                                    </label>
                                                     <textarea
                                                         value={
                                                             editActivity.description
@@ -471,12 +492,12 @@ export default function MyStudentPlan() {
                                                         }
                                                         placeholder="What to do..."
                                                         rows={3}
-                                                        className="w-full p-2 border border-gray-300 rounded text-sm resize-y min-h-15"
+                                                        className="min-h-15 w-full resize-y rounded border border-gray-300 p-2 text-sm"
                                                     />
                                                 </div>
-                                                <div className="flex gap-2 mt-3">
+                                                <div className="mt-3 flex gap-2">
                                                     <button
-                                                        className="px-4 py-2 border-none rounded cursor-pointer text-sm transition-all duration-200 bg-green-500 text-white hover:bg-green-600"
+                                                        className="cursor-pointer rounded border-none bg-green-500 px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-green-600"
                                                         onClick={
                                                             handleUpdateActivity
                                                         }
@@ -484,7 +505,7 @@ export default function MyStudentPlan() {
                                                         Update
                                                     </button>
                                                     <button
-                                                        className="px-4 py-2 border-none rounded cursor-pointer text-sm transition-all duration-200 bg-red-500 text-white hover:bg-red-600"
+                                                        className="cursor-pointer rounded border-none bg-red-500 px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-red-600"
                                                         onClick={
                                                             handleCancelEdit
                                                         }
@@ -495,7 +516,7 @@ export default function MyStudentPlan() {
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="flex items-center gap-2 mb-2">
+                                                <div className="mb-2 flex items-center gap-2">
                                                     <strong>
                                                         {task.teacher &&
                                                         task.subject
@@ -503,8 +524,9 @@ export default function MyStudentPlan() {
                                                             : 'Study Plan'}
                                                     </strong>
                                                     <span
-                                                        className={`text-base px-2 py-1 ml-auto rounded ${
-                                                            study_plan.status.toLowerCase() === 'done'
+                                                        className={`ml-auto rounded px-2 py-1 text-base ${
+                                                            study_plan.status.toLowerCase() ===
+                                                            'done'
                                                                 ? 'bg-green-400 text-white'
                                                                 : 'bg-orange-400 text-white'
                                                         }`}
@@ -512,19 +534,19 @@ export default function MyStudentPlan() {
                                                         {study_plan.status}
                                                     </span>
                                                 </div>
-                                                <div className="bg-white text-gray-900 p-2 my-2 text-xl whitespace-pre-wrap break-words">
+                                                <div className="my-2 bg-white p-2 text-xl break-words whitespace-pre-wrap text-gray-900">
                                                     {task.wtf && (
-                                                        <p className="bg-gray-200 font-bold p-2 whitespace-pre-wrap break-words text-blue-800 text-lg leading-6">
+                                                        <p className="bg-gray-200 p-2 text-lg leading-6 font-bold break-words whitespace-pre-wrap text-blue-800">
                                                             Task Details:{' '}
-                                                            <span className="py-2 whitespace-pre-wrap break-words text-black text-base leading-6">
+                                                            <span className="py-2 text-base leading-6 break-words whitespace-pre-wrap text-black">
                                                                 {task.wtf}
                                                             </span>
                                                         </p>
                                                     )}
-                                                    <p className="my-2 bg-gray-200 font-bold p-2 whitespace-pre-wrap break-words text-blue-800 text-lg leading-6">
+                                                    <p className="my-2 bg-gray-200 p-2 text-lg leading-6 font-bold break-words whitespace-pre-wrap text-blue-800">
                                                         {' '}
                                                         Plan Description:{' '}
-                                                        <span className="py-2 whitespace-pre-wrap break-words text-black text-base leading-6">
+                                                        <span className="py-2 text-base leading-6 break-words whitespace-pre-wrap text-black">
                                                             {study_plan.description ||
                                                                 'No description'}
                                                         </span>
@@ -551,7 +573,7 @@ export default function MyStudentPlan() {
                                                         </p>
                                                     )}
                                                 </div>
-                                                <div className="mt-2 text-gray-700 font-bold flex items-end justify-end text-sm">
+                                                <div className="mt-2 flex items-end justify-end text-sm font-bold text-gray-700">
                                                     <span className="mr-1">
                                                         by :
                                                     </span>
@@ -560,14 +582,14 @@ export default function MyStudentPlan() {
                                                             'Unknown'}
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-end gap-2 mt-2">
+                                                <div className="mt-2 flex justify-end gap-2">
                                                     <button
                                                         onClick={() =>
                                                             handleEditClick(
                                                                 study_plan,
                                                             )
                                                         }
-                                                        className="px-3 py-2 sm:px-3 sm:py-2 text-base border-none rounded cursor-pointer transition-all duration-200 bg-blue-600 text-white hover:scale-105"
+                                                        className="cursor-pointer rounded border-none bg-blue-600 px-3 py-2 text-base text-white transition-all duration-200 hover:scale-105 sm:px-3 sm:py-2"
                                                     >
                                                         Edit
                                                     </button>
@@ -577,7 +599,7 @@ export default function MyStudentPlan() {
                                                                 study_plan.sp_id,
                                                             )
                                                         }
-                                                        className="px-3 py-2 sm:px-3 sm:py-2 text-base border-none rounded cursor-pointer transition-all duration-200 bg-red-400 text-white hover:scale-105"
+                                                        className="cursor-pointer rounded border-none bg-red-400 px-3 py-2 text-base text-white transition-all duration-200 hover:scale-105 sm:px-3 sm:py-2"
                                                     >
                                                         Delete
                                                     </button>
@@ -587,10 +609,11 @@ export default function MyStudentPlan() {
                                                                 study_plan.sp_id,
                                                             )
                                                         }
-                                                        className={`px-3 py-2 text-base border-none rounded cursor-pointer transition-all duration-200 ${
-                                                            study_plan.status === 'done'
-                                                                ? 'bg-green-400 cursor-not-allowed opacity-80'
-                                                                : 'bg-green-500 hover:bg-green-600 hover:scale-105'
+                                                        className={`cursor-pointer rounded border-none px-3 py-2 text-base transition-all duration-200 ${
+                                                            study_plan.status ===
+                                                            'done'
+                                                                ? 'cursor-not-allowed bg-green-400 opacity-80'
+                                                                : 'bg-green-500 hover:scale-105 hover:bg-green-600'
                                                         } text-white`}
                                                         disabled={
                                                             study_plan.status ===
