@@ -115,7 +115,6 @@ export default function TaskList({
                     ? `${editData.due_date}T00:00:00Z`
                     : null,
                 created_by: editData.created_by,
-                // last_updated_by: userId || editData.last_updated_by || 1,
                 last_updated_by: adminName,
             };
 
@@ -314,12 +313,10 @@ export default function TaskList({
             );
 
             if (res.ok) {
-                // อัพเดท state notes โดยตรง
                 setNotes(prevNotes =>
                     prevNotes.filter(note => note.note_id !== noteId),
                 );
 
-                // อัพเดทจำนวนโน็ตใน taskNoteCounts
                 if (selectedTask) {
                     setTaskNoteCounts(prev => ({
                         ...prev,
@@ -340,7 +337,7 @@ export default function TaskList({
     };
 
     return (
-        <div className="cardContainer">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 w-full">
             {groupAndSortTasks().map(([date, tasksOnDate]) => {
                 let [d, m, y] = date.split('/').map(Number);
                 if (y > 2500) y -= 543;
@@ -355,135 +352,125 @@ export default function TaskList({
                 return (
                     <div
                         key={date}
-                        className="dateCard"
+                        className="bg-gray-100 h-fit min-h-[100px] w-full shadow-md border-4 border-gray-500"
                     >
-                        <div className="dateHeader">
-                            {date} <span className="weekday">{weekday}</span>
+                        <div className="bg-blue-200 p-2 font-bold flex justify-between items-center text-black text-base tracking-wider">
+                            {date} <span className="font-bold text-base uppercase ml-auto">{weekday}</span>
                         </div>
 
-                        {tasks.length === 0 ? (
-                            <div className="card-empty">
+                        {sortedTasks.length === 0 ? (
+                            <div className="p-5 text-center font-medium text-[var(--text-light)] italic">
                                 No Task Dued: Yeah!!! Very Happy
                             </div>
                         ) : (
-                            sortedTasks.map(t => {
-                                const isHomework =
-                                    t.work_type === 'Group' ||
-                                    t.work_type === 'Personal';
-                                if (isHomework) homeworkCounter++;
+                            <div className="task-day p-2">
+                                {sortedTasks.map(task => {
+                                    const isHomework =
+                                        task.work_type === 'Group' ||
+                                        task.work_type === 'Personal';
+                                    if (isHomework) homeworkCounter++;
 
-                                return (
-                                    <div
-                                        key={`${t.sid}-${t.task_id}`}
-                                        className={`taskCard ${
-                                            t.work_type === 'School Event'
-                                                ? 'school-event-task'
-                                                : t.work_type === 'School Exam'
-                                                  ? 'school-exam-task'
-                                                  : ''
-                                        }`}
-                                        data-work-type={t.work_type}
-                                    >
-                                        {editingId ===
-                                        `${t.sid}-${t.task_id}` ? (
-                                            <div className="editForm">
-                                                <EditForm
-                                                    editData={editData}
-                                                    setEditData={setEditData}
-                                                    handleSave={() =>
-                                                        handleSave(
-                                                            String(t.task_id),
-                                                        )
-                                                    }
-                                                    handleCancel={handleCancel}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <div className="taskHeader">
-                                                    {isHomework && (
-                                                        <span>
-                                                            {homeworkCounter}
-                                                            .{' '}
-                                                        </span>
-                                                    )}
-                                                    {t.work_type !==
-                                                        'School Event' &&
-                                                        t.work_type !==
-                                                            'School Exam' && (
-                                                            <strong>
-                                                                {t.teacher} :{' '}
-                                                                {t.subject}
-                                                            </strong>
-                                                        )}
-                                                    <span className="typeTag">
-                                                        {t.work_type}
-                                                    </span>
-                                                </div>
-                                                <div className="taskBody">
-                                                    {t.wtf}
-                                                </div>
-
-                                                <div className="taskCreator">
-                                                    <span className="creatorLabel">
-                                                        by :
-                                                    </span>
-                                                    <span className="creatorName">
-                                                        {t.created_by_name ||
-                                                            'Unknown'}
-                                                    </span>
-                                                </div>
-
-                                                <div className="taskActions">
-                                                    <button
-                                                        className="open-note-btn"
-                                                        onClick={() =>
-                                                            openNoteModal(t)
+                                    return (
+                                        <div
+                                            key={task.task_id}
+                                            className={`task-item mb-3 rounded p-3 ${
+                                                task.work_type === 'School Event'
+                                                    ? 'school-event border-l-4 border-purple-400 bg-purple-100'
+                                                    : task.work_type === 'School Exam'
+                                                      ? 'school-exam border-l-4 border-red-400 bg-red-100'
+                                                      : 'bg-white'
+                                            }`}
+                                        >
+                                            {editingId === `${task.sid}-${task.task_id}` ? (
+                                                <div className="flex flex-col gap-3">
+                                                    <EditForm
+                                                        editData={editData}
+                                                        setEditData={setEditData}
+                                                        handleSave={() =>
+                                                            handleSave(String(task.task_id))
                                                         }
-                                                    >
-                                                        📝
-                                                        {taskNoteCounts[
-                                                            t.task_id
-                                                        ] > 0 && (
-                                                            <span className="note-count">
-                                                                (
-                                                                {
-                                                                    taskNoteCounts[
-                                                                        t
-                                                                            .task_id
-                                                                    ]
-                                                                }
-                                                                )
+                                                        handleCancel={handleCancel}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="flex items-center justify-between bg-gray-50 px-3 py-2 font-bold text-blue-500">
+                                                        <div className="flex items-center gap-2">
+                                                            {isHomework && (
+                                                                <strong className="text-blue-500">
+                                                                    {homeworkCounter}.{' '}
+                                                                </strong>
+                                                            )}
+                                                            <span className="text-blue-500">
+                                                                {task.work_type}
                                                             </span>
-                                                        )}
-                                                    </button>
+                                                        </div>
+                                                        <span className="text-blue-500">
+                                                            {task.work_type !== 'School Event' &&
+                                                                task.work_type !== 'School Exam' && 
+                                                                `${task.teacher} : ${task.subject}`
+                                                            }
+                                                        </span>
+                                                    </div>
 
-                                                    <button
-                                                        onClick={() =>
-                                                            handleEdit(t)
-                                                        }
-                                                        className="editBtn"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDelete(
-                                                                String(
-                                                                    t.task_id,
-                                                                ),
-                                                            )
-                                                        }
-                                                        className="deleteBtn"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                );
-                            })
+                                                    {/* Task Description */}
+                                                    <div className="task-body px-3 py-2">
+                                                        {task.wtf}
+                                                    </div>
+
+                                                    {/* Footer - Notes button and Action buttons */}
+                                                    <div className="mt-2 flex items-center justify-between gap-2 text-gray-600 px-3 pb-2">
+                                                        <button
+                                                            className="cursor-pointer border-none bg-transparent text-3xl hover:opacity-70"
+                                                            onClick={() => openNoteModal(task)}
+                                                        >
+                                                            📝{' '}
+                                                            {taskNoteCounts[task.task_id] > 0 && (
+                                                                <span className="ml-[-3] text-2xl font-bold text-blue-600">
+                                                                    ({taskNoteCounts[task.task_id]})
+                                                                </span>
+                                                            )}
+                                                        </button>
+
+                                                        <div className="flex flex-col items-end gap-1">
+                                                            <div className="flex items-center gap-1 font-bold italic text-sm text-gray-600">
+                                                                <span className="mr-1">by :</span>
+                                                                <span className="italic">
+                                                                    {(() => {
+                                                                        const creator = task.created_by_name || 'Unknown';
+                                                                        const editor = task.last_updated_by;
+
+                                                                        if (!editor || editor === creator) {
+                                                                            return creator;
+                                                                        }
+
+                                                                        return `${creator} / ${editor}`;
+                                                                    })()}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            <div className="flex justify-end gap-2">
+                                                                <button
+                                                                    onClick={() => handleEdit(task)}
+                                                                    className="px-3 py-1.5 text-sm border-none rounded font-bold cursor-pointer transition-all duration-200 ease-in-out bg-green-400 text-white hover:bg-green-600 hover:scale-105"
+                                                                >
+                                                                    Edit
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleDelete(String(task.task_id))}
+                                                                    className="px-3 py-1.5 text-sm border-none rounded font-bold cursor-pointer transition-all duration-200 ease-in-out bg-red-400 text-white hover:bg-red-600 hover:scale-105"
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         )}
                     </div>
                 );
@@ -492,106 +479,104 @@ export default function TaskList({
             {/* Note Modal */}
             {selectedTask && (
                 <div
-                    className="modal-overlay"
+                    className="bg-opacity-20 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
                     onClick={closeNoteModal}
                 >
                     <div
-                        className="modal-content"
+                        className="animate-fadeIn scrollbar-thin scrollbar-thumb-gray-300 relative max-h-[95vh] w-96 max-w-[90%] overflow-y-auto rounded-xl bg-white p-5 shadow-xl"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="modal-header">
+                        <div className="mb-3 flex items-center justify-between pr-8 font-bold">
                             <strong>
                                 {selectedTask.teacher} : {selectedTask.subject}
                             </strong>
-                            <span className="typeTag">
+                            <span className="task-type">
                                 {selectedTask.work_type}
                             </span>
                             <button
                                 onClick={closeNoteModal}
-                                className="modal-close"
+                                className="absolute top-3 right-3 z-10 cursor-pointer border-none bg-transparent text-xl text-gray-500 transition-colors hover:text-red-500"
                             >
                                 ✖
                             </button>
                         </div>
 
-                        <div className="modal-body">
+                        <div className="mb-3 text-base">
                             <div className="existing-notes">
-                                {notes.length > 0 ? (
+                                {Array.isArray(notes) && notes.length > 0 ? (
                                     notes.map((item, index) => (
                                         <div
                                             key={index}
-                                            className="note-item"
+                                            className="mb-4 border-b-2 border-blue-500 pb-4"
                                         >
-                                            <div className="note-header">
-                                                <strong>
-                                                    Note {index + 1} : by{' '}
-                                                    {item.note_by}
+                                            <div className="flex items-center justify-between rounded-lg bg-blue-200 p-3 text-black">
+                                                <strong className="text-sm font-semibold">
+                                                    Note {index + 1} : by {item.note_by}
                                                 </strong>{' '}
-                                                <span className="note-date">
-                                                    {new Date(
-                                                        item.note_date,
-                                                    ).toLocaleString('en-GB', {
+                                                <span className="whitespace-nowrap text-black">
+                                                    {new Date(item.note_date).toLocaleString('en-GB', {
                                                         day: '2-digit',
                                                         month: 'short',
                                                         year: 'numeric',
                                                         hour: '2-digit',
                                                         minute: '2-digit',
                                                         hour12: false,
+                                                        timeZone: 'Asia/Bangkok',
                                                     })}
                                                 </span>
                                                 <button
                                                     onClick={() =>
-                                                        handleDeleteNote(
-                                                            item.note_id,
-                                                        )
+                                                        handleDeleteNote(item.note_id)
                                                     }
-                                                    className="delete-note-btn"
+                                                    className="bg-red-400 text-white border-none rounded px-1.5 py-1 text-sm cursor-pointer transition-all duration-200 ease-in-out hover:bg-red-700 hover:scale-105"
                                                 >
                                                     Delete
                                                 </button>
                                             </div>
                                             <div className="note-body">
-                                                {item.note
-                                                    .split('\n')
-                                                    .map((line, idx) => (
-                                                        <span key={idx}>
-                                                            {line}
-                                                            <br />
-                                                        </span>
-                                                    ))}
+                                                {item.note.split('\n').map((line, idx) => (
+                                                    <span key={idx}>
+                                                        {line}
+                                                        <br />
+                                                    </span>
+                                                ))}
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="note-item">
+                                    <div className="mb-4 border-b-2 border-blue-500 pb-4 text-gray-500">
                                         No notes available
                                     </div>
                                 )}
                             </div>
-
-                            <div className="note-title">Add your Note:</div>
+                            <div className="inline-flex justify-center rounded-2xl bg-pink-400 px-4 py-1 text-center text-lg text-black">
+                                {' '}
+                                Add you Note :{' '}
+                            </div>
                             <textarea
                                 placeholder="Add your note..."
                                 value={note}
                                 onChange={e => setNote(e.target.value)}
-                                className="modal-note"
+                                className="mt-2 h-20 w-full resize-none rounded-lg border border-gray-300 p-2 text-sm focus:border-pink-300 focus:shadow-lg focus:shadow-pink-300/30 focus:outline-none"
                             />
                             <input
                                 type="text"
                                 placeholder="Your Name *"
                                 value={yourName}
                                 onChange={e => setYourName(e.target.value)}
-                                className="modal-name-input"
+                                className="mt-2 w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-pink-300 focus:shadow-lg focus:shadow-pink-300/30 focus:outline-none"
                             />
                             {error && (
-                                <div className="error-message">{error}</div>
+                                <div className="mt-1 text-sm text-red-500">
+                                    {error}
+                                </div>
                             )}
                         </div>
 
-                        <div className="modal-footer">
+                        <div className="flex items-center justify-between text-xl">
                             <button
                                 onClick={handleSaveNote}
-                                className="editBtn"
+                                className="cursor-pointer rounded-md border-none bg-blue-500 px-3 py-1.5 text-white transition-all hover:scale-105 hover:bg-blue-700"
                             >
                                 Save
                             </button>
@@ -606,8 +591,8 @@ export default function TaskList({
 function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
     return (
         <>
-            <div className="editFormField">
-                <label>Teacher:</label>
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Teacher:</label>
                 <input
                     value={editData.teacher}
                     onChange={e =>
@@ -616,11 +601,12 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             teacher: e.target.value,
                         }))
                     }
-                    className="inputEdit"
+                    className="w-full px-3 py-2 border bg-white border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
             </div>
-            <div className="editFormField">
-                <label>Subject:</label>
+            
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
                 <input
                     value={editData.subject}
                     onChange={e =>
@@ -629,11 +615,12 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             subject: e.target.value,
                         }))
                     }
-                    className="inputEdit"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
             </div>
-            <div className="editFormField">
-                <label>Type:</label>
+            
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Type:</label>
                 <select
                     value={editData.work_type}
                     onChange={e =>
@@ -642,7 +629,7 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             work_type: e.target.value,
                         }))
                     }
-                    className="inputEdit"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 >
                     <option value="">Select Type</option>
                     <option value="Group">Group</option>
@@ -651,8 +638,9 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                     <option value="School Exam">School Exam</option>
                 </select>
             </div>
-            <div className="editFormField">
-                <label>Description:</label>
+            
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description:</label>
                 <textarea
                     value={editData.wtf}
                     onChange={e =>
@@ -662,20 +650,20 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                         }))
                     }
                     rows={3}
-                    className="inputEdit"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 />
             </div>
 
-            <div className="taskActions">
-                <button
-                    onClick={handleSave}
-                    className="editBtn"
+            <div className="flex gap-3 justify-end">
+                <button 
+                    onClick={handleSave} 
+                    className="px-4 py-2 bg-green-400 text-white rounded-md hover:bg-green-600 transition-colors duration-200"
                 >
                     Save
                 </button>
-                <button
-                    onClick={handleCancel}
-                    className="deleteBtn"
+                <button 
+                    onClick={handleCancel} 
+                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200"
                 >
                     Cancel
                 </button>

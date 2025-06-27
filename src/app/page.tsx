@@ -11,7 +11,7 @@ import { GoogleUserResponse } from '@/types/google-signin';
 import ActivityModal, {
     ActivityInput,
     CreateStudyPlanRequest,
-} from '@/Components/ActivityModal';
+} from '@/components/ActivityModal';
 
 export default function TaskInformation() {
     const { data: session, status, update } = useSession();
@@ -586,7 +586,7 @@ export default function TaskInformation() {
                                                             {taskNoteCounts[
                                                                 task.task_id
                                                             ] > 0 && (
-                                                                <span className="ml-0.5 text-xs font-bold text-blue-600">
+                                                                <span className="ml-[-3] text-2xl font-bold text-blue-600">
                                                                     (
                                                                     {
                                                                         taskNoteCounts[
