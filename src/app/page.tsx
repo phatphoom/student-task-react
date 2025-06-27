@@ -11,7 +11,7 @@ import { GoogleUserResponse } from '@/types/google-signin';
 import ActivityModal, {
     ActivityInput,
     CreateStudyPlanRequest,
-} from '@/components/ActivityModal';
+} from '@/Components/ActivityModal';
 
 export default function TaskInformation() {
     const { data: session, status, update } = useSession();
@@ -48,17 +48,9 @@ export default function TaskInformation() {
     const [isOpenActivityModal, setIsOpenActivityModal] =
         useState<boolean>(false);
 
-    //   // New states for task todo modal
-    //   const [todoDate, setTodoDate] = useState("");
-    //   const [todoStartTime, setTodoStartTime] = useState("");
-    //   const [todoNote, setTodoNote] = useState("");
-    //   const [todoDuration, setTodoDuration] = useState("");
-    //   const [showTodoModal, setShowTodoModal] = useState(false);
-
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
         setDateFrom(today);
-        // setTodoDate(today);
     }, []);
 
     useEffect(() => {
@@ -398,50 +390,6 @@ export default function TaskInformation() {
         }
     };
 
-    //   const handleOpenTaskTodo = (task: Task) => {
-    //     setSelectedTask(task);
-    //     setShowTodoModal(true);
-    //     const today = new Date().toISOString().split("T")[0];
-    //     setTodoDate(today);
-    //   };
-
-    //   const handleSaveTodo = async () => {
-    //     if (!selectedTask || !todoDate || !todoStartTime) {
-    //       setError("Please fill in required fields");
-    //       return;
-    //     }
-
-    //     try {
-    //       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-plans`, {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           task_id: selectedTask.task_id,
-    //           date: todoDate,
-    //           start_time: todoStartTime,
-    //           duration: parseFloat(todoDuration) || 0,
-    //           note: todoNote,
-    //           status: "pending",
-    //           task_title: `${selectedTask.teacher} : ${selectedTask.subject}`,
-    //           task_description: selectedTask.wtf,
-    //         }),
-    //       });
-
-    //       if (response.ok) {
-    //         // setShowTodoModal(false);
-    //         window.location.href = "/my-student-plan";
-    //       } else {
-    //         const errorData = await response.json();
-    //         setError(errorData.message || "Failed to save todo");
-    //       }
-    //     } catch (err) {
-    //       setError("Failed to save todo. Please try again.");
-    //       console.error("Save todo error:", err);
-    //     }
-    //   };
-
     const onChangeActivityInput = <K extends keyof ActivityInput>(
         key: K,
         value: ActivityInput[K],
@@ -467,16 +415,14 @@ export default function TaskInformation() {
 
             const request: CreateStudyPlanRequest = {
                 username: session?.user.username,
-                task_id: String(selectedTask?.task_id) ?? '', // task_id is invalid type should be fix later
+                task_id: String(selectedTask?.task_id) ?? '',
                 est_dur_min: hours * 60 + minutes,
                 datetime: datetime,
-                // utcString,
                 start_time: startTime,
                 description,
                 status: 'pending',
             };
 
-            // todo: handle response and type
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/study-plan`,
                 request,
@@ -489,7 +435,6 @@ export default function TaskInformation() {
 
             setSelectedTask(null);
             setIsOpenActivityModal(false);
-            // todo: swal
             alert('Add to my study plan successfully');
         } catch (err) {
             console.error('error while try to add my study plan', err);
@@ -498,10 +443,8 @@ export default function TaskInformation() {
 
     const handleOpenActivityModal = (task: Task) => {
         setSelectedTask(task);
-        setIsOpenActivityModal;
         setInputState({
             ...inputState,
-            // localDateTime:  new Date().toISOString().split("T")[0]
             datetime: new Date(task.due_date).toISOString().split('T')[0],
         });
         setIsOpenActivityModal(true);
@@ -522,74 +465,21 @@ export default function TaskInformation() {
 
     return (
         <div className="p-4">
-            <div className="group-button-and-text">
-                <div>
-                    <h1 className="title">
-                        Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0
-                        Build20250611
-                    </h1>
-
-                    <div className="flex flex-row space-x-2">
-                        <h2 className="title">Class Room EP105</h2>
-
-                        {session && session.user.username ? (
-                            <>
-                                <p>Welcome, {session.user.username}!</p>
-                                <button onClick={() => signOut()}>
-                                    Sign Out
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <button onClick={() => signIn('google')}>
-                                    Sign In with Google.
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </div>
-                <div className="top-right-button">
-                    <Link
-                        href="/room-announcement"
-                        className="nav-btn3"
-                    >
-                        Room Announcement
-                    </Link>
-                    <Link
-                        href="/login"
-                        className="nav-btn"
-                    >
-                        Manage Due
-                    </Link>
-                    <Link
-                        href="/"
-                        className="nav-btn2"
-                    >
-                        Work on Due Report
-                    </Link>
-                    {hasStudyPlan && (
-                        <Link
-                            href="/my-student-plan"
-                            className="nav-btn"
-                        >
-                            My Study plan
-                        </Link>
-                    )}
-                </div>
-            </div>
             <div className="mx-auto max-w-6xl">
-                <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
-                    <div className="form-row2">
-                        <div className="form-group2">
-                            <label className="form-label2">Date From : </label>
+                <div className="mb-6 rounded-lg bg-white p-4">
+                    <div className="form-row2 rounded-lg bg-blue-100 p-4">
+                        <div className="form-group2 flex flex-col items-center gap-2">
+                            <label className="form-label2 font-bold">
+                                Date From :{' '}
+                            </label>
                             <input
                                 type="date"
                                 value={dateFrom}
                                 onChange={e => setDateFrom(e.target.value)}
-                                className="form-input"
+                                className="form-input rounded-xl border px-3 py-2"
                             />
                             <button
-                                className="full-calendar-btn"
+                                className="full-calendar-btn rounded-lg bg-pink-500 px-4 py-2 font-bold text-white transition hover:bg-pink-800"
                                 onClick={() =>
                                     setFullCalendarMode(!fullCalendarMode)
                                 }
@@ -602,7 +492,7 @@ export default function TaskInformation() {
                     </div>
                 </div>
             </div>
-            <div className="card-container">
+            <div className="grid w-full grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-4">
                 {sortedEntries.map(([date, dateTasks]) => {
                     try {
                         const [day, month, year] = date.split('.').map(Number);
@@ -620,18 +510,20 @@ export default function TaskInformation() {
                         return (
                             <div
                                 key={date}
-                                className="card"
+                                className="flex h-fit w-full flex-col overflow-hidden border-[3px] border-[#747474] bg-white shadow-md transition-transform duration-200 ease-in-out"
                             >
-                                <div className="card-header">
+                                <div className="flex items-center justify-between bg-[#b3d4fc] p-2 text-center text-base font-bold tracking-[2px] text-black">
                                     {date}{' '}
-                                    <span className="weekday">{weekday}</span>
+                                    <span className="weekday ml-2">
+                                        {weekday}
+                                    </span>
                                 </div>
                                 {sortedTasks.length === 0 ? (
-                                    <div className="card-empty">
+                                    <div className="p-5 text-center font-medium text-[var(--text-light)] italic">
                                         No Task Dued: Yeah!!! Very Happy
                                     </div>
                                 ) : (
-                                    <div className="task-day">
+                                    <div className="task-day p-2">
                                         {sortedTasks.map(task => {
                                             const isHomework =
                                                 task.work_type === 'Group' ||
@@ -641,17 +533,17 @@ export default function TaskInformation() {
                                             return (
                                                 <div
                                                     key={task.task_id}
-                                                    className={`task-item ${
+                                                    className={`task-item mb-3 rounded p-3 ${
                                                         task.work_type ===
                                                         'School Event'
-                                                            ? 'school-event'
+                                                            ? 'school-event border-l-4 border-purple-400 bg-purple-100'
                                                             : task.work_type ===
                                                                 'School Exam'
-                                                              ? 'school-exam'
-                                                              : ''
+                                                              ? 'school-exam border-l-4 border-red-400 bg-red-100'
+                                                              : 'bg-white'
                                                     }`}
                                                 >
-                                                    <div className="task-header">
+                                                    <div className="flex items-center justify-between bg-gray-50 px-3 py-2 font-bold text-blue-500">
                                                         {isHomework && (
                                                             <strong>
                                                                 {
@@ -664,7 +556,7 @@ export default function TaskInformation() {
                                                             'School Event' &&
                                                             task.work_type !==
                                                                 'School Exam' && (
-                                                                <span className="teacher-subject">
+                                                                <span className="min-w-0 flex-1 text-blue-500">
                                                                     {
                                                                         task.teacher
                                                                     }{' '}
@@ -674,16 +566,16 @@ export default function TaskInformation() {
                                                                     }
                                                                 </span>
                                                             )}
-                                                        <span className="task-type">
+                                                        <span className="ml-auto text-blue-500">
                                                             {task.work_type}
                                                         </span>
                                                     </div>
                                                     <div className="task-body">
                                                         {task.wtf}
                                                     </div>
-                                                    <div className="task-creator">
+                                                    <div className="mt-2 flex items-center justify-between gap-2 text-gray-600">
                                                         <button
-                                                            className="open-note-btn"
+                                                            className="cursor-pointer border-none bg-transparent text-3xl hover:opacity-70"
                                                             onClick={() =>
                                                                 setSelectedTask(
                                                                     task,
@@ -694,7 +586,7 @@ export default function TaskInformation() {
                                                             {taskNoteCounts[
                                                                 task.task_id
                                                             ] > 0 && (
-                                                                <span className="note-count">
+                                                                <span className="ml-0.5 text-xs font-bold text-blue-600">
                                                                     (
                                                                     {
                                                                         taskNoteCounts[
@@ -709,27 +601,22 @@ export default function TaskInformation() {
 
                                                         {hasStudyPlan && (
                                                             <button
-                                                                className="open-task-btn"
+                                                                className="cursor-pointer border-none bg-transparent text-3xl hover:opacity-70"
                                                                 onClick={() =>
                                                                     handleOpenActivityModal(
                                                                         task,
                                                                     )
                                                                 }
                                                             >
-                                                                ✍️{' '}
-                                                                {/* {taskNoteCounts[task.task_id] > 0 && (
-                                        <span className="note-count">
-                                        ({taskNoteCounts[task.task_id]})
-                                        </span>
-                                    )} */}
+                                                                ✍️
                                                             </button>
                                                         )}
 
-                                                        <div className="creator-info">
-                                                            <span className="creator-label">
+                                                        <div className="flex items-center gap-1">
+                                                            <span className="mr-1">
                                                                 by :
                                                             </span>
-                                                            <span className="creator-name">
+                                                            <span className="italic">
                                                                 {(() => {
                                                                     const creator =
                                                                         task.created_by_name ||
@@ -766,14 +653,14 @@ export default function TaskInformation() {
 
             {selectedTask && !isOpenActivityModal && (
                 <div
-                    className="modal-overlay"
+                    className="bg-opacity-20 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
                     onClick={closeModal}
                 >
                     <div
-                        className="modal-content"
+                        className="animate-fadeIn scrollbar-thin scrollbar-thumb-gray-300 relative max-h-[95vh] w-96 max-w-[90%] overflow-y-auto rounded-xl bg-white p-5 shadow-xl"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="modal-header">
+                        <div className="mb-3 flex items-center justify-between pr-8 font-bold">
                             <strong>
                                 {selectedTask.teacher} : {selectedTask.subject}
                             </strong>
@@ -782,26 +669,26 @@ export default function TaskInformation() {
                             </span>
                             <button
                                 onClick={closeModal}
-                                className="modal-close"
+                                className="absolute top-3 right-3 z-10 cursor-pointer border-none bg-transparent text-xl text-gray-500 transition-colors hover:text-red-500"
                             >
                                 ✖
                             </button>
                         </div>
 
-                        <div className="modal-body">
+                        <div className="mb-3 text-base">
                             <div className="existing-notes">
                                 {Array.isArray(notes) && notes.length > 0 ? (
                                     notes.map((item, index) => (
                                         <div
                                             key={index}
-                                            className="note-item"
+                                            className="mb-4 border-b-2 border-blue-500 pb-4"
                                         >
-                                            <div className="note-header">
-                                                <strong>
+                                            <div className="flex items-center justify-between rounded-lg bg-blue-200 p-3 text-black">
+                                                <strong className="text-sm font-semibold">
                                                     Note {index + 1} : by{' '}
                                                     {item.note_by}
                                                 </strong>{' '}
-                                                <span className="note-date">
+                                                <span className="whitespace-nowrap text-black">
                                                     {new Date(
                                                         item.note_date,
                                                     ).toLocaleString('en-GB', {
@@ -829,24 +716,27 @@ export default function TaskInformation() {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="note-item text-gray-500">
+                                    <div className="mb-4 border-b-2 border-blue-500 pb-4 text-gray-500">
                                         No notes available
                                     </div>
                                 )}
                             </div>
-                            <div className="note-title"> Add you Note : </div>
+                            <div className="inline-flex justify-center rounded-2xl bg-pink-400 px-4 py-1 text-center text-lg text-black">
+                                {' '}
+                                Add you Note :{' '}
+                            </div>
                             <textarea
                                 placeholder="Add your note..."
                                 value={note}
                                 onChange={e => setNote(e.target.value)}
-                                className="modal-note"
+                                className="mt-2 h-20 w-full resize-none rounded-lg border border-gray-300 p-2 text-sm focus:border-pink-300 focus:shadow-lg focus:shadow-pink-300/30 focus:outline-none"
                             />
                             <input
                                 type="text"
                                 placeholder="Your Name *"
                                 value={yourName}
                                 onChange={e => setYourName(e.target.value)}
-                                className="modal-name-input"
+                                className="mt-2 w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-pink-300 focus:shadow-lg focus:shadow-pink-300/30 focus:outline-none"
                             />
                             {error && (
                                 <div className="mt-1 text-sm text-red-500">
@@ -855,10 +745,10 @@ export default function TaskInformation() {
                             )}
                         </div>
 
-                        <div className="modal-footer">
+                        <div className="flex items-center justify-between text-xl">
                             <button
                                 onClick={handleSaveNote}
-                                className="modal-save-btn"
+                                className="cursor-pointer rounded-md border-none bg-blue-500 px-3 py-1.5 text-white transition-all hover:scale-105 hover:bg-blue-700"
                             >
                                 Save
                             </button>
@@ -867,122 +757,158 @@ export default function TaskInformation() {
                 </div>
             )}
 
-            {/* separate into activitymodal */}
-            {/* {showTodoModal && selectedTask && (
-        <div className="modal-overlay" onClick={() => setShowTodoModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Date and Time To-Do</h3>
-              <button onClick={() => setShowTodoModal(false)} className="modal-close">
-                ✖
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <div className="form-group">
-                <label>Task:</label>
-                <div className="task-info">
-                  <strong>{selectedTask.teacher} : {selectedTask.subject}</strong>
-                  <p>{selectedTask.wtf}</p>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Date *</label>
-                <input
-                  type="date"
-                  value={todoDate}
-                  onChange={(e) => setTodoDate(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Start Time *</label>
-                <input
-                  type="time"
-                  value={todoStartTime}
-                  onChange={(e) => setTodoStartTime(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>My Note</label>
-                <textarea
-                  value={todoNote}
-                  onChange={(e) => setTodoNote(e.target.value)}
-                  className="form-textarea"
-                  placeholder="Add your notes here..."
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Estimate Duration (Hours)</label>
-                <input
-                  type="number"
-                  value={todoDuration}
-                  onChange={(e) => setTodoDuration(e.target.value)}
-                  className="form-input"
-                  min="0"
-                  step="0.5"
-                  placeholder="0.5"
-                />
-              </div>
-
-              {error && <div className="error-message">{error}</div>}
-            </div>
-
-            <div className="modal-footer">
-              <button
-                onClick={() => setShowTodoModal(false)}
-                className="discard-btn"
-              >
-                Discard
-              </button>
-              <button
-                onClick={handleSaveTodo}
-                className="confirm-btn"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
             {isOpenActivityModal && (
-                <ActivityModal
-                    inputState={inputState}
-                    selectedTask={selectedTask!!}
-                    onSave={handleCreateStudyPlan}
-                    onChange={onChangeActivityInput}
-                    onClose={handleCloseActivityModal}
-                />
+                <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="animate-fadeIn relative max-h-[95vh] w-96 max-w-[90%] overflow-y-auto rounded-xl bg-white p-5 shadow-xl">
+                        <div className="mb-4">
+                            <h2 className="text-xl font-bold">
+                                Date and Time To-Do
+                            </h2>
+                            <div className="mt-2 border-b-2 border-gray-200 pb-2">
+                                <p className="font-bold">Task:</p>
+                                <p className="p mt-3 rounded-2xl bg-blue-300 p-3 text-black">
+                                    {selectedTask?.teacher} -{' '}
+                                    {selectedTask?.subject}: {selectedTask?.wtf}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Date *
+                                </label>
+                                <input
+                                    type="date"
+                                    value={inputState.datetime}
+                                    onChange={e =>
+                                        onChangeActivityInput(
+                                            'datetime',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Start Time *
+                                </label>
+                                <input
+                                    type="time"
+                                    value={inputState.startTime}
+                                    onChange={e =>
+                                        onChangeActivityInput(
+                                            'startTime',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    My Note
+                                </label>
+                                <textarea
+                                    placeholder="Add your notes here..."
+                                    value={inputState.description}
+                                    onChange={e =>
+                                        onChangeActivityInput(
+                                            'description',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="mt-1 block w-full resize-none rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    rows={3}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Estimate Duration (Hours)
+                                </label>
+                                <div className="mt-1 flex space-x-4">
+                                    <div className="flex-1">
+                                        <label className="block text-xs text-gray-500">
+                                            Hours:
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={inputState.hours}
+                                            onChange={e =>
+                                                onChangeActivityInput(
+                                                    'hours',
+                                                    parseInt(e.target.value) ||
+                                                        0,
+                                                )
+                                            }
+                                            className="block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="block text-xs text-gray-500">
+                                            Minutes:
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={inputState.minutes}
+                                            onChange={e =>
+                                                onChangeActivityInput(
+                                                    'minutes',
+                                                    parseInt(e.target.value) ||
+                                                        0,
+                                                )
+                                            }
+                                            className="block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 flex justify-end space-x-3">
+                            <button
+                                onClick={handleCloseActivityModal}
+                                className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleCreateStudyPlan}
+                                className="rounded-md bg-pink-300 px-4 py-2 text-sm font-medium text-white hover:bg-pink-500"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {shouldPrompt && session && (
-                <div className="modal-overlay">
+                <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
                     <div
-                        className="modal-content"
+                        className="animate-fadeIn relative max-h-[95vh] w-96 max-w-[90%] overflow-y-auto rounded-xl bg-white p-5 shadow-xl"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="modal-header">
+                        <div className="mb-3 flex items-center justify-between pr-8 font-bold">
                             <button
                                 onClick={handleCloseGoogleSignInModal}
-                                className="modal-close"
+                                className="absolute top-3 right-3 z-10 cursor-pointer border-none bg-transparent text-xl text-gray-500 transition-colors hover:text-red-500"
                             >
                                 ✖
                             </button>
                         </div>
 
-                        <div className="modal-body">
+                        <div className="mb-3 text-base">
                             <div className="username">
                                 Create a new username to continue
                             </div>
                             <input
                                 type="text"
-                                className="modal-name-input"
+                                className="mt-2 w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-pink-300 focus:shadow-lg focus:shadow-pink-300/30 focus:outline-none"
                                 placeholder="Create a new username"
                                 value={username}
                                 onChange={e => {
@@ -1006,9 +932,9 @@ export default function TaskInformation() {
                             )}
                         </div>
 
-                        <div className="modal-footer">
+                        <div className="flex items-center justify-between text-xl">
                             <button
-                                className="modal-save-btn"
+                                className="cursor-pointer rounded-md border-none bg-blue-500 px-3 py-1.5 text-white transition-all hover:scale-105 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                                 disabled={!username || isAvailable === false}
                                 onClick={() => handleGoogleSignIn(session)}
                             >

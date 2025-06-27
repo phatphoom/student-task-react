@@ -1,11 +1,11 @@
-.card-container {
+/* .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
     width: 100%;
-}
+} */
 
-.card {
+/* .card {
     width: 100%;
     height: fit-content;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -16,10 +16,10 @@
     transition:
         transform 0.2 ease,
         box-shadow 0.2s ease;
-    border: 3px solid #747474; /* หรือจะใช้สีอื่นก็ได้ */
-}
+    border: 3px solid #747474; 
+} */
 
-.card-header {
+/* .card-header {
     background-color: #b3d4fc;
     padding: 0.5rem;
     font-weight: bold;
@@ -29,23 +29,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    letter-spacing: 2px; /* ระยะห่างระหว่างตัวเลข (ปรับค่าได้ตามต้องการ) */
-}
+    letter-spacing: 2px; 
+} */
 
-.card-empty {
+/* .card-empty {
     padding: 20px;
     text-align: center;
     font-weight: 500;
     color: var(--text-light);
     font-style: italic;
-}
+} */
 
-.task-item {
-    padding: 16px 12px; /* เพิ่ม padding ให้มากขึ้น */
-    margin: 0 0 16px 0; /* เพิ่ม margin ด้านล่าง */
+/* .task-item {
+    padding: 16px 12px; 
+    margin: 0 0 16px 0; 
     display: flex;
     flex-direction: column;
-    background-color: #fff; /* กำหนดพื้นหลังให้ชัดเจน */
+    background-color: #fff; 
 }
 
 .task-item + .task-item {
@@ -60,21 +60,20 @@
     justify-content: space-between;
     font-weight: bold;
     color: #2c9ff2;
-}
+} */
 
-.teacher-subject {
+/* .teacher-subject {
     color: #2c9ff2;
-    flex: 1; /* ยังคงไว้ */
-    min-width: 0; /* ยังคงไว้ */
-}
+    flex: 1; 
+    min-width: 0; 
+} */
 
-.task-type {
+/* .task-type {
     color: #2c9ff2;
-    margin-left: auto; /* เพิ่มบรรทัดนี้ */
-}
+    margin-left: auto; 
+} */
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .card-container {
         grid-template-columns: 1fr;
         padding: 0;
@@ -104,40 +103,41 @@
 
 .task-item.school-event .task-header {
     background-color: #f0c5ed !important;
-}
+} */
 
-.task-creator {
+/* .task-creator {
     margin-top: 8px;
     color: #4e4e4e;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* ปุ่มซ้าย, info ขวา */
+    justify-content: space-between; 
     gap: 8px;
-}
-.creator-info {
+} */
+
+/* .creator-info {
     display: flex;
     align-items: center;
     gap: 4px;
-}
-.creator-label {
-    margin-right: 4px;
-}
+} */
 
+/* .creator-label {
+    margin-right: 4px;
+} */
+
+/* 
 .creator-name {
     font-style: italic;
-}
+} */
 
-/* จัดตำแหน่งปุ่มให้อยู่ตรงกลาง */
-.form-group2 {
+/* .form-group2 {
     display: flex;
     flex-direction: column;
-    align-items: center; /* ตรงกลางแนวแกน X */
+    align-items: center; 
     gap: 10px;
-}
+} */
 
-/* ปรับสีปุ่มให้ดูน่ารักขึ้น */
-.full-calendar-btn {
-    background-color: #ff6b81; /* สีชมพูอมแดงพาสเทล */
+/* .full-calendar-btn {
+    background-color: #ff6b81; 
     color: white;
     border: none;
     padding: 10px 20px;
@@ -146,25 +146,25 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+} */
 
-.full-calendar-btn:hover {
-    background-color: #ff4f6f; /* สีเข้มขึ้นเวลาชี้ */
-}
+/* .full-calendar-btn:hover {
+    background-color: #ff4f6f;
+} */
 
-.task-item.school-exam .task-type {
-    color: #ff5151; /* สีข้อความแดง */
+/* .task-item.school-exam .task-type {
+    color: #ff5151; 
     font-weight: bold;
-}
+} */
 
-.task-item.school-exam .task-body {
-    color: white !important; /* ข้อความสีขาว */
-    background-color: #ff5151 !important; /* พื้นหลังสีแดง */
+/* .task-item.school-exam .task-body {
+    color: white !important; 
+    background-color: #ff5151 !important; 
     padding: 8px 12px;
     border-radius: 4px;
-}
+} */
 
-.open-note-btn {
+/* .open-note-btn {
     background: none;
     border: none;
     font-size: 30px;
@@ -210,26 +210,26 @@
     margin-bottom: 15px;
     padding-bottom: 15px;
     border-bottom: 2px solid #2c9ff2;
-}
+} */
 
-.note-date {
+/* .note-date {
     color: #000000;
-    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
-}
+    white-space: nowrap; 
+} */
 
-.note-title {
-    padding: 5px 15px; /* เพิ่ม padding ด้านซ้าย-ขวา ให้พื้นที่เยอะขึ้น */
+/* .note-title {
+    padding: 5px 15px;
     font-size: large;
-    display: inline-flex; /* เปลี่ยนจาก flex เป็น inline-flex */
+    display: inline-flex;
     text-align: center;
-    justify-content: center; /* จัดกึ่งกลางข้อความในกล่อง */
+    justify-content: center; 
     background: #d68fcf;
     border-radius: 20px;
     color: #000000;
-    cursor: default; /* ถ้าต้องการ */
-}
+    cursor: default; 
+} */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .modal-content {
         width: 95vw;
         max-height: 90vh;
@@ -259,9 +259,9 @@
         text-align: center;
         white-space: normal;
     }
-}
+} */
 
-.modal-overlay {
+/* .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -272,9 +272,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
-@keyframes modalFadeIn {
+/* @keyframes modalFadeIn {
     from {
         transform: translateY(-20px);
         opacity: 0;
@@ -283,9 +283,9 @@
         transform: translateY(0);
         opacity: 1;
     }
-}
+} */
 
-.modal-content {
+/* .modal-content {
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -294,7 +294,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     position: relative;
     animation: modalFadeIn 0.3s ease-out;
-
     max-height: 95vh;
     overflow-y: auto;
 }
@@ -305,37 +304,37 @@
 .modal-content::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-}
+} */
 
-.modal-close {
+/* .modal-close {
     position: absolute;
-    top: 12px; /* เดิม 8px → ขยับลงเล็กน้อย */
-    right: 12px; /* คงไว้เท่าเดิม */
+    top: 12px; 
+    right: 12px; 
     background: transparent;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    z-index: 10; /* เพิ่ม z-index ให้ลอยขึ้น */
-    color: #555; /* สีปุ่ม → เปลี่ยนเป็นสีเทาอ่อนดูสุภาพ */
+    z-index: 10; 
+    color: #555; 
 }
 
 .modal-close:hover {
-    color: #ff0000; /* เอฟเฟกต์ hover → เป็นสีดำชัดเจน */
+    color: #ff0000; 
     transition:
         background-color 0.3s ease,
         transform 0.2s ease;
-}
+} */
 
-.modal-header {
+/* .modal-header {
     font-weight: bold;
     padding-right: 30px;
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+} */
 
-.modal-body {
+/* .modal-body {
     font-size: 16px;
     margin-bottom: 12px;
 }
@@ -415,4 +414,4 @@
 
 .open-task-btn:hover {
     opacity: 0.7;
-}
+} */
