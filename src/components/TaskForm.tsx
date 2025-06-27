@@ -119,124 +119,97 @@ export default function TaskForm({
     };
 
     return (
-        <div className="p-4">
-            <div className="group-button-and-text">
-                <div>
-                    <h1 className="title">
-                        Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0
-                        Build20250611
-                    </h1>
-                    <h2 className="title">Class Room EP105</h2>
-                </div>
-                <div className="top-right-button">
-                    <Link
-                        href="/room-announcement"
-                        className="nav-btn3"
-                    >
-                        Room Announcement
-                    </Link>
-                    <Link
-                        href="/Manages"
-                        className="nav-btn"
-                    >
-                        Manage Due
-                    </Link>
-                    <Link
-                        href="/"
-                        className="nav-btn2"
-                    >
-                        Work on Due Report
-                    </Link>
-                    <Link
-                        href="/my-student-plan"
-                        className="nav-btn"
-                    >
-                        My Study plan
-                    </Link>
-                </div>
-            </div>
-
-            <div className="form-row">
-                <div className="form-group">
-                    <label className="form-label">Due Date *</label>
+        <div className="p-6 w-full">
+            {/* Form Fields Container */}
+            <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 rounded-2xl bg-pink-50 p-6">
+                {/* Due Date Field */}
+                <div className="flex flex-col">
+                    <label className="mb-2 text-sm font-semibold text-gray-700">
+                        Due Date *
+                    </label>
                     <input
                         type="date"
                         value={dueDate}
                         onChange={handleDateChange}
-                        className="form-input date-input"
+                        className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white font-medium text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-200"
                     />
                 </div>
+
+                {/* Teacher Field - Only show if not School Event or School Exam */}
                 {workType !== 'School Event' && workType !== 'School Exam' && (
-                    <>
-                        <div className="form-group">
-                            <label className="form-label">Teacher *</label>
-                            <select
-                                value={teacher}
-                                onChange={e => {
-                                    setTeacher(e.target.value);
-                                    const teacherSubjects = subjects.filter(
-                                        s => s.teacher === e.target.value,
-                                    );
-                                    if (teacherSubjects.length === 1) {
-                                        setSubject(teacherSubjects[0].subject);
-                                    } else if (teacherSubjects.length === 0) {
-                                        setSubject('');
-                                    }
-                                }}
-                                className="form-select items-select"
-                            >
-                                <option value="">Select Teacher</option>
-                                {[...new Set(subjects.map(s => s.teacher))].map(
-                                    t => (
-                                        <option
-                                            key={t}
-                                            value={t}
-                                        >
-                                            {t}
-                                        </option>
-                                    ),
-                                )}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">Subject *</label>
-                            <select
-                                value={subject}
-                                onChange={e => {
-                                    setSubject(e.target.value);
-                                    const selectedSubject = subjects.find(
-                                        s => s.subject === e.target.value,
-                                    );
-                                    if (selectedSubject) {
-                                        setTeacher(selectedSubject.teacher);
-                                    } else {
-                                        setTeacher('');
-                                    }
-                                }}
-                                className="form-select items-select"
-                            >
-                                <option value="">Select Subject</option>
-                                {[...new Set(subjects.map(s => s.subject))].map(
-                                    subj => (
-                                        <option
-                                            key={subj}
-                                            value={subj}
-                                        >
-                                            {subj}
-                                        </option>
-                                    ),
-                                )}
-                            </select>
-                        </div>
-                    </>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-semibold text-gray-700">
+                            Teacher *
+                        </label>
+                        <select
+                            value={teacher}
+                            onChange={e => {
+                                setTeacher(e.target.value);
+                                const teacherSubjects = subjects.filter(
+                                    s => s.teacher === e.target.value,
+                                );
+                                if (teacherSubjects.length === 1) {
+                                    setSubject(teacherSubjects[0].subject);
+                                } else if (teacherSubjects.length === 0) {
+                                    setSubject('');
+                                }
+                            }}
+                            className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white font-medium text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-200 cursor-pointer"
+                        >
+                            <option value="">Select Teacher</option>
+                            {[...new Set(subjects.map(s => s.teacher))].map(
+                                t => (
+                                    <option key={t} value={t}>
+                                        {t}
+                                    </option>
+                                ),
+                            )}
+                        </select>
+                    </div>
                 )}
 
-                <div className="form-group">
-                    <label className="form-label">Work Type *</label>
+                {/* Subject Field - Only show if not School Event or School Exam */}
+                {workType !== 'School Event' && workType !== 'School Exam' && (
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-semibold text-gray-700">
+                            Subject *
+                        </label>
+                        <select
+                            value={subject}
+                            onChange={e => {
+                                setSubject(e.target.value);
+                                const selectedSubject = subjects.find(
+                                    s => s.subject === e.target.value,
+                                );
+                                if (selectedSubject) {
+                                    setTeacher(selectedSubject.teacher);
+                                } else {
+                                    setTeacher('');
+                                }
+                            }}
+                            className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white font-medium text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-200 cursor-pointer"
+                        >
+                            <option value="">Select Subject</option>
+                            {[...new Set(subjects.map(s => s.subject))].map(
+                                subj => (
+                                    <option key={subj} value={subj}>
+                                        {subj}
+                                    </option>
+                                ),
+                            )}
+                        </select>
+                    </div>
+                )}
+
+                {/* Work Type Field */}
+                <div className="flex flex-col">
+                    <label className="mb-2 text-sm font-semibold text-gray-700">
+                        Work Type *
+                    </label>
                     <select
                         value={workType}
                         onChange={e => setWorkType(e.target.value)}
-                        className="form-select status-select"
+                        className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white font-medium text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-200 cursor-pointer"
                     >
                         <option>Group</option>
                         <option>Personal</option>
@@ -246,26 +219,29 @@ export default function TaskForm({
                 </div>
             </div>
 
-            <div
-                className="form-group"
-                style={{ marginTop: '20px', marginBottom: '20px' }}
-            >
-                <label className="form-label">What to finish *</label>
+            {/* What to finish Field */}
+            <div className="mb-6 flex flex-col rounded-2xl bg-pink-50 p-6">
+                <label className="mb-3 text-sm font-semibold text-gray-700">
+                    What to finish *
+                </label>
                 <textarea
                     value={wtf}
                     onChange={e => setWtf(e.target.value)}
                     placeholder="What to finish"
-                    className="form-textarea"
-                    rows={9}
+                    className="w-full min-h-[200px] px-4 py-3 rounded-lg border-2 border-gray-200 bg-white font-medium text-gray-700 placeholder-gray-400 resize-none focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-200"
+                    rows={8}
                 />
             </div>
 
-            <button
-                onClick={handleSubmit}
-                className="btn-primary mt-4"
-            >
-                Add Task
-            </button>
+            {/* Submit Button - Moved to left */}
+            <div className="flex justify-start">
+                <button
+                    onClick={handleSubmit}
+                    className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                >
+                    Add Task
+                </button>
+            </div>
         </div>
     );
 }
