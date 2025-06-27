@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import './RoomAnnouncement.css';
 
 type Announcement = {
     id: string;
@@ -88,38 +87,43 @@ export default function RoomAnnouncementPage() {
     };
 
     return (
-        <main className="container">
-            <div className="p-4-2">
-                <div className="group-button-and-text">
-                    <div>
-                        <h1 className="title">
+        <main className="font-kanit min-h-screen bg-gray-50">
+            {/* Header Section */}
+            <div className="px-8 py-6">
+                <div className="mb-6 flex flex-wrap items-start justify-between gap-6 rounded-xl bg-blue-50 p-6">
+                    <div className="max-w-full flex-1">
+                        <h1 className="m-0 text-2xl font-bold text-slate-800">
                             Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0
                             Build20250611
                         </h1>
-                        <h2 className="title">Class Room EP105</h2>
+                        <h2 className="m-2 mt-3 text-xl text-gray-800">
+                            Class Room EP105
+                        </h2>
                     </div>
-                    <div className="top-right-button">
+                    <div className="flex flex-wrap items-center gap-6">
                         <Link
                             href="/room-announcement"
-                            className="nav-btn3"
+                            className="rounded-full bg-white px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-blue-100 hover:shadow-md"
                         >
-                            Room Announcement
+                            <span className="text-base font-bold whitespace-nowrap text-blue-600">
+                                Room Announcement
+                            </span>
                         </Link>
                         <Link
-                            href="/Logins"
-                            className="nav-btn"
+                            href="/Manages"
+                            className="rounded-md bg-pink-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-pink-300 hover:shadow-md"
                         >
                             Manage Due
                         </Link>
                         <Link
                             href="/"
-                            className="nav-btn2"
+                            className="rounded-md bg-blue-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-blue-300 hover:shadow-md"
                         >
                             Work on Due Report
                         </Link>
                         <Link
                             href="/my-student-plan"
-                            className="nav-btn"
+                            className="rounded-md bg-emerald-200 px-6 py-3 text-base font-bold text-black transition duration-200 hover:bg-emerald-300 hover:shadow-md"
                         >
                             My Study plan
                         </Link>
@@ -127,215 +131,231 @@ export default function RoomAnnouncementPage() {
                 </div>
             </div>
 
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className="add-button"
-            >
-                Add
-            </button>
+            {/* Main Content */}
+            <div className="px-8 pb-8">
+                {/* Add Button and Title Section */}
+                <div className="mb-8 flex items-center justify-between">
+                    <h3 className="text-2xl font-bold text-blue-800">
+                        Room Announcement
+                    </h3>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="flex items-center gap-3 rounded-lg bg-green-500 px-5 py-2.5 text-white transition hover:bg-green-600 hover:shadow-md"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                        Add Announcement
+                    </button>
+                </div>
 
-            <h3 className="section-title">Room Announcement</h3>
-            <div className="table-container">
-                <table className="announcement-table">
-                    <thead>
-                        <tr>
-                            <th>Announcement</th>
-                            <th>Subject</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {isLoading ? (
+                {/* Announcements Table */}
+                <div className="overflow-hidden rounded-xl bg-white shadow-lg">
+                    <table className="w-full">
+                        <thead className="bg-blue-700 text-white">
                             <tr>
-                                <td colSpan={2}>Loading announcements...</td>
+                                <th className="px-8 py-4 text-left font-semibold">
+                                    Announcement
+                                </th>
+                                <th className="px-8 py-4 text-left font-semibold">
+                                    Subject
+                                </th>
                             </tr>
-                        ) : announcements.length > 0 ? (
-                            announcements.map(a => (
-                                <tr
-                                    key={
-                                        a.id ||
-                                        `${a.date}-${a.subject}-${Math.random().toString(36).substring(2, 9)}`
-                                    }
-                                >
-                                    <td>{a.date}</td>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {isLoading ? (
+                                <tr>
                                     <td
-                                        className="subject-link"
-                                        onClick={() =>
-                                            setSelectedAnnouncement(a)
-                                        }
+                                        colSpan={2}
+                                        className="px-6 py-4 text-center"
                                     >
-                                        {a.subject}
+                                        <div className="flex justify-center">
+                                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                                        </div>
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={2}>No announcements found</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            ) : announcements.length > 0 ? (
+                                announcements.map(a => (
+                                    <tr
+                                        key={a.id || `${a.date}-${a.subject}`}
+                                        className="hover:bg-gray-50"
+                                    >
+                                        <td className="px-8 py-4">{a.date}</td>
+                                        <td
+                                            className="cursor-pointer px-8 py-4 font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                            onClick={() =>
+                                                setSelectedAnnouncement(a)
+                                            }
+                                        >
+                                            {a.subject}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={2}
+                                        className="px-6 py-4 text-center text-gray-500"
+                                    >
+                                        No announcements found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Details Popup */}
-            <DetailsPopup
-                announcement={selectedAnnouncement}
-                onClose={() => setSelectedAnnouncement(null)}
-            />
+            {selectedAnnouncement && (
+                <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+                    <div className="w-full max-w-2xl rounded-xl bg-white p-8 shadow-2xl">
+                        <div className="mb-6 flex items-start justify-between border-b pb-4">
+                            <div>
+                                <h2 className="text-2xl font-bold text-blue-800">
+                                    {selectedAnnouncement.subject}
+                                </h2>
+                                <p className="mt-2 text-gray-600">
+                                    Posted on: {selectedAnnouncement.date}
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setSelectedAnnouncement(null)}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="mb-6 whitespace-pre-line text-gray-800">
+                            {selectedAnnouncement.details}
+                        </div>
+                        {selectedAnnouncement.fileUrl && (
+                            <div className="mt-6">
+                                <a
+                                    href={selectedAnnouncement.fileUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-5 w-5"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                    Download Attachment
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Add Announcement Modal */}
             {isModalOpen && (
-                <AddAnnouncementModal
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={addAnnouncement}
-                />
+                <div className="bg-opacity-30 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-2xl">
+                        <div className="mb-8 border-b pb-4">
+                            <h2 className="text-xl font-bold text-gray-800">
+                                Add New Announcement
+                            </h2>
+                            <p className="mt-2 text-gray-600">
+                                Class Room EP105
+                            </p>
+                        </div>
+                        <form
+                            onSubmit={e => {
+                                e.preventDefault();
+                                const formData = new FormData(e.currentTarget);
+                                addAnnouncement({
+                                    date: formData.get('date') as string,
+                                    subject: formData.get('subject') as string,
+                                    details: formData.get('details') as string,
+                                });
+                                setIsModalOpen(false);
+                            }}
+                        >
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="mb-2 block font-medium text-gray-700">
+                                        Announcement Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        name="date"
+                                        required
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-2 block font-medium text-gray-700">
+                                        Subject
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="subject"
+                                        required
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-2 block font-medium text-gray-700">
+                                        Details
+                                    </label>
+                                    <textarea
+                                        name="details"
+                                        rows={5}
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div className="mt-8 flex justify-end gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="rounded-lg bg-gray-200 px-5 py-2.5 font-medium text-gray-800 hover:bg-gray-300"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="rounded-lg bg-green-500 px-5 py-2.5 font-medium text-white hover:bg-green-600"
+                                >
+                                    Save Announcement
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
         </main>
-    );
-}
-
-function DetailsPopup({
-    announcement,
-    onClose,
-}: {
-    announcement: Announcement | null;
-    onClose: () => void;
-}) {
-    if (!announcement) return null;
-
-    return (
-        <div className={`details-modal ${announcement ? 'active' : ''}`}>
-            <div className="details-content">
-                <div className="details-header">
-                    <div>
-                        <h2 className="details-title">
-                            {announcement.subject}
-                        </h2>
-                        <p className="details-date">
-                            Posted on: {announcement.date}
-                        </p>
-                    </div>
-                    <button
-                        className="details-close-btn"
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </button>
-                </div>
-                <div className="details-body">
-                    {announcement.details}
-                    {announcement.fileUrl && (
-                        <a
-                            href={announcement.fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="file-download"
-                        >
-                            <svg
-                                className="file-icon"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"
-                                />
-                                <path
-                                    fill="currentColor"
-                                    d="M8,15V12H10V15H12L9,18L6,15H8Z"
-                                />
-                            </svg>
-                            Download Attachment
-                        </a>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function AddAnnouncementModal({
-    onClose,
-    onSave,
-}: {
-    onClose: () => void;
-    onSave: (announcement: Omit<Announcement, 'id'>) => void;
-}) {
-    const [date, setDate] = useState('');
-    const [topic, setTopic] = useState('');
-    const [details, setDetails] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        try {
-            await onSave({
-                date,
-                subject: topic,
-                details,
-            });
-            onClose();
-        } catch (error) {
-            console.error('Error saving announcement:', error);
-            alert('Failed to save announcement');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <div className="form-header">
-                    <div>
-                        <h1 className="title">
-                            Program SK149CNS - ฉันรักการบ้านที่ชู้ด V1.0
-                            Build20250611
-                        </h1>
-                        <h2 className="title">Class Room EP105</h2>
-                    </div>
-                </div>
-
-                <form
-                    onSubmit={handleSubmit}
-                    className="announcement-form"
-                >
-                    <div className="form-row">
-                        <label>Announcement Date</label>
-                        <input
-                            type="date"
-                            value={date}
-                            onChange={e => setDate(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label>Topic</label>
-                        <input
-                            type="text"
-                            value={topic}
-                            onChange={e => setTopic(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-buttons">
-                        <button
-                            type="button"
-                            className="btn-cancel"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="btn-save"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? 'Saving...' : 'Save'}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     );
 }
