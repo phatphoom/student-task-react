@@ -5,7 +5,7 @@ import { TopNav } from '@/components/TopNav';
 
 import './globals.css';
 
-import AuthProvider from '../contexts/session-provider';
+import { AuthProvider } from '@/contexts';
 
 const kanit = Kanit({
     weight: ['400'],

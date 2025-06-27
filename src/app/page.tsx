@@ -1,17 +1,20 @@
 'use client';
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import { useEffect, useState } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { Task, GroupedTasks, Note } from '@/types';
+import { GroupedTasks, Note } from '@/types';
 import './reports.css';
 import { GoogleUserResponse } from '@/types/google-signin';
 import ActivityModal, {
     ActivityInput,
     CreateStudyPlanRequest,
 } from '@/components/ActivityModal';
+import { Task } from '@/models/task';
+import { GoogleAuthRequest, GoogleAuthResponse } from '@/models/authentication';
+import { API } from '@/constants';
 
 export default function TaskInformation() {
     const { data: session, status, update } = useSession();
@@ -86,38 +89,34 @@ export default function TaskInformation() {
             return;
         }
 
+        if (!session.user.email) {
+            // handle invalid email
+            return;
+        }
+
         try {
-            const res = await fetch(
+            const body: GoogleAuthRequest = {
+                email: session.user.email,
+                username: username.trim(),
+            };
+
+            await axios.post<GoogleAuthResponse>(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/users/google`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: session.user.email,
-                        username: username.trim(),
-                    }),
-                },
+                body,
             );
 
-            if (!res.ok) {
-                const errorData = await res.json();
-
-                if (res.status === 409) {
-                    alert(errorData.message || 'User already exists.');
-                } else {
-                    alert(errorData.message || 'Something went wrong.');
-                }
-
-                throw new Error(errorData.message || 'Error occurred');
-            }
-
-            const data = (await res.json()) as GoogleUserResponse;
             setShouldPrompt(false);
             await update();
-        } catch (err) {
-            console.error('Error syncing user:', err);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.status === 409) {
+                    alert(
+                        error.response?.data.message || 'User already exists.',
+                    );
+                }
+            }
+
+            console.error('Error syncing user:', error);
         }
     };
 
@@ -320,9 +319,7 @@ export default function TaskInformation() {
 
     useEffect(() => {
         if (selectedTask) {
-            fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${selectedTask.task_id}`,
-            )
+            fetch(`${API.API_URL}/api/task-notes/${selectedTask.task_id}`)
                 .then(res => res.json())
                 .then(data => {
                     setNotes(Array.isArray(data) ? data : []);
