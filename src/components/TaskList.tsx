@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Task, EditData, Note } from '@/types';
-import './tasklist.css';
+// import './tasklist.css';
 
 export default function TaskList({
     refreshTrigger,
@@ -91,7 +91,6 @@ export default function TaskList({
             created_by: task.created_by || '',
         });
     };
-
     const handleSave = async (taskId: string) => {
         try {
             let userId = null;
@@ -301,12 +300,15 @@ export default function TaskList({
     };
 
     const handleDeleteNote = async (noteId: number) => {
+        const task_id = selectedTask?.task_id;
         const confirmed = confirm('Are you sure you want to delete this note?');
         if (!confirmed) return;
 
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${noteId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/task-notes/${noteId}?task_id=${task_id}`,
+
+                // /api/task-notes/${noteId}?task_id=${task_id}
                 {
                     method: 'DELETE',
                 },
@@ -337,7 +339,7 @@ export default function TaskList({
     };
 
     return (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 w-full">
+        <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {groupAndSortTasks().map(([date, tasksOnDate]) => {
                 let [d, m, y] = date.split('/').map(Number);
                 if (y > 2500) y -= 543;
@@ -352,10 +354,13 @@ export default function TaskList({
                 return (
                     <div
                         key={date}
-                        className="bg-gray-100 h-fit min-h-[100px] w-full shadow-md border-4 border-gray-500"
+                        className="h-fit min-h-[100px] w-full border-4 border-gray-500 bg-gray-100 shadow-md"
                     >
-                        <div className="bg-blue-200 p-2 font-bold flex justify-between items-center text-black text-base tracking-wider">
-                            {date} <span className="font-bold text-base uppercase ml-auto">{weekday}</span>
+                        <div className="flex items-center justify-between bg-blue-200 p-2 text-base font-bold tracking-wider text-black">
+                            {date}{' '}
+                            <span className="ml-auto text-base font-bold uppercase">
+                                {weekday}
+                            </span>
                         </div>
 
                         {sortedTasks.length === 0 ? (
@@ -374,22 +379,33 @@ export default function TaskList({
                                         <div
                                             key={task.task_id}
                                             className={`task-item mb-3 rounded p-3 ${
-                                                task.work_type === 'School Event'
+                                                task.work_type ===
+                                                'School Event'
                                                     ? 'school-event border-l-4 border-purple-400 bg-purple-100'
-                                                    : task.work_type === 'School Exam'
+                                                    : task.work_type ===
+                                                        'School Exam'
                                                       ? 'school-exam border-l-4 border-red-400 bg-red-100'
                                                       : 'bg-white'
                                             }`}
                                         >
-                                            {editingId === `${task.sid}-${task.task_id}` ? (
+                                            {editingId ===
+                                            `${task.sid}-${task.task_id}` ? (
                                                 <div className="flex flex-col gap-3">
                                                     <EditForm
                                                         editData={editData}
-                                                        setEditData={setEditData}
-                                                        handleSave={() =>
-                                                            handleSave(String(task.task_id))
+                                                        setEditData={
+                                                            setEditData
                                                         }
-                                                        handleCancel={handleCancel}
+                                                        handleSave={() =>
+                                                            handleSave(
+                                                                String(
+                                                                    task.task_id,
+                                                                ),
+                                                            )
+                                                        }
+                                                        handleCancel={
+                                                            handleCancel
+                                                        }
                                                     />
                                                 </div>
                                             ) : (
@@ -398,7 +414,10 @@ export default function TaskList({
                                                         <div className="flex items-center gap-2">
                                                             {isHomework && (
                                                                 <strong className="text-blue-500">
-                                                                    {homeworkCounter}.{' '}
+                                                                    {
+                                                                        homeworkCounter
+                                                                    }
+                                                                    .{' '}
                                                                 </strong>
                                                             )}
                                                             <span className="text-blue-500">
@@ -406,41 +425,65 @@ export default function TaskList({
                                                             </span>
                                                         </div>
                                                         <span className="text-blue-500">
-                                                            {task.work_type !== 'School Event' &&
-                                                                task.work_type !== 'School Exam' && 
-                                                                `${task.teacher} : ${task.subject}`
-                                                            }
+                                                            {task.work_type !==
+                                                                'School Event' &&
+                                                                task.work_type !==
+                                                                    'School Exam' &&
+                                                                `${task.teacher} : ${task.subject}`}
                                                         </span>
                                                     </div>
 
                                                     {/* Task Description */}
                                                     <div className="task-body px-3 py-2">
-                                                        {task.wtf}
+                                                        {task.detail}
                                                     </div>
 
                                                     {/* Footer - Notes button and Action buttons */}
-                                                    <div className="mt-2 flex items-center justify-between gap-2 text-gray-600 px-3 pb-2">
+                                                    <div className="mt-2 flex items-center justify-between gap-2 px-3 pb-2 text-gray-600">
                                                         <button
                                                             className="cursor-pointer border-none bg-transparent text-3xl hover:opacity-70"
-                                                            onClick={() => openNoteModal(task)}
+                                                            onClick={() =>
+                                                                openNoteModal(
+                                                                    task,
+                                                                )
+                                                            }
                                                         >
                                                             📝{' '}
-                                                            {taskNoteCounts[task.task_id] > 0 && (
+                                                            {taskNoteCounts[
+                                                                task.task_id
+                                                            ] > 0 && (
                                                                 <span className="ml-[-3] text-2xl font-bold text-blue-600">
-                                                                    ({taskNoteCounts[task.task_id]})
+                                                                    (
+                                                                    {
+                                                                        taskNoteCounts[
+                                                                            task
+                                                                                .task_id
+                                                                        ]
+                                                                    }
+                                                                    )
                                                                 </span>
                                                             )}
                                                         </button>
 
                                                         <div className="flex flex-col items-end gap-1">
-                                                            <div className="flex items-center gap-1 font-bold italic text-sm text-gray-600">
-                                                                <span className="mr-1">by :</span>
+                                                            <div className="flex items-center gap-1 text-sm font-bold text-gray-600 italic">
+                                                                <span className="mr-1">
+                                                                    by :
+                                                                </span>
                                                                 <span className="italic">
                                                                     {(() => {
-                                                                        const creator = task.created_by_name || 'Unknown';
-                                                                        const editor = task.last_updated_by;
+                                                                        const creator =
+                                                                            task.created_by_name ||
+                                                                            task.created_by ||
+                                                                            'Unknown';
+                                                                        const editor =
+                                                                            task.last_updated_by;
 
-                                                                        if (!editor || editor === creator) {
+                                                                        if (
+                                                                            !editor ||
+                                                                            editor ===
+                                                                                creator
+                                                                        ) {
                                                                             return creator;
                                                                         }
 
@@ -448,17 +491,27 @@ export default function TaskList({
                                                                     })()}
                                                                 </span>
                                                             </div>
-                                                            
+
                                                             <div className="flex justify-end gap-2">
                                                                 <button
-                                                                    onClick={() => handleEdit(task)}
-                                                                    className="px-3 py-1.5 text-sm border-none rounded font-bold cursor-pointer transition-all duration-200 ease-in-out bg-green-400 text-white hover:bg-green-600 hover:scale-105"
+                                                                    onClick={() =>
+                                                                        handleEdit(
+                                                                            task,
+                                                                        )
+                                                                    }
+                                                                    className="cursor-pointer rounded border-none bg-green-400 px-3 py-1.5 text-sm font-bold text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-green-600"
                                                                 >
                                                                     Edit
                                                                 </button>
                                                                 <button
-                                                                    onClick={() => handleDelete(String(task.task_id))}
-                                                                    className="px-3 py-1.5 text-sm border-none rounded font-bold cursor-pointer transition-all duration-200 ease-in-out bg-red-400 text-white hover:bg-red-600 hover:scale-105"
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            String(
+                                                                                task.task_id,
+                                                                            ),
+                                                                        )
+                                                                    }
+                                                                    className="cursor-pointer rounded border-none bg-red-400 px-3 py-1.5 text-sm font-bold text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-red-600"
                                                                 >
                                                                     Delete
                                                                 </button>
@@ -511,35 +564,43 @@ export default function TaskList({
                                         >
                                             <div className="flex items-center justify-between rounded-lg bg-blue-200 p-3 text-black">
                                                 <strong className="text-sm font-semibold">
-                                                    Note {index + 1} : by {item.note_by}
+                                                    Note {index + 1} : by{' '}
+                                                    {item.note_by}
                                                 </strong>{' '}
                                                 <span className="whitespace-nowrap text-black">
-                                                    {new Date(item.note_date).toLocaleString('en-GB', {
+                                                    {new Date(
+                                                        item.note_date,
+                                                    ).toLocaleString('en-GB', {
                                                         day: '2-digit',
                                                         month: 'short',
                                                         year: 'numeric',
                                                         hour: '2-digit',
                                                         minute: '2-digit',
                                                         hour12: false,
-                                                        timeZone: 'Asia/Bangkok',
+                                                        timeZone:
+                                                            'Asia/Bangkok',
                                                     })}
                                                 </span>
                                                 <button
                                                     onClick={() =>
-                                                        handleDeleteNote(item.note_id)
+                                                        handleDeleteNote(
+                                                            item.note_id,
+                                                        )
                                                     }
-                                                    className="bg-red-400 text-white border-none rounded px-1.5 py-1 text-sm cursor-pointer transition-all duration-200 ease-in-out hover:bg-red-700 hover:scale-105"
+                                                    className="cursor-pointer rounded border-none bg-red-400 px-1.5 py-1 text-sm text-white transition-all duration-200 ease-in-out hover:scale-105 hover:bg-red-700"
                                                 >
                                                     Delete
                                                 </button>
                                             </div>
                                             <div className="note-body">
-                                                {item.note.split('\n').map((line, idx) => (
-                                                    <span key={idx}>
-                                                        {line}
-                                                        <br />
-                                                    </span>
-                                                ))}
+                                                {item.note
+                                                    .split('\n')
+                                                    .map((line, idx) => (
+                                                        <span key={idx}>
+                                                            {line}
+                                                            <br />
+                                                        </span>
+                                                    ))}
                                             </div>
                                         </div>
                                     ))
@@ -592,7 +653,9 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
     return (
         <>
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Teacher:</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Teacher:
+                </label>
                 <input
                     value={editData.teacher}
                     onChange={e =>
@@ -601,12 +664,14 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             teacher: e.target.value,
                         }))
                     }
-                    className="w-full px-3 py-2 border bg-white border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
             </div>
-            
+
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Subject:
+                </label>
                 <input
                     value={editData.subject}
                     onChange={e =>
@@ -615,12 +680,14 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             subject: e.target.value,
                         }))
                     }
-                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
             </div>
-            
+
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type:</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Type:
+                </label>
                 <select
                     value={editData.work_type}
                     onChange={e =>
@@ -629,7 +696,7 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                             work_type: e.target.value,
                         }))
                     }
-                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
                     <option value="">Select Type</option>
                     <option value="Group">Group</option>
@@ -638,9 +705,11 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                     <option value="School Exam">School Exam</option>
                 </select>
             </div>
-            
+
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description:</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Description:
+                </label>
                 <textarea
                     value={editData.wtf}
                     onChange={e =>
@@ -650,20 +719,20 @@ function EditForm({ editData, setEditData, handleSave, handleCancel }: any) {
                         }))
                     }
                     rows={3}
-                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
             </div>
 
-            <div className="flex gap-3 justify-end">
-                <button 
-                    onClick={handleSave} 
-                    className="px-4 py-2 bg-green-400 text-white rounded-md hover:bg-green-600 transition-colors duration-200"
+            <div className="flex justify-end gap-3">
+                <button
+                    onClick={handleSave}
+                    className="rounded-md bg-green-400 px-4 py-2 text-white transition-colors duration-200 hover:bg-green-600"
                 >
                     Save
                 </button>
-                <button 
-                    onClick={handleCancel} 
-                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200"
+                <button
+                    onClick={handleCancel}
+                    className="rounded-md bg-red-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-red-600"
                 >
                     Cancel
                 </button>

@@ -5,6 +5,7 @@ export interface Task {
     subject: string;
     teacher: string;
     wtf: string;
+    detail: string;
     work_type: string;
     created_by: string;
     created_by_name?: string; // เพิ่ม field นี้
