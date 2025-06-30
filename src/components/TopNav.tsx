@@ -26,7 +26,7 @@ export function TopNav() {
         <div className="">
             <div className="px-2 pt-2">
                 <p className="text-2xl font-extrabold">
-                    Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250611
+                    Program SK149CNS - ฉันรักการบ้านที่ซู้ด V1.0 Build20250630
                 </p>
             </div>
 
